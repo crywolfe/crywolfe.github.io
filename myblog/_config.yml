@@ -1,0 +1,10 @@
+# Site settings
+title: Gerald Wolfe
+email: geraldlwolfe@gmail.com
+description: "This site contains a little about me, my online portfolio, and my interests."
+baseurl: ""
+url: "http://geraldwolfe.com"
+
+# Build settings
+markdown: kramdown
+permalink: pretty
