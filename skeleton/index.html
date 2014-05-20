@@ -5,6 +5,27 @@
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
 <head>
   <link href='http://fonts.googleapis.com/css?family=Pathway+Gothic+One' rel='stylesheet' type='text/css'>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+	$(function(){
+		$('li')
+			.css('pointer','default')
+			.css('list-style-image','none');
+		$('li:has(ul)')
+			.click(function(event){
+				if (this == event.target) {
+					$(this).css('list-style-image',
+						(!$(this).children().is(':hidden')) ? 'url(plusbox.gif)' : 'url(minusbox.gif)');
+					$(this).children().toggle('slow');
+				}
+				return false;
+			})
+			.css({cursor:'pointer', 'list-style-image':'url(plusbox.gif)'})
+			.children().hide();
+		$('li:not(:has(ul))').css({cursor:'default', 'list-style-image':'none'});
+	});
+</script>
 
 
 	<!-- Basic Page Needs
@@ -48,7 +69,8 @@
         <li id="menu-item-3"><a href="#skills">Skills</a></li>
         <li id="menu-item-4"><a href="../assets/resume" target="blank">Resume</a></li>
         <li id="menu-item-5"><a href="#projects">Projects</a></li>
-        <li id="menu-item-6"><a href="#trivia">Relevant Trivia</a></li>
+        <li id="menu-item-6"><a href="#trivia">Relevant.Trivia</a></li>
+        <li id="menu-item-7"><a href="#contact">Contact</a></li>
       </ul>
     </nav>
   </div>
@@ -76,21 +98,27 @@
     </div>
     <div class="offset-by-three eleven columns">
       <h3 id="skills">My.Skills</h3>
-      <p>Front.End</p>
-      <div>
-        <ul>Javascript</ul>
-        <ul>jQuery</ul>
-        <ul>AJAX</ul>
-        <ul>Backbone</ul>
-      </div>
-      <p>Back.End</p>
-      <ul>
-        <li>Ruby</li>
-        <li>Rails</li>
-        <li>rSpec</li>
-      </ul>
 
+      <ul>
+        <li>Front.End
+          <ul>
+            <li>Javascript</li>
+            <li>jQuery</li>
+            <li>AJAX</li>
+            <li>Backbone</li>
+          </ul>
+        </li>
+        <li>
+          Back.End
+          <ul>
+            <li>Ruby</li>
+            <li>Rails</li>
+            <li>rSpec</li>
+          </ul>
+        </li>
+      </ul>
     </div>
+
 
     <div class="offset-by-three eleven columns">
       <h3 id="trivia">Relevant Trivia</h3>
@@ -103,7 +131,7 @@
       <hr />
     </div>
     <div class="offset-by-three eleven columns">
-			<h3>Contact</h3>
+			<h3 id="contact">Contact</h3>
       <p><a href="http://github.com/crywolfe"> github</a></p>
       <p></p>
 			<p><a href="mailto:geraldlwolfe&#64;gmail.com">email</a></p>
