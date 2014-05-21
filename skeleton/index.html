@@ -29,6 +29,7 @@
     $('#version-1').hide();
     $('#version-2').hide();
     $('.version-3').hide();
+    $('.ptrivia').hide();
 
     $('#about').click(function() {
       $('#headshot').slideToggle('slow', 'linear', function() {
@@ -48,6 +49,11 @@
       $('.version-3').slideToggle('slow', 'swing', function() {
       });
     });
+    $('#trivia').click(function() {
+      $('.ptrivia').slideToggle('slow', 'swing', function() {
+      });
+    });
+
 });
 
 </script>
@@ -155,8 +161,8 @@
 
     <div class="offset-by-two thirteen columns">
       <h3 id="trivia">Relevant.Trivia</h3>
-      <p>I am an endurance athlete typically finishing in the top 10% of my age group.  Endurance athletics has trained me to be patient and enjoy the small incremental successes.</p>
-      <p>I know what it means to plan a project for the long term.</p>
+      <p class="ptrivia">I am an endurance athlete typically finishing in the top 10% of my age group.  Endurance athletics has trained me to be patient and enjoy the small incremental successes.</p>
+      <p class="ptrivia">I know what it means to plan a project for the long term.</p>
     <hr />
     </div>
     <div class="offset-by-two thirteen columns">
