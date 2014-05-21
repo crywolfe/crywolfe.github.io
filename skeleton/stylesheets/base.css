@@ -62,6 +62,18 @@
 			z-index: 10;
 		}
 
+		#about:hover {
+			color: #7995ae;
+			cursor: pointer;
+
+		}
+		h4:hover {
+			color: #7995ae;
+			cursor: pointer;
+
+		}
+
+
 
 	body {
 		line-height: 1;

@@ -24,7 +24,30 @@
 			.css({cursor:'pointer', 'list-style-image':'url(plusbox.gif)'})
 			.children().hide();
 		$('li:not(:has(ul))').css({cursor:'default', 'list-style-image':'none'});
-	});
+    $('#headshot').hide();
+    $('#version-0').hide();
+    $('#version-1').hide();
+    $('#version-2').hide();
+    $('.version-3').hide();
+
+    $('h3').click(function() {
+      $('#headshot').slideToggle('slow', 'linear', function() {
+      });
+    });
+    $('#h4-version-1').click(function() {
+      $('#version-1').slideToggle('slow', 'swing', function() {
+      });
+    });
+    $('#h4-version-2').click(function() {
+      $('#version-2').slideToggle('slow', 'swing', function() {
+      });
+    });
+    $('#h4-version-3').click(function() {
+      $('.version-3').slideToggle('slow', 'swing', function() {
+      });
+    });
+});
+
 </script>
 
 
@@ -76,24 +99,31 @@
   </div>
 
 	<div class="container">
-		<div class="fourteen columns">
+		<div class="offset-by-one fourteen columns">
 			<h1 class="remove-bottom" style="margin-top: 40px">Gerald.Wolfe</h1>
 			<h5>Version 3.0</h5>
       <h4>Full.Stack.Web.Developer</h4>
 			<hr />
 		</div>
 
-    <div class="three columns">
+    <div class="offset-by-one three columns">
       <img class="scale-with-grid" id="headshot" alt="Gerald Wolfe" src="assets/headshot.jpg">
 
     </div>
 
-    <div class="eleven columns">
+    <div class="offset-by-one fourteen columns">
 			<h3 id="about">About.Me</h3>
-      <p>I am now on version 3.0 of my life.  Version 1.0 was a very creative time in my life.  Version 2.0 was a productive time.  Version 3.0 combines creativity and productivity using web development as my career of choice.</p>
-      <p>I am a full stack web developer.  I tinker with all things technology.</p>
-			<p>With that in mind, on this site you can view my portfolio, interests, and learn a little bit more about me.</p>
-      <p>I am an ENTJ.  Personality tests are important to provide insight to determine if there would be a personality fit within an organization.</p>
+      <p id="version-0">I am now on version 3.0 of my life.  </p>
+      <h4 id="h4-version-1">Version 1.0</h4>
+      <p id="version-1">Version 1.0 was a very creative time in my life.  During that time, I performed as a stand-up comedian.  I became an independent joke writer for the Tonight Show with Jay Leno.  I played the piano.  I emceed and performed at the Comedy Store which would also include playing the piano.  Those were fun and creative moments in my life.</p>
+      <h4 id="h4-version-2">Version 2.0</h4>
+      <p id="version-2">Version 2.0 was a productive time.  I got married.  I built several businesses.  I traveled extensively.</p>
+      <h4 id="h4-version-3">Version 3.0</h4>
+      <p class="version-3">Version 3.0 will combine my creativity and productivity using web and software development as my career of choice.</p>
+
+      <p class="version-3">I am a full stack web developer.  Learning new technologies makes me tick.  I tinker with technology.  I build with technology.  Is there any greater technological development tool than the keyboard?  The keyboard allows me to express.</p>
+			<p class="version-3">With that in mind, on this site you can view my portfolio, interests, and learn a little bit more about me.</p>
+      <p class="version-3">I am an ENTJ.  Personality tests are important to provide insight to determine if there would be a personality fit within an organization.</p>
 		  <hr />
     </div>
     <div class="offset-by-three eleven columns">
