@@ -4,53 +4,56 @@
 <!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
 <head>
-  <link href='http://fonts.googleapis.com/css?family=Pathway+Gothic+One' rel='stylesheet' type='text/css'>
+
+  <!-- <link href='http://fonts.googleapis.com/css?family=Pathway+Gothic+One' rel='stylesheet' type='text/css'> -->
+  
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" type="text/css" charset="utf-8" />
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 <script type="text/javascript">
-	$(function(){
-		$('li')
-			.css('pointer','default')
-			.css('list-style-image','none');
-		$('li:has(ul)')
-			.click(function(event){
-				if (this == event.target) {
-					$(this).css('list-style-image',
-						(!$(this).children().is(':hidden')) ? 'url(plusbox.gif)' : 'url(minusbox.gif)');
-					$(this).children().toggle('slow');
-				}
-				return false;
-			})
-			.css({cursor:'pointer', 'list-style-image':'url(plusbox.gif)'})
-			.children().hide();
-		$('li:not(:has(ul))').css({cursor:'default', 'list-style-image':'none'});
-    $('#headshot').hide();
-    $('#version-0').hide();
-    $('#version-1').hide();
-    $('#version-2').hide();
-    $('.version-3').hide();
-    $('.ptrivia').hide();
+  \\\\\\$(function(){
+    \\\\\\$('li')
+      .css('pointer','default')
+      .css('list-style-image','none');
+    \\\\\\$('li:has(ul)')
+      .click(function(event){
+        if (this == event.target) {
+          \\\\\\$(this).css('list-style-image',
+            (!\\\\\\$(this).children().is(':hidden')) ? 'url(plusbox.gif)' : 'url(minusbox.gif)');
+          \\\\\\$(this).children().toggle('slow');
+        }
+        return false;
+      })
+      .css({cursor:'pointer', 'list-style-image':'url(plusbox.gif)'})
+      .children().hide();
+    \\\\\\$('li:not(:has(ul))').css({cursor:'default', 'list-style-image':'none'});
+    \\\\\\$('#headshot').hide();
+    \\\\\\$('#version-0').hide();
+    \\\\\\$('#version-1').hide();
+    \\\\\\$('#version-2').hide();
+    \\\\\\$('.version-3').hide();
+    \\\\\\$('.ptrivia').hide();
 
-    $('#about').click(function() {
-      $('#headshot').slideToggle('slow', 'linear', function() {
+    \\\\\\$('#about').click(function() {
+      \\\\\\$('#headshot').slideToggle('slow', 'linear', function() {
       });
-      $('#version-0').slideToggle('slow', 'linear', function() {
-      });
-    });
-    $('#h4-version-1').click(function() {
-      $('#version-1').slideToggle('slow', 'swing', function() {
+      \\\\\\$('#version-0').slideToggle('slow', 'linear', function() {
       });
     });
-    $('#h4-version-2').click(function() {
-      $('#version-2').slideToggle('slow', 'swing', function() {
+    \\\\\\$('#h4-version-1').click(function() {
+      \\\\\\$('#version-1').slideToggle('slow', 'swing', function() {
       });
     });
-    $('#h4-version-3').click(function() {
-      $('.version-3').slideToggle('slow', 'swing', function() {
+    \\\\\\$('#h4-version-2').click(function() {
+      \\\\\\$('#version-2').slideToggle('slow', 'swing', function() {
       });
     });
-    $('#trivia').click(function() {
-      $('.ptrivia').slideToggle('slow', 'swing', function() {
+    \\\\\\$('#h4-version-3').click(function() {
+      \\\\\\$('.version-3').slideToggle('slow', 'swing', function() {
+      });
+    });
+    \\\\\\$('#trivia').click(function() {
+      \\\\\\$('.ptrivia').slideToggle('slow', 'swing', function() {
       });
     });
 
@@ -59,33 +62,33 @@
 </script>
 
 
-	<!-- Basic Page Needs
-  ================================================== -->
-	<meta charset="utf-8">
-	<title>Gerald.Wolfe</title>
-	<meta name="description" content="">
-	<meta name="author" content="">
+  Basic Page Needs
+  ==================================================
+  <meta charset="utf-8">
+  <title>Gerald.Wolfe</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
 
-	<!-- Mobile Specific Metas
-  ================================================== -->
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  Mobile Specific Metas
+  ==================================================
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-	<!-- CSS
-  ================================================== -->
-	<link rel="stylesheet" href="stylesheets/base.css">
-	<link rel="stylesheet" href="stylesheets/skeleton.css">
-	<link rel="stylesheet" href="stylesheets/layout.css">
+  CSS
+  ==================================================
+  <link rel="stylesheet" href="stylesheets/base.css">
+  <link rel="stylesheet" href="stylesheets/skeleton.css">
+  <link rel="stylesheet" href="stylesheets/layout.css">
 
-	<!--[if lt IE 9]>
-		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
+  [if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]
 
-	<!-- Favicons
-	================================================== -->
-	<link rel="shortcut icon" href="images/favicon.ico">
-	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-	<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  Favicons
+  ==================================================
+  <link rel="shortcut icon" href="images/favicon.ico">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
 
 </head>
 <body id="top">
