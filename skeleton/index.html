@@ -6,24 +6,35 @@
 <head>
   <link href='http://fonts.googleapis.com/css?family=Pathway+Gothic+One' rel='stylesheet' type='text/css'>
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script type="text/javascript">
 
-<script type="text/javascript">
-	$(function(){
-		$('li')
-			.css('pointer','default')
-			.css('list-style-image','none');
-		$('li:has(ul)')
-			.click(function(event){
-				if (this == event.target) {
-					$(this).css('list-style-image',
-						(!$(this).children().is(':hidden')) ? 'url(plusbox.gif)' : 'url(minusbox.gif)');
-					$(this).children().toggle('slow');
-				}
-				return false;
-			})
-			.css({cursor:'pointer', 'list-style-image':'url(plusbox.gif)'})
-			.children().hide();
-		$('li:not(:has(ul))').css({cursor:'default', 'list-style-image':'none'});
+  $(function(){
+
+    $(window).scroll(function() {
+
+      if ($(this).scrollTop() > 40) {
+        $('nav').slideDown(200);
+      } else {
+        $('nav').slideUp(200);
+      }
+    });
+
+
+    $('li')
+      .css('pointer','default')
+      .css('list-style-image','none');
+    $('li:has(ul)')
+      .click(function(event){
+        if (this == event.target) {
+          $(this).css('list-style-image',
+            (!$(this).children().is(':hidden')) ? 'url(plusbox.gif)' : 'url(minusbox.gif)');
+          $(this).children().toggle('slow');
+        }
+        return false;
+      })
+      .css({cursor:'pointer', 'list-style-image':'url(plusbox.gif)'})
+      .children().hide();
+    $('li:not(:has(ul))').css({cursor:'default', 'list-style-image':'none'});
     $('#headshot').hide();
     $('#version-0').hide();
     $('#version-1').hide();
@@ -54,17 +65,17 @@
       });
     });
 
-});
+  });
 
-</script>
+  </script>
 
 
 	<!-- Basic Page Needs
   ================================================== -->
 	<meta charset="utf-8">
 	<title>Gerald.Wolfe</title>
-	<meta name="description" content="">
-	<meta name="author" content="">
+	<meta name="description" content="Gerald Wolfe Profile">
+	<meta name="author" content="Gerald Wolfe">
 
 	<!-- Mobile Specific Metas
   ================================================== -->
