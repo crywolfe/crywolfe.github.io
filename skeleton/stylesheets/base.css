@@ -29,7 +29,8 @@
 		padding: 0;
 		border: 0;
 		font-size: 40px;
-		font-family: 'Pathway Gothic One', sans-serif;
+		/* font-family: 'Pathway Gothic One', sans-serif; */
+		font-family: 'texgyreadventorregular', sans-serif;
 		font: inherit;
 		vertical-align: baseline; }
 	article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
@@ -73,6 +74,12 @@
 
 		}
 
+		h3:hover {
+			color: #7995ae;
+			cursor: pointer;
+
+		}
+
 
 
 	body {
@@ -96,7 +103,7 @@
 ================================================== */
 	body {
 		background: #fbfbfb;
-		font-family: 'Pathway Gothic One', sans-serif;
+		font-family: 'texgyreadventorregular', sans-serif;
 		/*font: 14px/21px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;*/
 		color: #444;
 		-webkit-font-smoothing: antialiased; /* Fix for webkit rendering */
@@ -108,7 +115,7 @@
 ================================================== */
 	h1, h2, h3, h4, h5, h6 {
 		color: #181818;
-		font-family: 'Pathway Gothic One', sans-serif;
+		font-family: 'texgyreadventorregular', sans-serif;
 		font-weight: normal; }
 	h1 a, h2 a, h3 a, h4 a, h5 a, h6 a { font-weight: inherit; }
 	h1 { font-size: 46px; line-height: 50px; margin-bottom: 14px;}

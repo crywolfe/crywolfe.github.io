@@ -4,7 +4,10 @@
 <!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
 <head>
-  <link href='http://fonts.googleapis.com/css?family=Pathway+Gothic+One' rel='stylesheet' type='text/css'>
+
+  <!-- <link href='http://fonts.googleapis.com/css?family=Pathway+Gothic+One' rel='stylesheet' type='text/css'> -->
+
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" type="text/css" charset="utf-8" />
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script type="text/javascript">
 
@@ -34,12 +37,19 @@
       .css({cursor:'pointer', 'list-style-image':'url(plusbox.gif)'})
       .children().hide();
     $('li:not(:has(ul))').css({cursor:'default', 'list-style-image':'none'});
+
+    $('.full-stack').hide();
     $('#headshot').hide();
     $('#version-0').hide();
     $('#version-1').hide();
     $('#version-2').hide();
     $('.version-3').hide();
     $('.ptrivia').hide();
+
+    $('#full').click(function() {
+      $('.full-stack').slideToggle('slow', 'linear', function() {
+      });
+    });
 
     $('#about').click(function() {
       $('#headshot').slideToggle('slow', 'linear', function() {
@@ -69,33 +79,33 @@
   </script>
 
 
-	<!-- Basic Page Needs
+  <!--Basic Page Needs
   ================================================== -->
 	<meta charset="utf-8">
 	<title>Gerald.Wolfe</title>
 	<meta name="description" content="Gerald Wolfe Profile">
 	<meta name="author" content="Gerald Wolfe">
 
-	<!-- Mobile Specific Metas
+  <!--Mobile Specific Metas
   ================================================== -->
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-	<!-- CSS
+  <!--CSS
   ================================================== -->
-	<link rel="stylesheet" href="stylesheets/base.css">
-	<link rel="stylesheet" href="stylesheets/skeleton.css">
-	<link rel="stylesheet" href="stylesheets/layout.css">
+  <link rel="stylesheet" href="stylesheets/base.css">
+  <link rel="stylesheet" href="stylesheets/skeleton.css">
+  <link rel="stylesheet" href="stylesheets/layout.css">
 
-	<!--[if lt IE 9]>
-		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
+  <!-- [if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
 
-	<!-- Favicons
-	================================================== -->
-	<link rel="shortcut icon" href="images/favicon.ico">
-	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-	<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+<!--  Favicons
+  ================================================== -->
+  <link rel="shortcut icon" href="images/favicon.ico">
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
 
 </head>
 <body id="top">
@@ -120,7 +130,10 @@
 		<div class="offset-by-two thirteen columns">
 			<h1 class="remove-bottom" style="margin-top: 40px">Gerald.Wolfe</h1>
 			<h5>Version 3.0</h5>
-      <h4>Full.Stack.Web.Developer</h4>
+      <h4 id="full">Full.Stack.Web.Developer</h4>
+      <p class="full-stack">I am known by two names.</p>
+      <p class="full-stack">(1)  The "empathetic coder".</p>
+      <p class="full-stack">(2)  The "binding.pry" of my coding community.</p>
 			<hr />
 		</div>
 
@@ -149,7 +162,7 @@
 
       <ul>
         <li>Front.End
-          <ul>
+          <ul id="front-end">
             <li>HTML5/CSS3</li>
             <li>Javascript</li>
             <li>jQuery</li>
@@ -159,7 +172,7 @@
         </li>
         <li>
           Back.End
-          <ul>
+          <ul id="back-end">
             <li>Ruby</li>
             <li>Rails</li>
             <li>rSpec</li>
