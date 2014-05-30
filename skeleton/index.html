@@ -9,18 +9,36 @@
 
   <link rel="stylesheet" href="../stylesheets/stylesheet.css" type="text/css" charset="utf-8" />
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="../skeleton/assets/tooltip.js" type="text/javascript"></script>
+
+  </script>
+
   <script type="text/javascript">
 
   $(function(){
 
-    $(window).scroll(function() {
+    if ($(window).width() < 787) {
+      $('nav').css('height: 130px;');
 
-      if ($(this).scrollTop() > 40) {
-        $('nav').slideDown(200);
-      } else {
-        $('nav').slideUp(200);
-      }
-    });
+      $(window).scroll(function() {
+
+        if ($(this).scrollTop() > 90) {
+          $('nav').slideDown(200);
+        } else {
+          $('nav').slideUp(200);
+        }
+      });
+    } else {
+      $(window).scroll(function() {
+
+        if ($(this).scrollTop() > 40) {
+          $('nav').slideDown(200);
+        } else {
+          $('nav').slideUp(200);
+        }
+      });
+    }
+
 
     $('li')
       .css('pointer','default')
@@ -45,6 +63,7 @@
     $('#version-2').hide();
     $('.version-3').hide();
     $('.ptrivia').hide();
+    $('.skills').hide();
 
     $('#full').click(function() {
       $('.full-stack').slideToggle('slow', 'linear', function() {
@@ -71,6 +90,10 @@
     });
     $('#trivia').click(function() {
       $('.ptrivia').slideToggle('slow', 'swing', function() {
+      });
+    });
+    $('#skills').click(function() {
+      $('.skills').slideToggle('slow', 'swing', function() {
       });
     });
 
@@ -116,7 +139,7 @@
     <nav>
       <ul id="menu">
         <li id="menu-item-1"><a href="#top">Welcome</a></li>
-        <li id="menu-item-2"><a href="#about">About</a></li>
+        <li id="menu-item-2"><a href="#about">About.Me</a></li>
         <li id="menu-item-3"><a href="#skills">Skills</a></li>
         <li id="menu-item-4"><a href="../assets/resume" target="blank">Resume</a></li>
         <li id="menu-item-5"><a href="#projects">Projects</a></li>
@@ -143,25 +166,26 @@
     </div>
 
     <div class="offset-by-two thirteen columns">
+
 			<h3 id="about">About.Me</h3>
       <p id="version-0">I am now on version 3.0 of my life.  </p>
       <h4 id="h4-version-1">Version 1.0</h4>
-      <p id="version-1">Version 1.0 was a very creative time in my life.  During that time, I performed as a stand-up comedian.  I became an independent joke writer for the Tonight Show with Jay Leno.  I played the piano.  I emceed and performed at the Comedy Store which would also include playing the piano.  Those were fun and creative moments in my life.</p>
+      <p id="version-1">Version 1.0 was a very creative time in my life.  During that time, I performed as a stand-up comedian.  I became an independent joke writer for the Tonight Show with Jay Leno.  I played the piano.  I emceed and performed at the Comedy Store which would also included playing the piano.  Those were fun and creative times in my life.</p>
       <h4 id="h4-version-2">Version 2.0</h4>
-      <p id="version-2">Version 2.0 was a productive time.  I got married.  I built several businesses.  I traveled extensively.</p>
+      <p id="version-2">Version 2.0 was a productive time.  I got married.  I built several successful businesses.  I traveled extensively.</p>
       <h4 id="h4-version-3">Version 3.0</h4>
       <p class="version-3">Version 3.0 will combine my creativity and productivity using web and software development as my career of choice.</p>
 
-      <p class="version-3">I am a full stack web developer.  Learning new technologies makes me tick.  I tinker with technology.  I build with technology.  Is there any greater technological development tool than the keyboard?  The keyboard allows me to express.</p>
-			<p class="version-3">With that in mind, on this site you can view my portfolio, interests, and learn a little bit more about me.</p>
-      <p class="version-3">I am an ENTJ.  Personality tests are important to provide insight to determine if there would be a personality fit within an organization.</p>
+      <p class="version-3">I am a full stack web developer.  Learning new technologies makes me tick.  I tinker with technology.  I build with technology.  Is there any greater technological development tool than the keyboard?  The keyboard gives me creative and logical expression.</p>
+			<p class="version-3">With that in mind, on this site you can view my portfolio, interests, and learn a little bit more about me.  Enjoy your day!</p>
+      <!-- <p class="version-3">I am an ENTJ.  Personality tests are important to provide insight to determine if there would be a personality fit within an organization.</p> -->
 		  <hr />
     </div>
     <div class="offset-by-two thirteen columns">
       <h3 id="skills">My.Skills</h3>
 
       <ul>
-        <li>Front.End
+        <li class="skills">Front.End
           <ul id="front-end">
             <li>HTML5/CSS3</li>
             <li>Javascript</li>
@@ -170,12 +194,13 @@
             <li>Backbone</li>
           </ul>
         </li>
-        <li>
+        <li class="skills">
           Back.End
           <ul id="back-end">
             <li>Ruby</li>
             <li>Rails</li>
             <li>rSpec</li>
+            <li>Node</li>
           </ul>
         </li>
       </ul>
@@ -186,6 +211,8 @@
       <h3 id="trivia">Relevant.Trivia</h3>
       <p class="ptrivia">I am an endurance athlete typically finishing in the top 10% of my age group.  Endurance athletics has trained me to be patient and enjoy the small incremental successes.</p>
       <p class="ptrivia">I know what it means to plan a project for the long term.</p>
+      <p class="ptrivia">I am an <a href="" title="ENTJs are natural born leaders. They live in a world of possibilities where they see all sorts challenges to be surmounted, and they want to be the ones responsible for surmounting them. They have a drive for leadership, which is well-served by their quickness to grasp complexities, their ability to absorb a large amount of impersonal information, and their quick and decisive judgments. They are 'take charge' people." class="tooltip"><span>ENTJ</span></a> personality type.</p>
+
     <hr />
     </div>
     <div class="offset-by-two thirteen columns">

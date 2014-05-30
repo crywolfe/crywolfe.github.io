@@ -335,13 +335,13 @@
 	.add-bottom { margin-bottom: 20px !important; }
 
 
-
-/* headroom */
-.headroom--pinned {
-	display: block;
-
-}
-
-.headroom--unpinned {
-	display: none;
-}
+#tooltip{
+	position:absolute;
+	margin-right: 20%;
+	/*border:1px solid #333;*/
+	border-radius: 15px;
+	background: #dfdfdf;
+	padding:2px 5px;
+	color:#000000;
+	display:none;
+	}
