@@ -23,6 +23,21 @@
 /* #Media Queries
 ================================================== */
 
+
+	/* Smaller than standard 1400 (devices and browsers) */
+	@media only screen and (min-width: 959px) and (max-width: 1186px) {}
+
+		nav {
+			text-align: center;
+			background: #e51616;
+			height: 90px;
+			position: fixed;
+			width: 100%;
+			z-index: 1;
+			line-height: 2.5;
+		}
+
+
 	/* Smaller than standard 960 (devices and browsers) */
 	@media only screen and (max-width: 959px) {}
 
