@@ -25,44 +25,24 @@
 
 
 	/* Smaller than standard 1400 (devices and browsers) */
-	@media only screen and (min-width: 959px) and (max-width: 1186px) {}
+	@media only screen and (min-width: 632px) and (max-width: 1186px) {
 
 		nav {
 			text-align: center;
-			background: #e51616;
+			background: #EFEFEF;
 			height: 90px;
 			position: fixed;
 			width: 100%;
 			z-index: 1;
 			line-height: 2.5;
 		}
-
-
-	/* Smaller than standard 960 (devices and browsers) */
-	@media only screen and (max-width: 959px) {}
-
-	/* Tablet Portrait size to standard 960 (devices and browsers) */
-	@media only screen and (min-width: 808px) and (max-width: 959px) {}
-
-	/* All Mobile Sizes (devices and browser) */
-	@media only screen and (max-width: 807px) {
-		nav {
-			text-align: center;
-			background: #e51616;
-			height: 90px;
-			position: fixed;
-			width: 100%;
-			z-index: 1;
-			line-height: 2.5;
-		}
-
 	}
 
 	/* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
-	@media only screen and (min-width: 480px) and (max-width: 907px) {
+	@media only screen and (min-width: 453px) and (max-width: 630px) {
 		nav {
 			text-align: center;
-			background: #06d3e2;
+			background: #EFEFEF;
 			height: 130px;
 			position: fixed;
 			width: 100%;
@@ -78,30 +58,6 @@
 		}
 		h3 { font-size: 30px; line-height: 36px; margin-bottom: 8px;
 			padding-top: 95px;
-
-	}
-
-	/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
-	@media only screen and (max-width: 479px) {
-		nav {
-			text-align: center;
-			background: #d90f0f;
-			height: 170px;
-			position: fixed;
-			width: 100%;
-			z-index: 1;
-			line-height: 2.5;
-		}
-
-		img.scale-with-grid {
-			max-width: 80%;
-			height: auto;
-			border: 1px solid #7995ae;
-			border-radius: 15%;
-		}
-
-		li {
-			font-size: 15px;
 		}
 
 	}
@@ -110,7 +66,7 @@
 	@media only screen and (max-width: 452px) {
 		nav {
 			text-align: center;
-			background: #110ed2;
+			background: #EFEFEF;
 			height: 170px;
 			position: fixed;
 			width: 100%;
@@ -125,11 +81,8 @@
 			border-radius: 15%;
 		}
 
-		li {
-			font-size: 15px;
-		}
-
 	}
+
 
 
 /* #Font-Face
