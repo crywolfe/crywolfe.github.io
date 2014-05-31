@@ -30,11 +30,11 @@
 	@media only screen and (min-width: 1187px) and (max-width: 1400px) {}
 
 	/* All Mobile Sizes (devices and browser) */
-	@media only screen and (max-width: 1186px) {
+	@media only screen and (min-width: 630px) and (max-width: 1186px) {
 		nav {
 			text-align: center;
 			background: #EFEFEF;
-			height: 170px;
+			height: 130px;
 			position: fixed;
 			width: 100%;
 			z-index: 1;
