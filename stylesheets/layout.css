@@ -25,7 +25,7 @@
 
 
 	/* Smaller than standard 1400 (devices and browsers) */
-	@media only screen and (min-width: 632px) and (max-width: 1186px) {
+	@media only screen and (min-width: 631px) and (max-width: 1186px) {
 
 		nav {
 			text-align: center;

@@ -15,8 +15,6 @@
   $(function(){
 
     if ($(window).width() > 630 && $(window).width() < 787) {
-      $('nav-bar').css('height: 230px;');
-      $('nav').css('background: #0729a4;');
 
       $(window).scroll(function() {
 
@@ -28,8 +26,6 @@
       });
     }
     if ($(window).width() < 629) {
-      $('nav').css('height: 170px;');
-      $('nav').css('background: #60a505;');
 
       $(window).scroll(function() {
 
@@ -50,23 +46,6 @@
       });
     }
 
-
-    $('li')
-      .css('pointer','default')
-      .css('list-style-image','none');
-    $('li:has(ul)')
-      .click(function(event){
-        if (this == event.target) {
-          $(this).css('list-style-image',
-            (!$(this).children().is(':hidden')) ? 'url(plusbox.gif)' : 'url(minusbox.gif)');
-          $(this).children().toggle('slow');
-        }
-        return false;
-      })
-      .css({cursor:'pointer', 'list-style-image':'url(plusbox.gif)'})
-      .children().hide();
-    $('li:not(:has(ul))').css({cursor:'default', 'list-style-image':'none'});
-
     $('.full-stack').hide();
     $('#headshot').hide();
     $('#version-0').hide();
@@ -76,6 +55,14 @@
     $('.ptrivia').hide();
     $('.skills').hide();
     $('.contact').hide();
+
+    $('.menu-item').click(function(){
+      if ($(window).width() > 453 && $(window).width() < 630) {
+        $('#about').css('padding-top', '130px');
+
+      }
+
+    });
 
     $('#full').click(function() {
       $('.full-stack').slideToggle('slow', 'linear', function() {
@@ -151,29 +138,29 @@
   <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
 </head>
 <body id="top">
-<div class="offset-by-one fourteen columns">
+  <div class="offset-by-one fourteen columns">
 
-<!-- resume popup -->
-  <div id ="openPopup" class="popupDialog">
-    <div>
-    <a href="#close" title="Close" class="close">X</a>
-    <p><img id="resume" src="../assets/resume.png"></p>
+  <!-- resume popup -->
+    <div id ="openPopup" class="popupDialog">
+      <div>
+      <a href="#close" title="Close" class="close">X</a>
+      <p><img id="resume" src="../assets/resume.png"></p>
+      </div>
     </div>
   </div>
-</div>
 
 	<!-- Primary Page Layout
 	================================================== -->
   <div class="nav_bar">
     <nav>
       <ul id="menu">
-        <li id="menu-item-1"><a href="#top">Welcome</a></li>
-        <li id="menu-item-2"><a href="#about">About.Me</a></li>
-        <li id="menu-item-3"><a href="#skills">My.Skills</a></li>
-        <li id="menu-item-4"><a href="#openPopup">My.Resume</a></li>
-        <li id="menu-item-5"><a href="#projects">My.Projects</a></li>
-        <li id="menu-item-6"><a href="#trivia">Relevant.Trivia</a></li>
-        <li id="menu-item-7"><a href="#contact">My.Contact</a></li>
+        <li class="menu-item"><a href="#top">Welcome</a></li>
+        <li class="menu-item"><a href="#about">About.Me</a></li>
+        <li class="menu-item"><a href="#skills">My.Skills</a></li>
+        <li class="menu-item"><a href="#openPopup">My.Resume</a></li>
+        <li class="menu-item"><a href="#projects">My.Projects</a></li>
+        <li class="menu-item"><a href="#trivia">Relevant.Trivia</a></li>
+        <li class="menu-item"><a href="#contact">My.Contact</a></li>
       </ul>
     </nav>
   </div>
