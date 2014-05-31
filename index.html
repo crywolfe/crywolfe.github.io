@@ -14,18 +14,8 @@
 
   $(function(){
 
-    if ($(window).width() > 630 && width() < 787) {
-      $('nav').css('height: 130px;');
 
-      $(window).scroll(function() {
-
-        if ($(this).scrollTop() > 90) {
-          $('nav').slideDown(200);
-        } else {
-          $('nav').slideUp(200);
-        }
-      });
-    } else if ($(window).width() < 629) {
+    if ($(window).width() < 629) {
       $('nav').css('height: 170px;');
 
       $(window).scroll(function() {
