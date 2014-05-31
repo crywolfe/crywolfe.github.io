@@ -24,13 +24,13 @@
 ================================================== */
 
 	/* Smaller than standard 960 (devices and browsers) */
-	@media only screen and (max-width: 959px) {}
+	@media only screen and (max-width: 1400) {}
 
 	/* Tablet Portrait size to standard 960 (devices and browsers) */
-	@media only screen and (min-width: 808px) and (max-width: 959px) {}
+	@media only screen and (min-width: 1187px) and (max-width: 1400) {}
 
 	/* All Mobile Sizes (devices and browser) */
-	@media only screen and (max-width: 807px) {
+	@media only screen and (max-width: 1186px) {
 		nav {
 			text-align: center;
 			background: #EFEFEF;
@@ -44,7 +44,7 @@
 	}
 
 	/* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
-	@media only screen and (min-width: 480px) and (max-width: 807px) {
+	@media only screen and (min-width: 630px) and (max-width: 1186px) {
 		nav {
 			text-align: center;
 			background: #EFEFEF;

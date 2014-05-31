@@ -7,7 +7,7 @@
 
   <!-- <link href='http://fonts.googleapis.com/css?family=Pathway+Gothic+One' rel='stylesheet' type='text/css'> -->
 
-  <link rel="stylesheet" href="../stylesheet.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../stylesheets/stylesheet.css" type="text/css" charset="utf-8" />
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script src="../assets/tooltip.js" type="text/javascript"></script>
 
@@ -64,18 +64,23 @@
     $('.version-3').hide();
     $('.ptrivia').hide();
     $('.skills').hide();
+    $('.contact').hide();
 
     $('#full').click(function() {
       $('.full-stack').slideToggle('slow', 'linear', function() {
       });
     });
 
-    $('#about').click(function() {
+    $('#see').click(function() {
       $('#headshot').slideToggle('slow', 'linear', function() {
       });
+
+    });
+    $('#about').click(function() {
       $('#version-0').slideToggle('slow', 'linear', function() {
       });
     });
+
     $('#h4-version-1').click(function() {
       $('#version-1').slideToggle('slow', 'swing', function() {
       });
@@ -94,6 +99,10 @@
     });
     $('#skills').click(function() {
       $('.skills').slideToggle('slow', 'swing', function() {
+      });
+    });
+    $('#contact').click(function() {
+      $('.contact').slideToggle('slow', 'swing', function() {
       });
     });
 
@@ -129,12 +138,12 @@
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
   <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
   <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
-
 </head>
 <body id="top">
 <div class="offset-by-one fourteen columns">
 
-  <div id ="openModal" class="modalDialog">
+<!-- resume popup -->
+  <div id ="openPopup" class="popupDialog">
     <div>
     <a href="#close" title="Close" class="close">X</a>
     <p><img id="resume" src="../assets/resume.png"></p>
@@ -149,23 +158,22 @@
       <ul id="menu">
         <li id="menu-item-1"><a href="#top">Welcome</a></li>
         <li id="menu-item-2"><a href="#about">About.Me</a></li>
-        <li id="menu-item-3"><a href="#skills">Skills</a></li>
-        <li id="menu-item-4"><a href="#openModal">Resume</a></li>
-        <li id="menu-item-5"><a href="#projects">Projects</a></li>
+        <li id="menu-item-3"><a href="#skills">My.Skills</a></li>
+        <li id="menu-item-4"><a href="#openPopup">My.Resume</a></li>
+        <li id="menu-item-5"><a href="#projects">My.Projects</a></li>
         <li id="menu-item-6"><a href="#trivia">Relevant.Trivia</a></li>
-        <li id="menu-item-7"><a href="#contact">Contact</a></li>
+        <li id="menu-item-7"><a href="#contact">My.Contact</a></li>
       </ul>
     </nav>
   </div>
 
 	<div class="container">
 
-
 		<div class="offset-by-two thirteen columns">
 			<h1 class="remove-bottom" style="margin-top: 40px">Gerald.Wolfe</h1>
 			<h5>Version 3.0</h5>
       <h4 id="full">Full.Stack.Web.Developer</h4>
-      <p class="full-stack">As a full stack web developer, I am known by two names.</p>
+      <p class="full-stack">As a full stack web developer, I am known by two phrases.</p>
       <p class="full-stack">(1)  The "empathetic coder".</p>
       <p class="full-stack">(2)  The "binding.pry" of my coding community.</p>
 			<hr />
@@ -176,25 +184,18 @@
 
     </div>
 
-
-
     <div class="offset-by-two thirteen columns">
-
-
-
-
-			<h3 id="about">See.Me</h3>
-      <p id="version-0">I am now on version 3.0 of my life.  </p>
+      <h3 id="about">About.Me</h3>
+      <p id="version-0">I am now on version 3.0 of my life.  I believe life is an outward and inward adventure!</p>
       <h4 id="h4-version-1">Version 1.0</h4>
       <p id="version-1">Version 1.0 was a very creative time in my life.  During that time, I performed as a stand-up comedian.  I became an independent joke writer for the Tonight Show with Jay Leno.  I played the piano.  I emceed and performed at the Comedy Store which would also included playing the piano.  Those were fun and creative times in my life.</p>
       <h4 id="h4-version-2">Version 2.0</h4>
-      <p id="version-2">Version 2.0 was a productive time.  I got married.  I built several successful businesses.  I traveled extensively.</p>
+      <p id="version-2">Version 2.0 was a productive time for me.  I got married.  I built several successful businesses.  I traveled extensively.</p>
       <h4 id="h4-version-3">Version 3.0</h4>
-      <p class="version-3">Version 3.0 will combine my creativity and productivity using web and software development as my career of choice.</p>
-
+      <p class="version-3">Version 3.0 is now!  I am combining my creativity and productivity using web and software development as my career of choice.</p>
       <p class="version-3">I am a full stack web developer.  Learning new technologies makes me tick.  I tinker with technology.  I build with technology.  Is there any greater technological development tool than the keyboard?  The keyboard gives me creative and logical expression.</p>
-			<p class="version-3">With that in mind, on this site you can view my portfolio, interests, and learn a little bit more about me.  Enjoy your day!</p>
-      <!-- <p class="version-3">I am an ENTJ.  Personality tests are important to provide insight to determine if there would be a personality fit within an organization.</p> -->
+			<p class="version-3">With that in mind, on this site you can view my portfolio, my interests, and learn a little bit more about me, including relevant trivia.  Enjoy your day!</p>
+			<h4 id="see">See.Me</h4>
 		  <hr />
     </div>
     <div class="offset-by-two thirteen columns">
@@ -204,7 +205,7 @@
         <li class="skills">Front.End
           <ul id="front-end">
             <li>HTML5/CSS3</li>
-            <li>Javascript</li>
+            <li>JavaScript</li>
             <li>jQuery</li>
             <li>AJAX</li>
             <li>Backbone</li>
@@ -215,7 +216,6 @@
           <ul id="back-end">
             <li>Ruby</li>
             <li>Rails</li>
-            <li>rSpec</li>
             <li>Node</li>
           </ul>
         </li>
@@ -226,21 +226,22 @@
     <div class="offset-by-two thirteen columns">
       <h3 id="trivia">Relevant.Trivia</h3>
       <p class="ptrivia">I am an endurance athlete typically finishing in the top 10% of my age group.  Endurance athletics has trained me to be patient and enjoy the small incremental successes.</p>
-      <p class="ptrivia">I know what it means to plan a project for the long term.</p>
+      <p class="ptrivia">Based in part on my endurance athletics, I am committed to long term planning.  Great work is not accomplished overnight.  Great work require long term commitment.</p>
+      <p class="ptrivia">My most recent favorite quote is .</p>
+
       <p class="ptrivia">I am an <a href="" title="ENTJs are natural born leaders. They live in a world of possibilities where they see all sorts challenges to be surmounted, and they want to be the ones responsible for surmounting them. They have a drive for leadership, which is well-served by their quickness to grasp complexities, their ability to absorb a large amount of impersonal information, and their quick and decisive judgments. They are 'take charge' people." class="tooltip"><span>ENTJ</span></a> personality type.</p>
 
     <hr />
     </div>
     <div class="offset-by-two thirteen columns">
-      <h3 id="projects">Projects</h3>
+      <h3 id="projects">My.Projects</h3>
       <p>PLACEHOLDER FOR MY PROJECTS.</p>
       <hr />
     </div>
     <div class="offset-by-two thirteen columns">
-			<h3 id="contact">Contact</h3>
-      <p><a href="http://github.com/crywolfe"> github</a></p>
-      <p></p>
-			<p><a href="mailto:geraldlwolfe&#64;gmail.com">email</a></p>
+			<h3 id="contact">My.Contact</h3>
+      <p class="contact"><a href="http://github.com/crywolfe"> github</a></p>
+			<p class="contact"><a href="mailto:geraldlwolfe&#64;gmail.com">email</a></p>
       <hr />
 		</div>
 
