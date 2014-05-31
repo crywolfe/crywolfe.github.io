@@ -70,7 +70,7 @@
 	@media only screen and (min-width: 453px) and (max-width: 629px) {
 		nav {
 			text-align: center;
-			background: #EFEFEF;
+			background: #d90f0f;
 			height: 130px;
 			position: fixed;
 			width: 100%;
@@ -91,7 +91,7 @@
 	@media only screen and (max-width: 452px) {
 		nav {
 			text-align: center;
-			background: #EFEFEF;
+			background: #110ed2;
 			height: 170px;
 			position: fixed;
 			width: 100%;
