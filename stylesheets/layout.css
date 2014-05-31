@@ -85,6 +85,10 @@
 			border-radius: 15%;
 		}
 
+		li {
+			font-size: 15px;
+		}
+
 	}
 
 	/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
