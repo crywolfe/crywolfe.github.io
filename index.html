@@ -15,7 +15,7 @@
   $(function(){
 
     if ($(window).width() > 630 && $(window).width() < 787) {
-      $('nav').css('height: 230px;');
+      $('nav-bar').css('height: 230px;');
       $('nav').css('background: #0729a4;');
 
       $(window).scroll(function() {
@@ -26,11 +26,10 @@
           $('nav').slideUp(200);
         }
       });
-    } else if ($(window).width() < 629) {
+    }
+    if ($(window).width() < 629) {
       $('nav').css('height: 170px;');
       $('nav').css('background: #60a505;');
-
-      alert("less than 629");
 
       $(window).scroll(function() {
 
