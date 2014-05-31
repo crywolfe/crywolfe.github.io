@@ -404,3 +404,7 @@
 	max-width: 100%;
 
 }
+
+.quote {
+	font-style: italics;
+}
