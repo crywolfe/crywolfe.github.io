@@ -67,11 +67,32 @@
 	}
 
 	/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
-	@media only screen and (max-width: 629) {
+	@media only screen and (min-width: 453) and (max-width: 629) {
 		nav {
 			text-align: center;
 			background: #EFEFEF;
 			height: 130px;
+			position: fixed;
+			width: 100%;
+			z-index: 1;
+			line-height: 2.5;
+		}
+
+		img.scale-with-grid {
+			max-width: 80%;
+			height: auto;
+			border: 1px solid #7995ae;
+			border-radius: 15%;
+		}
+
+	}
+
+	/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
+	@media only screen and (max-width: 452) {
+		nav {
+			text-align: center;
+			background: #EFEFEF;
+			height: 170px;
 			position: fixed;
 			width: 100%;
 			z-index: 1;
