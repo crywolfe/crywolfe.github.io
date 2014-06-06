@@ -36,6 +36,13 @@
 			z-index: 1;
 			line-height: 2.5;
 		}
+
+		img.scale-with-grid {
+			max-width: 80%;
+			height: auto;
+			border: 1px solid #7995ae;
+			border-radius: 15%;
+		}
 	}
 
 	/* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
