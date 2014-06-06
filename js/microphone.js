@@ -21,7 +21,7 @@ navigator.getUserMedia = (navigator.getUserMedia ||
                           navigator.msGetUserMedia);
 function MicrophoneSample() {
   this.WIDTH = 140;
-  this.HEIGHT = 800;
+  this.HEIGHT = 1000;
   this.getMicrophoneInput();
   this.canvas = document.querySelector('canvas');
 }
