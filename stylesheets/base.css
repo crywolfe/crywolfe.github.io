@@ -416,6 +416,7 @@
 #microphone {
 	position: absolute;
 	top: 120px;
+	right: 0px;
 	color: red;
 	z-index: -1;
 }
