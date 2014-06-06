@@ -416,9 +416,9 @@
 #microphone {
 	position: absolute;
 	top: 160px;
-	right:-60px;
+	right:-50px;
 	color: red;
-	z-index: -1;
+	z-index: 1;
 }
 
 #microphone:hover {
