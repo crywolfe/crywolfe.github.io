@@ -420,3 +420,7 @@
 	color: red;
 	z-index: -1;
 }
+
+#microphone:hover {
+	cursor: pointer;
+}
