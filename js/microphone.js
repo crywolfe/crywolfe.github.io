@@ -66,14 +66,14 @@ MicrophoneSample.prototype.visualize = function() {
   for (var i = 0; i < times.length; i++) {
     var value = times[i];
     var percent = value / 256;
-    var newWidth = this.WIDTH * percent + 40;
+    var newWidth = this.WIDTH * percent;
 
     var newOffset = this.WIDTH - newWidth;
 
     var barHeight = this.HEIGHT/times.length;
 
     drawContext.fillStyle = 'blue';
-    drawContext.fillRect(newOffset - 15,i * barHeight, 30, 5);
+    drawContext.fillRect(newOffset - 15,barHeight, 30, 5);
   }
   requestAnimFrame(this.visualize.bind(this));
 };
