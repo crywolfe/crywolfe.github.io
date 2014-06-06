@@ -35,9 +35,9 @@ MicrophoneSample.prototype.getMicrophoneInput = function() {
 MicrophoneSample.prototype.onStream = function(stream) {
   var input = context.createMediaStreamSource(stream);
   var filter = context.createBiquadFilter();
-  filter.frequency.value = 10.0;
+  filter.frequency.value = 60.0;
   filter.type = filter.NOTCH;
-  filter.Q = 10.0;
+  filter.Q = 100.0;
 
   var analyser = context.createAnalyser();
 
