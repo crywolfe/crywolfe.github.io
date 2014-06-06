@@ -409,3 +409,14 @@
 	font-style: italic;
 	text-decoration: none;
 }
+
+
+/*position the vertical microphone bar*/
+
+#microphone {
+	position: absolute;
+	top: 100px;
+	right: 20px;
+	color: red;
+	z-index: -1;
+}
