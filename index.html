@@ -95,15 +95,12 @@ d3.timer(function() {
       });
     }
 
-    $('.full-stack').hide();
-    <!-- $('#headshot').hide(); -->
+    // $('.full-stack').hide();
     $('#version-0').hide();
     $('#version-1').hide();
     $('#version-2').hide();
     $('.version-3').hide();
     $('.ptrivia').hide();
-    $('.skills').hide();
-    $('.contact').hide();
 
     $('.menu-item').click(function(){
       if ($(window).width() > 453 && $(window).width() < 630) {
@@ -113,43 +110,25 @@ d3.timer(function() {
 
     });
 
-    $('#full').click(function() {
-      $('.full-stack').slideToggle('slow', 'linear', function() {
+    $('#about').hover(function() {
+      $('#version-0').slideDown('slow', 'linear', function() {
       });
     });
 
-    $('#see').click(function() {
-      $('#headshot').slideToggle('slow', 'linear', function() {
-      });
-
-    });
-    $('#about').click(function() {
-      $('#version-0').slideToggle('slow', 'linear', function() {
+    $('#h4-version-1').hover(function() {
+      $('#version-1').slideDown('slow', 'swing', function() {
       });
     });
-
-    $('#h4-version-1').click(function() {
-      $('#version-1').slideToggle('slow', 'swing', function() {
+    $('#h4-version-2').hover(function() {
+      $('#version-2').slideDown('slow', 'swing', function() {
       });
     });
-    $('#h4-version-2').click(function() {
-      $('#version-2').slideToggle('slow', 'swing', function() {
+    $('#h4-version-3').hover(function() {
+      $('.version-3').slideDown('slow', 'swing', function() {
       });
     });
-    $('#h4-version-3').click(function() {
-      $('.version-3').slideToggle('slow', 'swing', function() {
-      });
-    });
-    $('#trivia').click(function() {
-      $('.ptrivia').slideToggle('slow', 'swing', function() {
-      });
-    });
-    $('#skills').click(function() {
-      $('.skills').slideToggle('slow', 'swing', function() {
-      });
-    });
-    $('#contact').click(function() {
-      $('.contact').slideToggle('slow', 'swing', function() {
+    $('#trivia').hover(function() {
+      $('.ptrivia').slideDown('slow', 'swing', function() {
       });
     });
 
@@ -254,30 +233,47 @@ d3.timer(function() {
       <p class="version-3">Version 3.0 is now!  I am combining my creativity and productivity using web and software development as my career of choice.</p>
       <p class="version-3">I am a full stack web developer.  Learning new technologies makes me tick.  I tinker with technology.  I build with technology.  Is there any greater technological development tool than the keyboard?  The keyboard gives me creative and logical expression.</p>
 			<p class="version-3">With that in mind, on this site you can view my portfolio, my interests, and learn a little bit more about me, including relevant trivia.  Enjoy your day!</p>
-			<h4 id="see">See.Me</h4>
 		  <hr />
     </div>
     <div class="offset-by-two thirteen columns">
       <h3 id="skills">My.Skills</h3>
 
       <ul>
+      <div class="six columns">
+
         <li class="skills">Front.End
           <ul id="front-end">
-            <li>HTML5/CSS3</li>
+            <li>HTML5</li>
+            <li>CSS3</li>
             <li>JavaScript</li>
             <li>jQuery</li>
             <li>AJAX</li>
+            <li>Foundation</li>
+            <li>Skeleton</li>
             <li>Backbone</li>
+            <li>Hipbone :)</li>
           </ul>
         </li>
+      </div>
+      <div class="five columns">
+
         <li class="skills">
           Back.End
           <ul id="back-end">
-            <li>Ruby</li>
+            <li>Git</li>
+            <li>Ruby and its Gems</li>
             <li>Rails</li>
+            <li>Sinatra</li>
+            <li>Heroku</li>
             <li>Node</li>
+            <li>TDD</li>
+            <li>SSL</li>
+            <li>RSpec</li>
+            <li>PostgreSQL</li>
+
           </ul>
         </li>
+      </div>
       </ul>
     <hr />
     </div>
