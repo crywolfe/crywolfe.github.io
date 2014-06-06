@@ -16,7 +16,7 @@ return  window.requestAnimationFrame       ||
   window.oRequestAnimationFrame      ||
   window.msRequestAnimationFrame     ||
   function( callback ){
-  window.setTimeout(callback, 100 / 60);
+  window.setTimeout(callback, 2000);
 };
 })();
 
