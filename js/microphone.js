@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+ /* modified by Gerald Wolfe 2014 */
+
 
 navigator.getUserMedia = (navigator.getUserMedia ||
                           navigator.webkitGetUserMedia ||
@@ -37,7 +39,7 @@ MicrophoneSample.prototype.onStream = function(stream) {
   var filter = context.createBiquadFilter();
   filter.frequency.value = 60.0;
   filter.type = filter.NOTCH;
-  filter.Q = 100.0;
+  filter.Q = 10.0;
 
   var analyser = context.createAnalyser();
 
@@ -64,17 +66,13 @@ MicrophoneSample.prototype.visualize = function() {
   for (var i = 0; i < times.length; i++) {
     var value = times[i];
     var percent = value / 256;
-    // var height = this.HEIGHT * percent;
-    var newWidth = this.WIDTH * percent;
+    var newWidth = this.WIDTH * percent + 40;
 
-    // var offset = this.HEIGHT - height;
     var newOffset = this.WIDTH - newWidth;
 
-    // var barWidth = this.WIDTH/times.length;
     var barHeight = this.HEIGHT/times.length;
 
     drawContext.fillStyle = 'blue';
-    // drawContext.fillRect(i * barWidth, offset, 10, 10);
     drawContext.fillRect(newOffset - 15,i * barHeight, 30, 5);
   }
   requestAnimFrame(this.visualize.bind(this));
