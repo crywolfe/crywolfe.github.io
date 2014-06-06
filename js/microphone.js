@@ -65,7 +65,7 @@ MicrophoneSample.prototype.visualize = function() {
   this.analyser.getByteTimeDomainData(times);
   for (var i = 0; i < times.length; i++) {
     var value = times[i];
-    var percent = value / 456;
+    var percent = value / 256;
     var newWidth = this.WIDTH * percent;
 
     var newOffset = this.WIDTH - newWidth;
@@ -73,7 +73,9 @@ MicrophoneSample.prototype.visualize = function() {
     var barHeight = this.HEIGHT/times.length;
 
     drawContext.fillStyle = 'blue';
-    drawContext.fillRect(newOffset - 15,i * barHeight, 30, 5);
+    setInterval ( drawContext.fillRect(newOffset - 15,i * barHeight, 30, 5), 50 );
+
+    // drawContext.fillRect(newOffset - 15,i * barHeight, 30, 5);
   }
   requestAnimFrame(this.visualize.bind(this));
 };
