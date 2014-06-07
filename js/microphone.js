@@ -58,18 +58,18 @@ MicrophoneSample.prototype.visualize = function() {
   for (var i = 0; i < times.length; i++) {
     var value = times[i];
     var percent = value / 256;
-    var newWidth = this.WIDTH * percent * 1.8;
+    var newWidth = this.WIDTH * percent * 1.6;
 
     var newOffset = this.WIDTH - newWidth;
 
-    var barHeight = this.HEIGHT*2.4/times.length;
+    var barHeight = this.HEIGHT*2.3/times.length;
 
     drawContext.fillStyle = 'blue';
 
-    drawContext.fillRect(newOffset+40,i * barHeight, 30, 5);
+    drawContext.fillRect(newOffset+20,i * barHeight, 30, 5);
 
     drawContext2.fillStyle = 'blue';
-    drawContext2.fillRect(newOffset + 910,i * barHeight, 30, 5);
+    drawContext2.fillRect(newOffset + 870,i * barHeight, 30, 5);
   }
   requestAnimFrame(this.visualize.bind(this));
 };
