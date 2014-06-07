@@ -61,8 +61,7 @@ MicrophoneSample.prototype.visualize = function() {
   this.canvas.height = this.HEIGHT;
   var drawContext = this.canvas.getContext('2d');
 
-  var times = new Uint8Array(this.analyser.frequencyBinCount/2);
-  // var times = Uint8Array(100);
+  var times = new Uint8Array(this.analyser.frequencyBinCount);
   this.analyser.getByteTimeDomainData(times);
   for (var i = 0; i < times.length; i++) {
     var value = times[i];
@@ -71,7 +70,7 @@ MicrophoneSample.prototype.visualize = function() {
 
     var newOffset = this.WIDTH - newWidth;
 
-    var barHeight = this.HEIGHT/times.length;
+    var barHeight = this.HEIGHT*4/times.length;
 
     drawContext.fillStyle = 'blue';
 
