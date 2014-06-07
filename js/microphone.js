@@ -26,6 +26,7 @@ function MicrophoneSample() {
   this.HEIGHT = 2400;
   this.getMicrophoneInput();
   this.canvas = document.querySelector('canvas');
+  this.canvas2 = document.querySelector('canvas');
 }
 
 MicrophoneSample.prototype.getMicrophoneInput = function() {
@@ -58,8 +59,11 @@ MicrophoneSample.prototype.onStreamError = function(e) {
 
 MicrophoneSample.prototype.visualize = function() {
   this.canvas.width = this.WIDTH;
+  this.canvas2.width = this.WIDTH;
   this.canvas.height = this.HEIGHT;
+  this.canvas2.height = this.HEIGHT;
   var drawContext = this.canvas.getContext('2d');
+  var drawContext2 = this.canvas2.getContext('2d');
 
   var times = new Uint8Array(this.analyser.frequencyBinCount);
   this.analyser.getByteTimeDomainData(times);
@@ -73,10 +77,10 @@ MicrophoneSample.prototype.visualize = function() {
     var barHeight = this.HEIGHT*4/times.length;
 
     drawContext.fillStyle = 'blue';
+    drawContext2.fillStyle = 'blue';
 
     drawContext.fillRect(newOffset - 15,i * barHeight, 30, 5);
+    drawContext2.fillRect(newOffset - 15,i * barHeight, 30, 5);
   }
   requestAnimFrame(this.visualize.bind(this));
 };
-
-var sample = new MicrophoneSample();
