@@ -58,7 +58,7 @@ MicrophoneSample.prototype.visualize = function() {
   for (var i = 0; i < times.length; i++) {
     var value = times[i];
     var percent = value / 256;
-    var newWidth = this.WIDTH * percent * 1;
+    var newWidth = this.WIDTH * percent * 1.3;
 
     var newOffset = this.WIDTH - newWidth;
 
@@ -66,7 +66,7 @@ MicrophoneSample.prototype.visualize = function() {
 
     drawContext.fillStyle = 'blue';
 
-    drawContext.fillRect(newOffset - 240,i * barHeight, 28, 4);
+    drawContext.fillRect(newOffset - 240,i * barHeight, 2, 4);
 
     drawContext2.fillStyle = 'blue';
     drawContext2.fillRect(newOffset + 550,i * barHeight, 28, 4);
