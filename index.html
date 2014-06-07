@@ -193,23 +193,23 @@ d3.timer(function() {
     </nav>
   </div>
 
-<div id="microphone-2" title="I am a learner, which means I like to listen.  This vertical bar evidences I am actually listening to you!">
-  <p><canvas style="background: #123456;"></canvas></p>
-  <script>
-  var sample = new MicrophoneSample();
-  </script>
 
-</div>
 	<div class="container">
     <!-- microphone and audio integration -->
       <div id="microphone" title="I am a learner, which means I like to listen.  This vertical bar evidences I am actually listening to you!">
         <p><canvas style="background: #fbfbfb;"></canvas></p>
         <script>
-        sample;
+          var sample = new MicrophoneSample();
         </script>
       </div>
 
+      <div id="microphone-2" title="I am a learner, which means I like to listen.  This vertical bar evidences I am actually listening to you!">
+        <p><canvas style="background: #123456;"></canvas></p>
+        <script>
+        sample;
+        </script>
 
+      </div>
 
 		<div class="offset-by-two thirteen columns">
 
