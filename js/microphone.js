@@ -23,7 +23,7 @@ navigator.getUserMedia = (navigator.getUserMedia ||
                           navigator.msGetUserMedia);
 function MicrophoneSample() {
   this.WIDTH = 70;
-  this.HEIGHT = 1900;
+  this.HEIGHT = 2400;
   this.getMicrophoneInput();
   this.canvas = document.querySelector('canvas');
 }
@@ -66,7 +66,7 @@ MicrophoneSample.prototype.visualize = function() {
   for (var i = 0; i < times.length; i++) {
     var value = times[i];
     var percent = value / 256;
-    var newWidth = this.WIDTH * percent * 2.3;
+    var newWidth = this.WIDTH * percent * 2;
 
     var newOffset = this.WIDTH - newWidth;
 
