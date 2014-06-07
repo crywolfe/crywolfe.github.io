@@ -4,10 +4,13 @@
 <!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
 <head>
+  <link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
 
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script src="../assets/tooltip.js" type="text/javascript"></script>
   <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+
   <!-- scripts related to microphone and audio visualization -->
   <script src="js/microphone.js"></script>
   <script src="js/shared.js"></script>
@@ -182,13 +185,13 @@ d3.timer(function() {
   <div class="nav_bar">
     <nav>
       <ul id="menu">
-        <li class="menu-item"><a href="#top">Welcome</a></li>
-        <li class="menu-item"><a href="#about">About.Me</a></li>
-        <li class="menu-item"><a href="#skills">My.Skills</a></li>
-        <li class="menu-item"><a href="#openPopup">My.Resume</a></li>
-        <li class="menu-item"><a href="#projects">My.Projects</a></li>
-        <li class="menu-item"><a href="#trivia">Relevant.Trivia</a></li>
-        <li class="menu-item"><a href="#contact">My.Contact</a></li>
+        <li class="menu-item"><a href="#top"><i class="fa fa-user"> Welcome</i></a></li>
+        <li class="menu-item"><a href="#about"><i class="fa fa-comment-o"> About.Me</i></a></li>
+        <li class="menu-item"><a href="#skills"><i class="fa fa-wrench"> My.Skills</i></a></li>
+        <li class="menu-item"><a href="#openPopup"><i class="fa fa-paperclip"> My.Resume</i></a></li>
+        <li class="menu-item"><a href="#projects"><i class="fa fa-database"> My.Projects</i></a></li>
+        <li class="menu-item"><a href="#trivia"><i class="fa fa-pencil-square-o"> Relevant.Trivia</i></a></li>
+        <li class="menu-item"><a href="#contact"><i class="fa fa-envelope-o"> My.Contact</i></a></li>
       </ul>
     </nav>
   </div>
@@ -220,12 +223,12 @@ d3.timer(function() {
     </div>
 
     <div class="offset-by-two thirteen columns">
-      <h3 id="about">About.Me</h3>
-      <p id="version-0">I am now on version 3.0 of my life.  I believe life is an outward and inward adventure!</p>
+      <h3 id="about"><i class="fa fa-comment-o"> About.Me</i></h3>
+      <p id="version-0">I am now on version 3.0 of my life.</p>
       <h4 id="h4-version-1">Version 1.0</h4>
       <p id="version-1">Version 1.0 was a very creative time in my life.  During that time, I performed as a stand-up comedian.  I became an independent joke writer for the Tonight Show with Jay Leno.  I played the piano.  I emceed and performed at the Comedy Store which would also included playing the piano.  Those were fun and creative times in my life.</p>
       <h4 id="h4-version-2">Version 2.0</h4>
-      <p id="version-2">Version 2.0 was a productive time for me.  I got married.  I built several successful businesses.  I traveled extensively.</p>
+      <p id="version-2">Version 2.0 was a productive time for me.  I got married.  I built several successful businesses.  I practiced law during that time.  I traveled extensively.</p>
       <h4 id="h4-version-3">Version 3.0</h4>
       <p class="version-3">Version 3.0 is now!  I am combining my creativity and productivity using web and software development as my career of choice.</p>
       <p class="version-3">I am a full stack web developer.  Learning new technologies makes me tick.  I tinker with technology.  I build with technology.  Is there any greater technological development tool than the keyboard?  The keyboard gives me creative and logical expression.</p>
@@ -233,12 +236,12 @@ d3.timer(function() {
 		  <hr />
     </div>
     <div class="offset-by-two thirteen columns">
-      <h3 id="skills">My.Skills</h3>
+      <h3 id="skills"><i class="fa fa-wrench"> My.Skills</i></h3>
 
       <ul>
       <div class="six columns">
 
-        <li class="skills">Front.End
+        <li class="skills"><i class="fa fa-check-square-o"> Front.End</i>
           <ul id="front-end">
             <li>HTML5</li>
             <li>CSS3</li>
@@ -252,10 +255,9 @@ d3.timer(function() {
           </ul>
         </li>
       </div>
-      <div class="five columns">
+      <div class="six columns">
 
-        <li class="skills">
-          Back.End
+        <li class="skills"><i class="fa fa-check-square-o"> Back.End</i>
           <ul id="back-end">
             <li>Git</li>
             <li>Ruby and its Gems</li>
@@ -264,7 +266,6 @@ d3.timer(function() {
             <li>Heroku</li>
             <li>Node</li>
             <li>TDD</li>
-            <li>SSL</li>
             <li>RSpec</li>
             <li>PostgreSQL</li>
 
@@ -277,24 +278,24 @@ d3.timer(function() {
 
     <div class="offset-by-two thirteen columns">
 
-      <h3 id="trivia">Relevant.Trivia</h3>
+      <h3 id="trivia"><i class="fa fa-pencil-square-o"> Relevant.Trivia</i></h3>
       <p class="ptrivia">I am an endurance athlete typically finishing in the top 10% of my age group.  Endurance athletics has trained me to be patient and enjoy the small incremental successes.</p>
       <p class="ptrivia">Based in part on my endurance athletics, I am committed to long term planning.  Great work is not accomplished overnight.  Great work require long term commitment.</p>
-      <p class="ptrivia">My current favorite quotation is: <br><a class='quote'>'Our actions may be impeded... but there can be no impeding our intentions or dispositions. Because we can accommodate and adapt. The mind adapts and converts to its own purposes the obstacle to our acting... The impediment to action advances action.  What stands in the way becomes the way'</a> by Marcus Aurelius.</p>
+      <p class="ptrivia">My current favorite quotation is: <br><a class='quote'>'Our actions may be impeded... but there can be no impeding our intentions or dispositions. Because we can accommodate and adapt. The mind adapts and converts to its own purposes the obstacle to our acting... The impediment to action advances action.  What stands in the way becomes the way.'</a> <br> by Marcus Aurelius.</p>
 
       <p class="ptrivia">I am an <a href="" title="ENTJs are natural born leaders. They live in a world of possibilities where they see all sorts challenges to be surmounted, and they want to be the ones responsible for surmounting them. They have a drive for leadership, which is well-served by their quickness to grasp complexities, their ability to absorb a large amount of impersonal information, and their quick and decisive judgments. They are 'take charge' people." class="tooltip"><span>ENTJ</span></a> personality type.</p>
 
     <hr />
     </div>
     <div class="offset-by-two thirteen columns">
-      <h3 id="projects">My.Projects</h3>
+      <h3 id="projects"><i class="fa fa-database"> My.Projects</i></h3>
       <p>PLACEHOLDER FOR MY PROJECTS.</p>
       <hr />
     </div>
     <div class="offset-by-two thirteen columns">
 			<h3 id="contact">My.Contact</h3>
-      <p class="contact"><a href="http://github.com/crywolfe"> github</a></p>
-			<p class="contact"><a href="mailto:geraldlwolfe&#64;gmail.com">email</a></p>
+      <p class="contact"><a href="http://github.com/crywolfe"><i class="fa fa-github"> github</i></a></p>
+			<p class="contact"><a href="mailto:geraldlwolfe&#64;gmail.com"><i class="fa fa-envelope-o"> email</i></a></p>
       <hr />
 		</div>
 
