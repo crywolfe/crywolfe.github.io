@@ -81,7 +81,7 @@ MicrophoneSample.prototype.visualize = function() {
     drawContext.fillRect(newOffset - 15,i * barHeight, 30, 5);
 
     drawContext2.fillStyle = 'red';
-    drawContext2.fillRect(newOffset + 20,i * barHeight, 30, 5);
+    drawContext2.fillRect(newOffset + 700,i * barHeight, 30, 5);
   }
   requestAnimFrame(this.visualize.bind(this));
 };
