@@ -425,7 +425,7 @@
 	cursor: pointer;
 }
 
-#microphone-2 {
+/*#microphone-2 {
 	position: absolute;
 	top: 220px;
 	left:-30px;
@@ -435,7 +435,7 @@
 
 #microphone-2:hover {
 	cursor: pointer;
-}
+}*/
 
 
 /* miscellaneous */
