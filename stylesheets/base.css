@@ -415,25 +415,13 @@
 
 #microphone {
 	position: absolute;
-	top: 280px;
+	top: 285px;
 	right:-30px;
 	color: red;
 	z-index: 0;
 }
 
 #microphone:hover {
-	cursor: pointer;
-}
-
-#microphone-2 {
-	position: absolute;
-	top: 220px;
-	left:-30px;
-	color: red;
-	z-index: 1;
-}
-
-#microphone-2:hover {
 	cursor: pointer;
 }
 

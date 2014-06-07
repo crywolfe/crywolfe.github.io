@@ -23,7 +23,7 @@ navigator.getUserMedia = (navigator.getUserMedia ||
                           navigator.msGetUserMedia);
 function MicrophoneSample() {
   this.WIDTH = 70;
-  this.HEIGHT = 1200;
+  this.HEIGHT = 1500;
   this.getMicrophoneInput();
   this.canvas = document.querySelector('canvas');
 }
@@ -57,65 +57,6 @@ MicrophoneSample.prototype.onStreamError = function(e) {
 };
 
 MicrophoneSample.prototype.visualize = function() {
-  this.canvas.width = this.WIDTH;
-  this.canvas.height = this.HEIGHT;
-  var drawContext = this.canvas.getContext('2d');
-
-  var times = new Uint8Array(this.analyser.frequencyBinCount);
-  this.analyser.getByteTimeDomainData(times);
-  for (var i = 0; i < times.length; i++) {
-    var value = times[i];
-    var percent = value / 256;
-    var newWidth = this.WIDTH * percent;
-
-    var newOffset = this.WIDTH - newWidth;
-
-    var barHeight = this.HEIGHT/times.length;
-
-    drawContext.fillStyle = 'blue';
-
-    drawContext.fillRect(newOffset - 15,i * barHeight, 30, 5);
-  }
-  requestAnimFrame(this.visualize.bind(this));
-};
-
-
-function MicrophoneSample2() {
-  this.WIDTH = 70;
-  this.HEIGHT = 1200;
-  this.getMicrophoneInput();
-  this.canvas = document.querySelector('canvas');
-}
-
-MicrophoneSample2.prototype.getMicrophoneInput = function() {
-  navigator.getUserMedia({audio: true},
-                          this.onStream.bind(this),
-                          this.onStreamError.bind(this));
-};
-
-MicrophoneSample2.prototype.onStream = function(stream) {
-  var input = context.createMediaStreamSource(stream);
-  var filter = context.createBiquadFilter();
-  filter.frequency.value = 60.0;
-  filter.type = filter.NOTCH;
-  filter.Q = 10.0;
-
-  var analyser = context.createAnalyser();
-
-  // Connect graph.
-  input.connect(filter);
-  filter.connect(analyser);
-
-  this.analyser = analyser;
-  // Setup a timer to visualize some stuff.
-  requestAnimFrame(this.visualize.bind(this));
-};
-
-MicrophoneSample2.prototype.onStreamError = function(e) {
-  console.error('Error getting microphone', e);
-};
-
-MicrophoneSample2.prototype.visualize = function() {
   this.canvas.width = this.WIDTH;
   this.canvas.height = this.HEIGHT;
   var drawContext = this.canvas.getContext('2d');
