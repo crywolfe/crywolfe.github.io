@@ -58,11 +58,11 @@ MicrophoneSample.prototype.visualize = function() {
   for (var i = 0; i < times.length; i++) {
     var value = times[i];
     var percent = value / 256;
-    var newWidth = this.WIDTH * percent * 2;
+    var newWidth = this.WIDTH * percent * 1.8;
 
     var newOffset = this.WIDTH - newWidth;
 
-    var barHeight = this.HEIGHT*2.5/times.length;
+    var barHeight = this.HEIGHT*2.4/times.length;
 
     drawContext.fillStyle = 'blue';
 
