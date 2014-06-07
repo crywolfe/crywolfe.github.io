@@ -425,6 +425,17 @@
 	cursor: pointer;
 }
 
+#microphone-2 {
+	position: absolute;
+	top: 285px;
+	left:-30px;
+	color: brown;
+	z-index: 0;
+}
+
+#microphone-2:hover {
+	cursor: pointer;
+}
 
 /* miscellaneous */
 
