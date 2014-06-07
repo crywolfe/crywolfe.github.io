@@ -22,7 +22,7 @@ navigator.getUserMedia = (navigator.getUserMedia ||
                           navigator.mozGetUserMedia ||
                           navigator.msGetUserMedia);
 function MicrophoneSample() {
-  this.WIDTH = 800;
+  this.WIDTH = 1000;
   this.HEIGHT = 2400;
   this.getMicrophoneInput();
   this.canvas = document.querySelector('canvas');
@@ -81,7 +81,7 @@ MicrophoneSample.prototype.visualize = function() {
     drawContext.fillRect(newOffset,i * barHeight, 30, 5);
 
     drawContext2.fillStyle = 'red';
-    drawContext2.fillRect(newOffset + 700,i * barHeight, 30, 5);
+    drawContext2.fillRect(newOffset + 600,i * barHeight, 30, 5);
   }
   requestAnimFrame(this.visualize.bind(this));
 };
