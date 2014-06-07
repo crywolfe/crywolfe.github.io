@@ -66,7 +66,7 @@ MicrophoneSample.prototype.visualize = function() {
   for (var i = 0; i < times.length; i++) {
     var value = times[i];
     var percent = value / 256;
-    var newWidth = this.WIDTH * percent;
+    var newWidth = this.WIDTH * percent * 1.3;
 
     var newOffset = this.WIDTH - newWidth;
 
