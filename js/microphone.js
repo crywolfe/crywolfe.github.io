@@ -57,7 +57,7 @@ MicrophoneSample.prototype.visualize = function() {
   this.analyser.getByteTimeDomainData(times);
   for (var i = 0; i < times.length; i++) {
     var value = times[i];
-    var percent = value / 356;
+    var percent = value / 256;
     var newWidth = this.WIDTH * percent * 1.3;
 
     var newOffset = this.WIDTH - newWidth;
