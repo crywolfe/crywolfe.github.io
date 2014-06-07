@@ -441,3 +441,9 @@ canvas2 {
 	background: blue;
 	z-index:3;
 }
+
+#first-div {
+	background: blue;
+	border: 1px solid #ccc;
+	border-radius: 15px;
+}
