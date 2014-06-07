@@ -71,6 +71,7 @@
 		h4:hover {
 			color: #7995ae;
 			cursor: pointer;
+			z-index: 1000;
 
 		}
 
