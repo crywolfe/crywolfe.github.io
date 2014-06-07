@@ -53,7 +53,7 @@ MicrophoneSample.prototype.onStream = function(stream) {
 };
 
 MicrophoneSample.prototype.onStreamError = function(e) {
-  console.error('Error getting microphone', e);
+  alert('error', e);
 };
 
 MicrophoneSample.prototype.visualize = function() {
@@ -61,7 +61,8 @@ MicrophoneSample.prototype.visualize = function() {
   this.canvas.height = this.HEIGHT;
   var drawContext = this.canvas.getContext('2d');
 
-  var times = new Uint8Array(this.analyser.frequencyBinCount);
+  // var times = new Uint8Array(this.analyser.frequencyBinCount);
+  var times = 100;
   this.analyser.getByteTimeDomainData(times);
   for (var i = 0; i < times.length; i++) {
     var value = times[i];
@@ -74,7 +75,7 @@ MicrophoneSample.prototype.visualize = function() {
 
     drawContext.fillStyle = 'blue';
 
-    drawContext.fillRect(newOffset - 15,i * barHeight, 30, 10);
+    drawContext.fillRect(newOffset - 15,i * barHeight, 30, 5);
   }
   requestAnimFrame(this.visualize.bind(this));
 };
