@@ -436,3 +436,8 @@
 .skills li:nth-child(odd) {
 	color: blue;
 }
+
+canvas2 {
+	background: blue;
+	z-index:3;
+}
