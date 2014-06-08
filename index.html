@@ -236,13 +236,10 @@
     </div>
     <div class="offset-by-two thirteen columns">
       <h3 id="projects"><i class="fa fa-database"> My.Projects</i></h3>
-
-
-      <p>PLACEHOLDER FOR MY PROJECTS.</p>
       <div class="carousel">
-        <div>CONTENT</div>
-        <div>CONTENT</div>
-        <div>CONTENT</div>
+        <div><img src="assets/rails_guide.png" alt="rails guide pull request" class="scale-with-grid carousel" /></div>
+        <div><img src="assets/buggy_bus.png" alt="buggy bus" class="scale-with-grid carousel"/></div>
+        <div><img src="assets/taba.png" alt="there and back again" class="scale-with-grid carousel"/></div>
       </div>
       <hr />
     </div>
@@ -273,7 +270,12 @@
   $(document).ready(function(){
 	$('.carousel').slick({
 	  arrows: true,
-    accessibility: true
+    accessibility: true,
+    autoplay: true,
+    centermode: true,
+    centerpadding: "100px",
+    dots: true
+
 	});
 });
 </script>
