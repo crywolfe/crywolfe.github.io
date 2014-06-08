@@ -119,7 +119,7 @@
 		font-family: 'texgyreadventorregular', sans-serif;
 		font-weight: normal; }
 	h1 a, h2 a, h3 a, h4 a, h5 a, h6 a { font-weight: inherit; }
-	h1 { font-size: 56px; line-height: 60px; margin-bottom: 14px;}
+	h1 { font-size: 66px; line-height: 70px; margin-bottom: 14px;}
 	h2 { font-size: 36px; line-height: 40px; margin-bottom: 10px; }
 	h3 { font-size: 34px; line-height: 38px; margin-bottom: 8px;
 		padding-top: 45px;
@@ -440,4 +440,8 @@
 	background: #d9f0f7;
 	border: 1px solid #ccc;
 	border-radius: 15px;
+}
+
+.red {
+	color: red;
 }
