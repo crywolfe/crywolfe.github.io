@@ -11,7 +11,7 @@ navigator.getUserMedia = (navigator.getUserMedia ||
                           navigator.msGetUserMedia);
 function MicrophoneSample() {
   this.WIDTH = 1000;
-  this.HEIGHT = 2000;
+  this.HEIGHT = 1800;
   this.getMicrophoneInput();
   this.canvas = document.querySelector('canvas');
   this.canvas2 = document.querySelector('canvas');
@@ -26,10 +26,12 @@ MicrophoneSample.prototype.getMicrophoneInput = function() {
 MicrophoneSample.prototype.onStream = function(stream) {
   var input = context.createMediaStreamSource(stream);
   var filter = context.createBiquadFilter();
-  filter.frequency.value = 200.0;
-  filter.type = filter.BANDPASS;
-  // filter.type = filter.NOTCH;
-  filter.Q = 20;
+  filter.frequency.value = 60.0;
+  // filter.frequency.value = 200.0;
+  // filter.type = filter.BANDPASS;
+  filter.type = filter.NOTCH;
+  filter.Q = 10;
+  // filter.Q = 20;
 
   var analyser = context.createAnalyser();
 
@@ -67,10 +69,10 @@ MicrophoneSample.prototype.visualize = function() {
 
     drawContext.fillStyle = 'blue';
 
-    drawContext.fillRect(newOffset - 255,i * barHeight, 18, 4);
+    drawContext.fillRect(newOffset - 255,i * barHeight, 18, 2);
 
     drawContext2.fillStyle = 'blue';
-    drawContext2.fillRect(newOffset + 575,i * barHeight, 18, 4);
+    drawContext2.fillRect(newOffset + 575,i * barHeight, 18, 2);
   }
   requestAnimFrame(this.visualize.bind(this));
 };
