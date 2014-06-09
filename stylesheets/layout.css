@@ -43,6 +43,10 @@
 			border: 1px solid #7995ae;
 			border-radius: 15%;
 		}
+		.carousel {
+			max-width: 100%;
+
+		}
 		#about {
 			padding-top: 120px;
 		}
@@ -72,6 +76,12 @@
 			border: 1px solid #7995ae;
 			border-radius: 15%;
 		}
+
+	.carousel {
+		max-width: 100%;
+
+	}
+
 		h3 { font-size: 30px; line-height: 36px; margin-bottom: 8px;
 			padding-top: 95px;
 		}
@@ -115,6 +125,11 @@
 			height: auto;
 			border: 1px solid #7995ae;
 			border-radius: 15%;
+		}
+
+		.carousel {
+			max-width: 100%;
+
 		}
 	}
 
