@@ -57,10 +57,10 @@ MicrophoneSample.prototype.visualize = function() {
   this.analyser.getByteTimeDomainData(times);
   for (var i = 0; i < times.length; i++) {
     var value = times[i];
-    var percent = value / 106;
+    var percent = value / 256;
 
     var height = this.HEIGHT * percent;
-    var offset = this.HEIGHT - height;
+    var offset = this.HEIGHT - height + 20;
     var barWidth = this.WIDTH/times.length;
     drawContext.fillStyle = 'blue';
     drawContext.fillRect(i * barWidth, offset, 15, 10);
