@@ -10,7 +10,8 @@ navigator.getUserMedia = (navigator.getUserMedia ||
                           navigator.mozGetUserMedia ||
                           navigator.msGetUserMedia);
 function MicrophoneSample() {
-  this.WIDTH = 640;
+  var mydiv = document.getElementsByClassName("offset-by-two thirteen columns");
+  this.WIDTH = mydiv.style.width;
   this.HEIGHT = 30;
   this.getMicrophoneInput();
   this.canvas = document.querySelector('canvas');
