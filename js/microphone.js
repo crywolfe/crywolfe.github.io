@@ -10,8 +10,8 @@ navigator.getUserMedia = (navigator.getUserMedia ||
                           navigator.mozGetUserMedia ||
                           navigator.msGetUserMedia);
 function MicrophoneSample() {
-  this.WIDTH = 650;
-  this.HEIGHT = 50;
+  this.WIDTH = 640;
+  this.HEIGHT = 40;
   this.getMicrophoneInput();
   this.canvas = document.querySelector('canvas');
 }
@@ -74,7 +74,7 @@ MicrophoneSample.prototype.visualize = function() {
     var offset = this.HEIGHT - height - 1;
     var barWidth = this.WIDTH/times.length;
     drawContext.fillStyle = 'blue';
-    drawContext.fillRect(i * barWidth, offset, 20, 2);
+    drawContext.fillRect(i * barWidth, offset, 20, 5);
 
   }
   requestAnimFrame(this.visualize.bind(this));
