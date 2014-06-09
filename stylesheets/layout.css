@@ -30,7 +30,7 @@
 		nav {
 			text-align: center;
 			background: #EFEFEF;
-			height: 110px;
+			height: 80px;
 			position: fixed;
 			width: 100%;
 			z-index: 1;
@@ -63,7 +63,7 @@
 		nav {
 			text-align: center;
 			background: #EFEFEF;
-			height: 170px;
+			height: 120px;
 			position: fixed;
 			width: 100%;
 			z-index: 1;
@@ -87,13 +87,13 @@
 		}
 
 		#about {
-			padding-top: 170px;
+			padding-top: 130px;
 		}
 		#projects {
-			padding-top: 170px;
+			padding-top: 130px;
 		}
 		#skills {
-			padding-top: 170px;
+			padding-top: 130px;
 		}
 	}
 
@@ -102,7 +102,7 @@
 		nav {
 			text-align: center;
 			background: #EFEFEF;
-			height: 230px;
+			height: 170px;
 			position: fixed;
 			width: 100%;
 			z-index: 1;
@@ -110,14 +110,14 @@
 		}
 
 		#about {
-			padding-top: 210px;
+			padding-top: 200px;
 		}
 
 		#projects {
-			padding-top: 230px;
+			padding-top: 210px;
 		}
 		#skills {
-			padding-top: 250px;
+			padding-top: 220px;
 		}
 
 		img.scale-with-grid {

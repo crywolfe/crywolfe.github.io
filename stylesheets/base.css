@@ -48,7 +48,7 @@
 
 		nav ul li{
 			display: inline;
-			margin: 30px;
+			margin: 20px;
 			font-size: 130%;
 		}
 		.nav_bar {
@@ -343,12 +343,13 @@
 #tooltip{
 	position:absolute;
 	margin-right: 20%;
+	margin-bottom: 20%;
 	/*border:1px solid #333;*/
 	border-radius: 15px;
 	background: #dfdfdf;
 	padding:2px 5px;
 	color:#000000;
-	display:none;
+	display: block;
 	}
 
 .popupDialog {
