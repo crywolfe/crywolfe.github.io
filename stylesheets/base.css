@@ -64,23 +64,23 @@
 			z-index: 10;
 		}
 
-		#about:hover {
+		/*#about:hover {
 			color: #7995ae;
-			cursor: pointer;
+			cursor: pointer;*/
 
 		}
-		h4:hover {
+		/*h4:hover {
 			color: #7995ae;
 			cursor: pointer;
 			z-index: 1000;
 
-		}
+		}*/
 
-		h3:hover {
+		/*h3:hover {
 			color: #7995ae;
 			cursor: pointer;
 
-		}
+		}*/
 
 
 
@@ -457,5 +457,5 @@ h1 h1:visited {
 
 .centered {
 	text-align:center;
-	
+
 }
