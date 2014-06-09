@@ -30,7 +30,7 @@
 		nav {
 			text-align: center;
 			background: #EFEFEF;
-			height: 90px;
+			height: 110px;
 			position: fixed;
 			width: 100%;
 			z-index: 1;
@@ -42,6 +42,15 @@
 			height: auto;
 			border: 1px solid #7995ae;
 			border-radius: 15%;
+		}
+		#about {
+			padding-top: 120px;
+		}
+		#projects {
+			padding-top: 130px;
+		}
+		#skills {
+			padding-top: 140px;
 		}
 	}
 
@@ -67,6 +76,15 @@
 			padding-top: 95px;
 		}
 
+		#about {
+			padding-top: 170px;
+		}
+		#projects {
+			padding-top: 170px;
+		}
+		#skills {
+			padding-top: 170px;
+		}
 	}
 
 	/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
@@ -79,6 +97,17 @@
 			width: 100%;
 			z-index: 1;
 			line-height: 2.5;
+		}
+
+		#about {
+			padding-top: 210px;
+		}
+
+		#projects {
+			padding-top: 230px;
+		}
+		#skills {
+			padding-top: 250px;
 		}
 
 		img.scale-with-grid {
