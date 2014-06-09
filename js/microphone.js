@@ -70,7 +70,7 @@ MicrophoneSample.prototype.visualize = function() {
     // // drawContext.fillRect(newOffset - 255,i * barHeight, 18, 1);
     // drawContext.fillRect(i * barWidth, newOffset, 2, 1);
 
-    var height = this.HEIGHT * percent + 2;
+    var height = this.HEIGHT * percent + 4;
     var offset = this.HEIGHT - height;
     console.log(offset);
     var barWidth = this.WIDTH/times.length;
