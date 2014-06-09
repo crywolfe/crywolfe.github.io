@@ -56,7 +56,7 @@
       });
     }
 
-    // $('.full-stack').hide();
+    $('.full-stack').hide();
     $('#version-0').hide();
     $('#version-1').hide();
     $('#version-2').hide();
@@ -66,13 +66,17 @@
     $('.menu-item').click(function(){
       if ($(window).width() > 453 && $(window).width() < 630) {
         $('#about').css('padding-top', '130px');
-
       }
-
     });
+
 
     $('#about').hover(function() {
       $('#version-0').slideDown('slow', 'linear', function() {
+      });
+    });
+
+    $('#full').hover(function() {
+      $('.full-stack').slideDown('slow', 'linear', function() {
       });
     });
 
@@ -155,17 +159,9 @@
 
 
 	<div class="container">
-    <!-- microphone and audio integration -->
-      <div id="microphone" title="I am a learner, which means I like to pay attention.  This vertical bar evidences I am actually listening to you!">
-        <p><canvas style="background: transparent; z-index: -1000;"></canvas></p>
 
-        <script>
-          var sample = new MicrophoneSample();
-        </script>
-      </div>
 
 		<div class="offset-by-two thirteen columns">
-
 
 			<h1 class="remove-bottom" style="margin-top: 40px">Gerald.Wolfe</h1>
     <section class="link-svgmarker">
@@ -174,10 +170,22 @@
 
       <h4 id="full">Full.Stack.Web.Developer</h4>
       <p class="full-stack">As a web developer, I am known as...</p>
-      <p class="full-stack">(1)  the "empathetic coder".</p>
-      <p class="full-stack">(2)  the "binding.pry" of my coding community.</p>
+      <p class="full-stack">... an "empathetic coder".</p>
+      <p class="full-stack">... the "binding.pry" of my coding community.</p>
 		  <hr />
 		</div>
+
+  <div class="offset-by-two thirteen columns">
+
+    <!-- microphone and audio integration -->
+      <div id="microphone" title="I am a learner, which means I like to pay attention.  This vertical bar evidences I am actually listening to you!">
+        <p><canvas style="background: transparent; z-index: -1000;"></canvas></p>
+
+        <script>
+          var sample = new MicrophoneSample();
+        </script>
+      </div>
+  </div> <!-- offset by two thirteen columns -->
 
     <div class="offset-by-two three columns">
       <img class="scale-with-grid" id="headshot" alt="Gerald Wolfe" src="assets/headshot.jpg">

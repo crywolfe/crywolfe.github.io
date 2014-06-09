@@ -289,7 +289,7 @@ body {
 
 a, a:link, a:visited {
   color: #ee3f3f;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 #mainCol a, #subCol a, #feature a {color: #980905;}

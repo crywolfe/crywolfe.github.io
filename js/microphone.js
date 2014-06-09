@@ -10,11 +10,10 @@ navigator.getUserMedia = (navigator.getUserMedia ||
                           navigator.mozGetUserMedia ||
                           navigator.msGetUserMedia);
 function MicrophoneSample() {
-  this.WIDTH = 1000;
-  this.HEIGHT = 2700;
+  this.WIDTH = 700;
+  this.HEIGHT = 300;
   this.getMicrophoneInput();
   this.canvas = document.querySelector('canvas');
-  this.canvas2 = document.querySelector('canvas');
 }
 
 MicrophoneSample.prototype.getMicrophoneInput = function() {
@@ -50,29 +49,27 @@ MicrophoneSample.prototype.onStreamError = function(e) {
 
 MicrophoneSample.prototype.visualize = function() {
   this.canvas.width = this.WIDTH;
-  this.canvas2.width = this.WIDTH;
   this.canvas.height = this.HEIGHT;
-  this.canvas2.height = this.HEIGHT;
   var drawContext = this.canvas.getContext('2d');
-  var drawContext2 = this.canvas2.getContext('2d');
 
   var times = new Uint8Array(this.analyser.frequencyBinCount);
   this.analyser.getByteTimeDomainData(times);
   for (var i = 0; i < times.length; i++) {
     var value = times[i];
     var percent = value / 256;
-    var newWidth = this.WIDTH * percent * 1.3;
+    // var newWidth = this.WIDTH * percent * 1.3;
+    var newHeight = this.HEIGHT * percent;
 
-    var newOffset = this.WIDTH - newWidth;
+    // var newOffset = this.WIDTH - newWidth;
+    var newOffset = this.HEIGHT - newHeight;
 
-    var barHeight = this.HEIGHT/(times.length* 2);
+    // var barHeight = this.HEIGHT/(times.length* 2);
+    var barWidth = this.WIDTH/(times.length);
 
     drawContext.fillStyle = 'blue';
-
     drawContext.fillRect(newOffset - 255,i * barHeight, 18, 1);
+    drawContext.fillRect(i * barWidth, newOffset - 255, 18, 1);
 
-    drawContext2.fillStyle = 'blue';
-    drawContext2.fillRect(newOffset + 575,i * barHeight, 18, 1);
   }
   requestAnimFrame(this.visualize.bind(this));
 };
