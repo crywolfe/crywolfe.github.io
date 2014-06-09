@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Boris Smus. All Rights Reserved.
+ * Initial structure is the work of Boris Smus.
  */
 
  /* modified extensively by Gerald Wolfe 2014 */
