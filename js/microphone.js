@@ -58,17 +58,23 @@ MicrophoneSample.prototype.visualize = function() {
     var value = times[i];
     var percent = value / 256;
     // var newWidth = this.WIDTH * percent * 1.3;
-    var newHeight = this.HEIGHT * percent;
+    // var newHeight = this.HEIGHT * percent;
+    //
+    // // var newOffset = this.WIDTH - newWidth;
+    // var newOffset = this.HEIGHT - newHeight;
+    //
+    // // var barHeight = this.HEIGHT/(times.length* 2);
+    // var barWidth = this.WIDTH/(times.length);
+    //
+    // drawContext.fillStyle = 'blue';
+    // // drawContext.fillRect(newOffset - 255,i * barHeight, 18, 1);
+    // drawContext.fillRect(i * barWidth, newOffset, 2, 1);
 
-    // var newOffset = this.WIDTH - newWidth;
-    var newOffset = this.HEIGHT - newHeight;
-
-    // var barHeight = this.HEIGHT/(times.length* 2);
-    var barWidth = this.WIDTH/(times.length);
-
+    var height = this.HEIGHT * percent;
+    var offset = this.HEIGHT - height - 1;
+    var barWidth = this.WIDTH/times.length;
     drawContext.fillStyle = 'blue';
-    // drawContext.fillRect(newOffset - 255,i * barHeight, 18, 1);
-    drawContext.fillRect(i * barWidth, newOffset, 18, 1);
+    drawContext.fillRect(i * barWidth, offset, 1, 1);
 
   }
   requestAnimFrame(this.visualize.bind(this));
