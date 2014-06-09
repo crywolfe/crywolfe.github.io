@@ -74,7 +74,7 @@ MicrophoneSample.prototype.visualize = function() {
     var offset = this.HEIGHT - height - 1;
     var barWidth = this.WIDTH/times.length;
     drawContext.fillStyle = 'blue';
-    drawContext.fillRect(i * barWidth, offset, 5, 1);
+    drawContext.fillRect(i * barWidth, offset, 10, 1);
 
   }
   requestAnimFrame(this.visualize.bind(this));
