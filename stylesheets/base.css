@@ -30,7 +30,8 @@
 		border: 0;
 		font-size: 40px;
 		/* font-family: 'Pathway Gothic One', sans-serif; */
-		font-family: 'texgyreadventorregular', sans-serif;
+		/*font-family: 'texgyreadventorregular', sans-serif;*/
+		font-family: 'Raleway', sans-serif;
 		font: inherit;
 		vertical-align: baseline; }
 	article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
@@ -104,7 +105,8 @@
 ================================================== */
 	body {
 		background: #fbfbfb;
-		font-family: 'texgyreadventorregular', sans-serif;
+		/*font-family: 'texgyreadventorregular', sans-serif;*/
+		font-family: 'Raleway', sans-serif;
 		/*font: 14px/21px "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;*/
 		color: #444;
 		-webkit-font-smoothing: antialiased; /* Fix for webkit rendering */
@@ -116,7 +118,8 @@
 ================================================== */
 	h1, h2, h3, h4, h5, h6 {
 		color: #181818;
-		font-family: 'texgyreadventorregular', sans-serif;
+		/*font-family: 'texgyreadventorregular', sans-serif;*/
+		font-family: 'Raleway', sans-serif;
 		font-weight: normal; }
 	h1 a, h2 a, h3 a, h4 a, h5 a, h6 a { font-weight: inherit; }
 	h1 { font-size: 66px; line-height: 70px; margin-bottom: 14px;}
@@ -149,7 +152,7 @@
 	blockquote { margin: 0 0 20px; padding: 9px 20px 0 19px; border-left: 1px solid #ddd; }
 	blockquote cite { display: block; font-size: 12px; color: #555; }
 	blockquote cite:before { content: "\2014 \0020"; }
-	blockquote cite a, blockquote cite a:visited, blockquote cite a:visited { color: #555; }
+	blockquote cite a, blockquote cite a:visited, blockquote cite a:visited { color: #555555; }
 
 	hr { border: solid #ddd; border-width: 1px 0 0; clear: both; margin: 10px 0 30px; height: 0; }
 
@@ -446,4 +449,8 @@
 
 .red {
 	color: red;
+}
+
+h1 h1:visited {
+	color: #000000;
 }

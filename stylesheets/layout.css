@@ -25,7 +25,7 @@
 
 
 	/* Smaller than standard 1400 (devices and browsers) */
-	@media only screen and (min-width: 631px) and (max-width: 1186px) {
+	@media only screen and (min-width: 631px) and (max-width: 1355px) {
 
 		nav {
 			text-align: center;
@@ -70,7 +70,7 @@
 	}
 
 	/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
-	@media only screen and (max-width: 452px) {
+	@media only screen and (max-width: 525px) {
 		nav {
 			text-align: center;
 			background: #EFEFEF;
