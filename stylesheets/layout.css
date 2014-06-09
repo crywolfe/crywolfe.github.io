@@ -35,6 +35,8 @@
 			width: 100%;
 			z-index: 1;
 			line-height: 2.5;
+			margin-top: 10px;
+			margin-bottom: 10px;
 		}
 
 		img.scale-with-grid {
