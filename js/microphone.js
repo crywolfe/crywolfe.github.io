@@ -70,11 +70,11 @@ MicrophoneSample.prototype.visualize = function() {
     // // drawContext.fillRect(newOffset - 255,i * barHeight, 18, 1);
     // drawContext.fillRect(i * barWidth, newOffset, 2, 1);
 
-    var height = this.HEIGHT * percent;
+    var height = this.HEIGHT * percent + 10;
     var offset = this.HEIGHT - height;
     var barWidth = this.WIDTH/times.length;
     drawContext.fillStyle = 'blue';
-    drawContext.fillRect(i * barWidth, offset, 20, 10);
+    drawContext.fillRect(i * barWidth, offset, 15, 10);
 
   }
   requestAnimFrame(this.visualize.bind(this));
