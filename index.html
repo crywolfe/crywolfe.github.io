@@ -1,325 +1,205 @@
 <!DOCTYPE html>
-<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
-<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
-<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<html lang="en">
 <head>
-  <link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/jquery.slick/1.3.6/slick.css"/>
-  <link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" />
-	<link rel="stylesheet" type="text/css" href="stylesheets/demo.css" />
-	<link rel="stylesheet" type="text/css" href="stylesheets/component.css" />
-
-  <script src="../assets/tooltip.js" type="text/javascript"></script>
-
-  <!-- scripts related to microphone and audio visualization -->
-  <script src="js/microphone.js"></script>
-  <script src="js/shared.js"></script>
-
-
-  </script>
-
-  <script type="text/javascript">
-
-  $(function(){
-
-    if ($(window).width() > 630 && $(window).width() < 787) {
-
-      $(window).scroll(function() {
-        if ($(this).scrollTop() > 90) {
-          $('nav').slideDown(200);
-        } else {
-          $('nav').slideUp(200);
-        }
-      });
-    }
-    if ($(window).width() < 629) {
-      $(window).scroll(function() {
-        if ($(this).scrollTop() > 130) {
-          $('nav').slideDown(200);
-        } else {
-          $('nav').slideUp(200);
-        }
-      });
-    } else {
-      $(window).scroll(function() {
-
-        if ($(this).scrollTop() > 40) {
-          $('nav').slideDown(200);
-        } else {
-          $('nav').slideUp(200);
-        }
-      });
-    }
-
-    $('.full-stack').hide();
-    $('#version-0').hide();
-    $('#version-1').hide();
-    $('#version-2').hide();
-    $('.version-3').hide();
-    $('.ptrivia').hide();
-
-    $('.menu-item').click(function(){
-      if ($(window).width() > 453 && $(window).width() < 630) {
-        $('#about').css('padding-top', '130px');
-      }
-    });
-
-    $('#about').hover(function() {
-      $('#version-0').slideDown('slow', 'linear', function() {
-      });
-    });
-
-    $('#full').hover(function() {
-      $('.full-stack').slideDown('slow', 'linear', function() {
-      });
-    });
-
-    $('#h4-version-1').hover(function() {
-      $('#version-1').slideDown('slow', 'swing', function() {
-      });
-    });
-    $('#h4-version-2').hover(function() {
-      $('#version-2').slideDown('slow', 'swing', function() {
-      });
-    });
-    $('#h4-version-3').hover(function() {
-      $('.version-3').slideDown('slow', 'swing', function() {
-      });
-    });
-    $('#trivia').hover(function() {
-      $('.ptrivia').slideDown('slow', 'swing', function() {
-      });
-    });
-
-  });
-
-  </script>
-
-  <!--Basic Page Needs
-  ================================================== -->
-	<meta charset="utf-8">
-	<title>Gerry.Wolfe - Full.Stack.Web.Developer</title>
-	<meta name="description" content="Gerry Wolfe Profile">
-	<meta name="author" content="Gerry Wolfe">
-
-  <!--Mobile Specific Metas
-  ================================================== -->
+  <meta charset="utf-8">
+  <title>Gerry Wolfe - AI Consultant</title>
+  <meta name="description" content="Gerry Wolfe - AI Consultant at Intificia.com">
+  <meta name="author" content="Gerry Wolfe">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-  <!--CSS
-  ================================================== -->
-  <link rel="stylesheet" href="stylesheets/base.css">
+  
+  <!-- Modernized Libraries -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  
+  <!-- Google Fonts for Poppins (matching Intificia) -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS Files (updated for Intificia branding) -->
+  <link rel="stylesheet" href="stylesheets/normalize.css">
+  <link rel="stylesheet" href="stylesheets/base.css"> <!-- Updated with new colors/fonts -->
   <link rel="stylesheet" href="stylesheets/skeleton.css">
   <link rel="stylesheet" href="stylesheets/layout.css">
-
-  <!-- [if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
-
-<!--  Favicons
-  ================================================== -->
+  
+  <!-- Favicons -->
   <link rel="shortcut icon" href="images/favicon.ico">
   <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
   <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
   <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  
+  <!-- Updated JavaScript for active nav state and smooth scrolling -->
+  <script>
+    $(document).ready(function(){
+      // Smooth scroll to section
+      $('a[href^="#"]').on('click', function(event) {
+        var target = $(this.getAttribute('href'));
+        if( target.length ) {
+          event.preventDefault();
+          $('html, body').stop().animate({
+            scrollTop: target.offset().top - 50 // Adjust for fixed nav bar
+          }, 800);
+        }
+      });
+
+      // Highlight nav link on scroll
+      $(window).on('scroll', function() {
+        var scrollPos = $(document).scrollTop();
+        $('nav a').each(function () {
+          var currLink = $(this);
+          var refElement = $(currLink.attr("href"));
+          if (refElement.position().top - 60 <= scrollPos && refElement.position().top + refElement.height() > scrollPos) {
+            $('nav a').removeClass("active");
+            currLink.addClass("active");
+          }
+          else{
+            currLink.removeClass("active");
+          }
+        });
+      });
+
+      // Section toggle
+      $('.section-toggle').click(function(){
+        $(this).next('.section-content').slideToggle('slow');
+        $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
+      });
+    });
+  </script>
 </head>
-<body id="top">
-  <div class="svg-wrap">
-			<svg viewBox="0 0 400 20" xmlns="http://www.w3.org/2000/svg">
-				<path id="svg_line" d="m 1.986,8.91 c 55.429038,4.081 111.58111,5.822 167.11781,2.867 22.70911,-1.208 45.39828,-0.601 68.126,-0.778 28.38173,-0.223 56.76079,-1.024 85.13721,-1.33 24.17379,-0.261 48.42731,0.571 72.58115,0.571"></path>
-			</svg>
-			<svg viewBox="0 0 400 60" xmlns="http://www.w3.org/2000/svg">
-				<path id="svg_marker" d="m 3.518915,27.827324 c 55.429038,4.081 111.581115,5.822 167.117815,2.867 22.70911,-1.208 45.39827,-0.601 68.126,-0.778 28.38172,-0.223 56.76078,-1.024 85.13721,-1.33 24.17378,-0.261 48.4273,0.571 72.58114,0.571"></path>
-			</svg>
-		</div>
-
-
-	<!-- Primary Page Layout
-	================================================== -->
-  <div class="nav_bar">
-    <nav>
+<body>
+  <nav class="nav_bar">
+    <div class="container">
       <ul id="menu">
-        <li class="menu-item"><a href="#top"><i class="fa fa-user"> Welcome</i></a></li>
-        <li class="menu-item"><a href="#about"><i class="fa fa-comment-o"> About.Me</i></a></li>
-        <li class="menu-item"><a href="#skills"><i class="fa fa-wrench"> My.Skills</i></a></li>
-        <li class="menu-item"><a href="#projects"><i class="fa fa-database"> My.Projects</i></a></li>
-        <!-- <li class="menu-item"><a href="#openPopup"><i class="fa fa-paperclip"> My.Resume</i></a></li> -->
-        <li class="menu-item"><a href="#trivia"><i class="fa fa-pencil-square-o"> Relevant.Trivia</i></a></li>
-        <li class="menu-item"><a href="#contact"><i class="fa fa-envelope-o"> My.Contact</i></a></li>
+        <li class="menu-item"><a href="#welcome"><i class="fas fa-user"></i> Welcome</a></li>
+        <li class="menu-item"><a href="#about"><i class="fas fa-info-circle"></i> About</a></li>
+        <li class="menu-item"><a href="#skills"><i class="fas fa-tools"></i> Skills</a></li>
+        <li class="menu-item"><a href="#projects"><i class="fas fa-project-diagram"></i> Projects</a></li>
+        <li class="menu-item"><a href="#blog"><i class="fas fa-blog"></i> Blog</a></li>
+        <li class="menu-item"><a href="#trivia"><i class="fas fa-lightbulb"></i> Trivia</a></li>
+        <li class="menu-item"><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
       </ul>
-    </nav>
+    </div>
+  </nav>
+
+  <div id="welcome" class="container" style="padding-top: 80px;">
+    <div class="sixteen columns">
+      <h1 class="remove-bottom" style="margin-top: 40px;">Gerry Wolfe</h1>
+      <h5><span class='primary-blue'>Version 4.0 (2025)</span></h5>
+      <h4>AI Consultant at Intificia.com</h4>
+      <p>Empowering businesses with safe, effective AI solutions.</p>
+      <hr />
+    </div>
   </div>
 
-	<div class="container">
-		<div class="offset-by-two sixteen columns">
-      <section class="link-svgline">
-			  <a href="#"><h1 class="remove-bottom" style="margin-top: 40px">Gerry Wolfe<svg class="link-svgline"><use xlink:href="#svg_line"></use></svg></h1></a>
-			</section>
-    <section class="link-svgmarker">
-			<h5><a href=""><span class='red'>Version 3.0</span><svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></h5>
-    </section>
-
-      <h4 id="full">Full.Stack.Web.Developer</h4>
-    <section class="link-svgline">
-      <p class="full-stack">... an <a href="#">"empathetic coder"<svg class="link-svgline"><use xlink:href="#svg_line"></use></svg></a></p>
-      <p class="full-stack">... the <a href="#">"binding.pry"<svg class="link-svgline"><use xlink:href="#svg_line"></use></svg></a> of my coding community</p>
-    </section>
-    <div class="eleven columns">
-      <hr />
-    </div>
-		</div>
-
-    <div class="offset-by-two thirteen columns">
-      <!-- microphone and audio integration -->
-        <div id="microphone">
-          <p><canvas style="background: transparent;"></canvas></p>
-
-          <script>
-            var sample = new MicrophoneSample();
-          </script>
-        </div>
-    </div> <!-- offset by two thirteen columns -->
-
-    <div class="offset-by-two five columns">
+  <div id="about" class="container">
+    <div class="five columns">
       <img class="scale-with-grid" id="headshot" alt="Gerry Wolfe" src="assets/headshot.jpg">
-
     </div>
-
-    <div class="offset-by-two thirteen columns">
-      <h3 id="about"><i class="fa fa-comment-o"> About.Me</i></h3>
-      <p id="version-0">I am now on version 3.0 of my life.</p>
-      <h4 id="h4-version-1" z-index="1000">Version 1.0</h4>
-
-      <p id="version-1">Version 1.0 was a very creative time in my life.  During that time, I performed as a <span class='red'>professional stand-up comedian</span>.  I landed a gig as an independent joke writer for the <span class='red'>Tonight Show with Jay Leno</span>.  I played the piano as an emcee at the <span class='red'>Comedy Store</span> and also was a regular there too!  Those were incredibly fun and creative times in my life.</p>
-      <h4 id="h4-version-2">Version 2.0</h4>
-      <p id="version-2">Version 2.0 was another incredible time in my life.  It was a productive time.  I got married.  I built several <span class='red'>businesses</span>.  I traveled extensively.  I became an <span class='red'>endurance athlete</span>.</p>
-      <h4 id="h4-version-3">Version 3.0</h4>
-      <p class="version-3">Version 3.0 is now!  I am combining my humor, creativity and productivity using web and software development as my career of choice.</p>
-      <p class="version-3">I am a full stack web developer.  Is that even a real thing?  Bottom line is that I am a web developer.  Learning new technologies makes me tick.  I tinker with technology.  I build with technology.  Is there any greater technological development tool than the <span class='red'>keyboard,</span>?  The keyboard gives me <span class='red'>creative</span> and <span class='red'>logical</span> expression.</p>
-			<p class="version-3">With that in mind, on this site you can view my portfolio, my interests, and learn a little bit more about me, including relevant trivia.  Enjoy your day!</p>
-		  <hr />
+    <div class="eleven columns">
+      <h3><i class="fas fa-info-circle"></i> About Me</h3>
+      <p>I am Gerry Wolfe, an AI Consultant at <a href="https://intificia.com" target="_blank">Intificia.com</a>, specializing in helping businesses implement AI solutions safely and effectively. With 9 years as a software engineer and a Master's degree in Computer Science focused on machine learning, I work daily with AI technologies. I have several years of experience building generative AI products and understand the opportunities and challenges for small to medium-sized businesses.</p>
     </div>
+    <hr class="sixteen columns"/>
+  </div>
 
-<!-- MY PROJECTS -->
-    <div class="offset-by-two thirteen columns">
-      <h3 id="projects"><i class="fa fa-database"> My.Projects</i></h3>
-      <div class="carousel">
-
-        <div><img src="assets/arduino.jpg" alt="arduino" class="scale-with-grid carousel"/></a><p class="centered">Light My Node is an "Internet of Things" experiment.<br> If I can control LEDs from my web browser, what else can I control?</p></div>
-        <div><a href="http://buggybus.herokuapp.com/"><img src="assets/buggy_bus.jpg" alt="buggy bus" class="scale-with-grid carousel"/></a><p class="centered">Buggy Bus is like Kayak.com for bus services.<br> One bus site to rule them all!</p></div>
-        <div><a href="rails-guide/rails_index.html"><img src="assets/rails_guide.jpg" alt="rails guide pull request" class="scale-with-grid carousel" /></a><p class="centered">This link is a Pull Request I am submitting to Rails.<br>You won't believe what Rails never documented!</p>
-        </div>
-        <div><a href="http://taba-app.herokuapp.com/"><img src="assets/taba.jpg" alt="there and back again" class="scale-with-grid carousel"/></a><p class="centered">This is a mood tracking journal.  Huh?</p></div>
-      </div>
-      <hr />
+  <div id="skills" class="container">
+    <div class="sixteen columns">
+      <h3><i class="fas fa-tools"></i> My Skills</h3>
     </div>
-
-    <div class="offset-by-one fifteen columns">
-      <h3 id="skills"><i class="fa fa-wrench"> My.Skills</i></h3>
-
-      <div class="six columns">
-        <li class="skills"><i class="fa fa-check-square-o"> Front.End</i>
-          <ul id="front-end">
-          <section class="link-svgmarker">
-            <br>
-            <li><a href="">HTML5... getting better<svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-            <li><a>CSS3... hidden treasures<svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-            <li><a href="">JavaScript... flexible<svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-            <li><a>jQuery... convenient<svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-            <li><a href="">AJAX... efficient<svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-            <li><a>Foundation... extensive<svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-            <li><a href="">Skeleton... simple<svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-            <li><a>Backbone... needed<svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-            <li><a><span>Meteor... wow!!</span><svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-            <li><a><span class='red'>Hipbone :)</span><svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-          </section>
-          </ul>
-        </li>
-      </div> <!--six columns -->
-      <div class="seven columns">
-        <li class="skills"><i class="fa fa-check-square-o"> Back.End</i>
-          <ul id="back-end">
-            <section class="link-svgmarker">
-              <br>
-              <li><a>Git... still amazing<svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-              <li><a href="">Ruby and its <span class='red'>lovely</span> Gems<svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-              <li><a>Rails... lots o' magic<svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-              <li><a href="">Sinatra... so quick<svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-              <li><a>Heroku... so slow<svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-              <li><a href="">Node... blazing fast<svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-              <li><a>TDD... so fun<svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-              <li><a href="">RSpec... helpful<svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-              <li><a>PostgreSQL... so advanced<svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-              <li><a>MongoDB... so easy<svg class="link-svgline"><use xlink:href="#svg_marker"></svg></a></li>
-            </section>
-          </ul>
-        </li>
-      </div>
-      <div class="thirteen columns">
-      <hr />
+    <div class="one-half column">
+      <h4 class="skills"><i class="fas fa-check-square"></i> AI & ML Expertise</h4>
+      <ul id="ai-skills">
+        <li>Machine Learning Frameworks (TensorFlow, PyTorch)</li>
+        <li>Generative AI & LLMs</li>
+        <li>Retrieval-Augmented Generation (RAG)</li>
+        <li>Predictive Analytics</li>
+        <li>Custom AI Agents</li>
+      </ul>
     </div>
+    <div class="one-half column">
+      <h4 class="skills"><i class="fas fa-check-square"></i> Development & Tools</h4>
+      <ul id="dev-skills">
+        <li>Python, JavaScript, Node.js</li>
+        <li>Databases (PostgreSQL, MongoDB)</li>
+        <li>Cloud Platforms (AWS, Azure AI)</li>
+        <li>Process Automation & Optimization</li>
+        <li>Secure AI Implementation</li>
+      </ul>
     </div>
+    <hr class="sixteen columns"/>
+  </div>
 
-    <div class="offset-by-two thirteen columns">
-
-      <h3 id="trivia"><i class="fa fa-pencil-square-o"> Relevant.Trivia</i></h3>
-      <p class="ptrivia">I am an endurance athlete typically finishing in the <span class='red'>top 10%</span> of my age group.  Endurance athletics has trained me to be patient and enjoy the small incremental successes.</p>
-      <p class="ptrivia">Based in part on my endurance athletics, I experience that great work is not accomplished overnight.  Great work require long term commitment.</p>
-      <p class="ptrivia">My current favorite quotation is: <br><span class='quote'>'Our actions may be impeded... but there can be no impeding our intentions or dispositions... The impediment to action advances action.  What stands in the way becomes the way.'</span> <br> by Marcus Aurelius.</p>
-
-      <p class="ptrivia">My personality type is <a href="" title="ENTJs are natural born leaders. They live in a world of possibilities where they see all sorts challenges to be surmounted, and they want to be the ones responsible for surmounting them. They have a drive for leadership, which is well-served by their quickness to grasp complexities, their ability to absorb a large amount of impersonal information, and their quick and decisive judgments. They are 'take charge' people."><span>ENTJ</span></a>.</p>
-
-
-      <hr />
+  <div id="projects" class="container">
+    <div class="sixteen columns">
+      <h3><i class="fas fa-project-diagram"></i> My Projects</h3>
     </div>
-    <div class="offset-by-two thirteen columns">
-			<h3 id="contact">My.Contact</h3>
-      <div class="three columns">
-        <p class="contact"><a href="http://github.com/crywolfe"><i class="fa fa-github"> github</i></a></p>
-      </div>
-      <div class="three columns">
-        <p class="contact"><a href="http://linkedin.com/in/gerrywolfe"><i class="fa fa-linkedin"> LinkedIn</i></a></p>
-      </div>
-      <div class="three columns">
-		  	<p class="contact"><a href="mailto:gwolfe2007&#64;gmail.com?Subject=Saw%20Your%20Website"><i class="fa fa-envelope-o"> email</i></a></p>
-      </div>
-      <hr />
-		</div>
-    <!-- resume
-    <div class="offset-by-one fourteen columns"> -->
+    <div class="four columns project-item">
+      <img src="assets/gen-ai-win.jpg" alt="Gen AI Quick Win">
+      <h5>Gen AI: Quick Win for Business</h5>
+      <p>Implemented generative AI for immediate team benefits and business success.</p>
+    </div>
+    <div class="four columns project-item">
+      <img src="assets/rag-reliable-ai.jpg" alt="RAG Reliable AI">
+      <h5>Making AI Reliable with RAG</h5>
+      <p>Developed retrieval-augmented systems for accurate AI using proprietary data.</p>
+    </div>
+    <div class="four columns project-item">
+      <img src="assets/large-ai-models.jpg" alt="Large AI Models Costs">
+      <h5>Hidden Costs of Large AI Models</h5>
+      <p>Optimized AI deployments with smaller, cost-effective models.</p>
+    </div>
+    <div class="four columns project-item">
+      <img src="assets/covid-analytics.jpg" alt="COVID-19 Analytics">
+      <h5>COVID-19 Treatments Analytics</h5>
+      <p>Used data analytics to evaluate research for treatments.</p>
+    </div>
+    <hr class="sixteen columns"/>
+  </div>
 
-    <!-- resume popup
-      <div id ="openPopup" class="popupDialog">
-        <div>
-        <a href="#close" title="Close" class="close">X</a>
-        <p><img id="resume" src="../assets/resume.png"></p>
-        </div>
-      </div>
-    </div> -->
+  <div id="blog" class="container">
+    <div class="sixteen columns">
+      <h3><i class="fas fa-blog"></i> Blog Highlights</h3>
+      <ul>
+        <li><a href="https://www.intificia.com/blog/blog-post-one-tf5bm" target="_blank">Gen AI: Your Team's Quick Win for Immediate AI Success</a> – By Gerry Wolfe</li>
+        <li><a href="https://www.intificia.com/blog/blog-post-two-knfsw" target="_blank">Making AI Reliable with RAG: A Practical Guide</a> – By Gerry Wolfe</li>
+        <li><a href="https://www.intificia.com/blog/the-hidden-costs-of-large-ai-models" target="_blank">The Hidden Costs of Large AI Models</a> – By Gerry Wolfe</li>
+      </ul>
+      <p>Read more on <a href="https://www.intificia.com/blog" target="_blank">Intificia Blog</a>.</p>
+    </div>
+    <hr class="sixteen columns"/>
+  </div>
 
-	</div><!-- container -->
-<!-- BOTTOM BAR -->
-	<div class="nav_bar_bottom"></div>
+  <div id="trivia" class="container">
+    <div class="sixteen columns">
+      <h3><i class="fas fa-lightbulb"></i> Relevant Trivia</h3>
+      <p>As an endurance athlete finishing in the top 10% of my age group, I've learned patience and incremental success – much like training AI models.</p>
+      <p>Favorite quote: "Our actions may be impeded... but there can be no impeding our intentions... What stands in the way becomes the way." – Marcus Aurelius (applies to AI challenges).</p>
+      <p>Personality: ENTJ – Natural leader, quick to grasp complexities in AI projects.</p>
+    </div>
+    <hr class="sixteen columns"/>
+  </div>
 
-<script type="text/javascript" src="http://cdn.jsdelivr.net/jquery.slick/1.3.6/slick.min.js"></script>
-<script>
-  $(document).ready(function(){
-	$('.carousel').slick({
-	  arrows: true,
-    accessibility: true,
-    autoplay: true,
-    autoplaySpeed: 5000,
-    centermode: true,
-    centerpadding: "150px",
-    dots: true
+  <div id="contact" class="container">
+    <div class="sixteen columns">
+      <h3><i class="fas fa-envelope"></i> Contact</h3>
+    </div>
+    <div class="four columns">
+      <p class="contact"><a href="https://github.com/crywolfe"><i class="fab fa-github"></i> GitHub</a></p>
+    </div>
+    <div class="four columns">
+      <p class="contact"><a href="https://linkedin.com/in/gerrywolfe"><i class="fab fa-linkedin"></i> LinkedIn</a></p>
+    </div>
+    <div class="four columns">
+      <p class="contact"><a href="mailto:gwolfe@intificia.com"><i class="fas fa-envelope"></i> Email</a></p>
+    </div>
+    <div class="four columns">
+      <p class="contact"><a href="https://intificia.com"><i class="fas fa-globe"></i> Intificia.com</a></p>
+    </div>
+  </div>
 
-	});
-});
-</script>
-<!-- End Document
-================================================== -->
+  <footer class="nav_bar_bottom">
+    <div class="container">
+      <p>&copy; 2025 Gerry Wolfe. All rights reserved.</p>
+    </div>
+  </footer>
+
 </body>
 </html>
