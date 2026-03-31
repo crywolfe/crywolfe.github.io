@@ -1,205 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Gerry Wolfe - AI Consultant</title>
-  <meta name="description" content="Gerry Wolfe - AI Consultant at Intificia.com">
-  <meta name="author" content="Gerry Wolfe">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  
-  <!-- Modernized Libraries -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  
-  <!-- Google Fonts for Poppins (matching Intificia) -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-  
-  <!-- CSS Files (updated for Intificia branding) -->
-  <link rel="stylesheet" href="stylesheets/normalize.css">
-  <link rel="stylesheet" href="stylesheets/base.css"> <!-- Updated with new colors/fonts -->
-  <link rel="stylesheet" href="stylesheets/skeleton.css">
-  <link rel="stylesheet" href="stylesheets/layout.css">
-  
-  <!-- Favicons -->
-  <link rel="shortcut icon" href="images/favicon.ico">
-  <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-  <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-  <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
-  
-  <!-- Updated JavaScript for active nav state and smooth scrolling -->
-  <script>
-    $(document).ready(function(){
-      // Smooth scroll to section
-      $('a[href^="#"]').on('click', function(event) {
-        var target = $(this.getAttribute('href'));
-        if( target.length ) {
-          event.preventDefault();
-          $('html, body').stop().animate({
-            scrollTop: target.offset().top - 50 // Adjust for fixed nav bar
-          }, 800);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gerry Wolfe, JD — Legal AI Engineer & Architect of Intent. Home of Lambda Engine (deterministic AI consultancy) and The Forge (foundational research).">
+    <meta property="og:title" content="Gerry Wolfe | Architected Intent • Deterministic AI & The Forge">
+    <meta property="og:description" content="Bridging law, philosophy, and autonomous systems. Deterministic guardrails for high-stakes enterprise AI.">
+    <title>Gerry Wolfe | Architected Intent • Deterministic AI & The Forge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&amp;family=Fira+Code:wght@400;500&amp;display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #020617; 
+            color: #f8fafc; 
         }
-      });
-
-      // Highlight nav link on scroll
-      $(window).on('scroll', function() {
-        var scrollPos = $(document).scrollTop();
-        $('nav a').each(function () {
-          var currLink = $(this);
-          var refElement = $(currLink.attr("href"));
-          if (refElement.position().top - 60 <= scrollPos && refElement.position().top + refElement.height() > scrollPos) {
-            $('nav a').removeClass("active");
-            currLink.addClass("active");
-          }
-          else{
-            currLink.removeClass("active");
-          }
-        });
-      });
-
-      // Section toggle
-      $('.section-toggle').click(function(){
-        $(this).next('.section-content').slideToggle('slow');
-        $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
-      });
-    });
-  </script>
+        .mono { font-family: 'Fira Code', monospace; }
+        .glass {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .accent-gradient {
+            background: linear-gradient(135deg, #00d4ff 0%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card-hover:hover { 
+            border-color: #00d4ff; 
+            transform: translateY(-2px); 
+        }
+    </style>
 </head>
-<body>
-  <nav class="nav_bar">
-    <div class="container">
-      <ul id="menu">
-        <li class="menu-item"><a href="#welcome"><i class="fas fa-user"></i> Welcome</a></li>
-        <li class="menu-item"><a href="#about"><i class="fas fa-info-circle"></i> About</a></li>
-        <li class="menu-item"><a href="#skills"><i class="fas fa-tools"></i> Skills</a></li>
-        <li class="menu-item"><a href="#projects"><i class="fas fa-project-diagram"></i> Projects</a></li>
-        <li class="menu-item"><a href="#blog"><i class="fas fa-blog"></i> Blog</a></li>
-        <li class="menu-item"><a href="#trivia"><i class="fas fa-lightbulb"></i> Trivia</a></li>
-        <li class="menu-item"><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
-      </ul>
-    </div>
-  </nav>
+<body class="min-h-screen flex flex-col">
 
-  <div id="welcome" class="container" style="padding-top: 80px;">
-    <div class="sixteen columns">
-      <h1 class="remove-bottom" style="margin-top: 40px;">Gerry Wolfe</h1>
-      <h5><span class='primary-blue'>Current Version of Technical Self - Version 4.0.1</span></h5>
-      <h4>AI Consultant at Intificia.com</h4>
-      <p>Empowering businesses with safe, effective AI solutions.</p>
-      <hr />
-    </div>
-  </div>
+    <!-- HERO -->
+    <header class="max-w-6xl mx-auto w-full pt-20 pb-12 px-6 text-center">
+        <div class="inline-flex items-center gap-2 bg-slate-800/70 px-4 py-2 rounded-3xl mb-6">
+            <span class="text-xs font-medium tracking-widest text-[#00d4ff]">GERRY WOLFE • JD • MSCS</span>
+        </div>
+        <h1 class="text-6xl md:text-7xl font-bold tracking-tighter mb-4">Architected Intent</h1>
+        <p class="mono text-lg uppercase tracking-[3px] text-[#00d4ff] mb-8">Deterministic AI for High-Stakes Environments</p>
+        
+        <p class="max-w-2xl mx-auto text-xl text-slate-300 leading-relaxed">
+            From legal reasoning systems to production-grade agents and developer tools - I build the last mile where AI must be verifiable, safe, and enterprise-ready.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center mt-12">
+            <a href="https://lambda.gerrywolfe.com" 
+               class="px-10 py-5 bg-[#00d4ff] hover:brightness-110 text-slate-950 font-semibold rounded-2xl flex items-center justify-center gap-3 transition">
+                Visit Lambda Engine Consultancy
+                <span class="text-xl">→</span>
+            </a>
+            <a href="#forge" 
+               class="px-8 py-5 border border-slate-300 hover:border-slate-100 rounded-2xl flex items-center justify-center gap-3 transition">
+                Explore The Forge (Research)
+            </a>
+        </div>
+    </header>
 
-  <div id="about" class="container">
-    <div class="five columns">
-      <img class="scale-with-grid" id="headshot" alt="Gerry Wolfe" src="assets/headshot.jpg">
-    </div>
-    <div class="eleven columns">
-      <h3><i class="fas fa-info-circle"></i> About Me</h3>
-      <p>I am Gerry Wolfe, an AI Consultant at <a href="https://intificia.com" target="_blank">Intificia.com</a>, specializing in helping businesses implement AI solutions safely and effectively. With 9 years as a software engineer and a Master's degree in Computer Science focused on machine learning, I work daily with AI technologies. I have several years of experience building generative AI products and understand the opportunities and challenges for small to medium-sized businesses.</p>
-    </div>
-    <hr class="sixteen columns"/>
-  </div>
+    <main class="max-w-6xl mx-auto w-full px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 mb-20">
+        
+        <!-- Lambda Engine Pillar -->
+        <section class="glass p-8 rounded-2xl flex flex-col border-t-4 border-t-[#00d4ff]">
+            <div class="mb-8">
+                <div class="flex items-center justify-between mb-2">
+                    <h2 class="text-3xl font-bold">Lambda Engine</h2>
+                    <span class="text-[10px] border border-[#00d4ff]/50 text-[#00d4ff] px-2 py-1 rounded uppercase tracking-widest">Consultancy</span>
+                </div>
+                <p class="text-[#00d4ff] font-semibold mb-4 text-xs tracking-widest uppercase">Agentic Strategy & Implementation</p>
+                <p class="text-slate-300 leading-relaxed">
+                    Engineering mission-critical agents for legal and corporate sectors. We focus on "The Last Mile" of AI - where outputs must be verifiable, deterministic, and safe for enterprise deployment.
+                </p>
+                <p class="text-emerald-400 text-sm font-medium mt-6 flex items-center gap-2">
+                    <span class="inline-block w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                    From problem to proof-of-concept to production in weeks - not months of pilots
+                </p>
+            </div>
 
-  <div id="skills" class="container">
-    <div class="sixteen columns">
-      <h3><i class="fas fa-tools"></i> My Skills</h3>
-    </div>
-    <div class="one-half column">
-      <h4 class="skills"><i class="fas fa-check-square"></i> AI & ML Expertise</h4>
-      <ul id="ai-skills">
-        <li>Machine Learning Frameworks (TensorFlow, PyTorch)</li>
-        <li>Generative AI & LLMs</li>
-        <li>Retrieval-Augmented Generation (RAG)</li>
-        <li>Predictive Analytics</li>
-        <li>Custom AI Agents (Google ADK, Pydantic AI, Claude SDK)</li>
-      </ul>
-    </div>
-    <div class="one-half column">
-      <h4 class="skills"><i class="fas fa-check-square"></i> Development & Tools</h4>
-      <ul id="dev-skills">
-        <li>Python, TypeScript</li>
-        <li>Databases (SQL, NoSQL, Vector, Graph)</li>
-        <li>Cloud Platforms (AWS, Azure)</li>
-        <li>Event-Driven Architecture</li>
-        <li>Scalable System Design</li>
-      </ul>
-    </div>
-    <hr class="sixteen columns"/>
-  </div>
+            <div class="space-y-5 mb-10">
+                <div class="flex items-start gap-3">
+                    <div class="mt-1 text-[#00d4ff]">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-slate-100">Deterministic Guardrails</h4>
+                        <p class="text-sm text-slate-400">Hard-coded logical constraints that eliminate hallucinations in high-liability legal and operational workflows.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3">
+                    <div class="mt-1 text-[#00d4ff]">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-slate-100">Agentic Workflow Design</h4>
+                        <p class="text-sm text-slate-400">Moving beyond static RAG to dynamic, autonomous multi-agent systems designed with Architected Intent.</p>
+                    </div>
+                </div>
+            </div>
 
-  <!-- <div id="projects" class="container">
-    <div class="sixteen columns">
-      <h3><i class="fas fa-project-diagram"></i> My Projects</h3>
-    </div>
-    <div class="four columns project-item">
-      <img src="assets/gen-ai-win.jpg" alt="Gen AI Quick Win">
-      <h5>Gen AI: Quick Win for Business</h5>
-      <p>Implemented generative AI for immediate team benefits and business success.</p>
-    </div>
-    <div class="four columns project-item">
-      <img src="assets/rag-reliable-ai.jpg" alt="RAG Reliable AI">
-      <h5>Making AI Reliable with RAG</h5>
-      <p>Developed retrieval-augmented systems for accurate AI using proprietary data.</p>
-    </div>
-    <div class="four columns project-item">
-      <img src="assets/large-ai-models.jpg" alt="Large AI Models Costs">
-      <h5>Hidden Costs of Large AI Models</h5>
-      <p>Optimized AI deployments with smaller, cost-effective models.</p>
-    </div>
-    <div class="four columns project-item">
-      <img src="assets/covid-analytics.jpg" alt="COVID-19 Analytics">
-      <h5>COVID-19 Treatments Analytics</h5>
-      <p>Used data analytics to evaluate research for treatments.</p>
-    </div>
-    <hr class="sixteen columns"/>
-  </div> -->
+            <div class="mt-auto">
+                <a href="https://lambda.gerrywolfe.com" 
+                   class="inline-block w-full text-center bg-[#00d4ff] hover:brightness-110 text-slate-950 font-bold py-3 rounded-lg transition-colors">
+                    Deploy Reliable AI →
+                </a>
+                <p class="text-center text-xs text-slate-500 mt-4 italic">"Architecting certainty for the enterprise."</p>
+            </div>
+        </section>
 
-  <div id="blog" class="container">
-    <div class="sixteen columns">
-      <h3><i class="fas fa-blog"></i> Blog Highlights</h3>
-      <ul>
-        <li><a href="https://www.intificia.com/blog/blog-post-one-tf5bm" target="_blank">Gen AI: Your Team's Quick Win for Immediate AI Success</a> – By Gerry Wolfe</li>
-        <li><a href="https://www.intificia.com/blog/blog-post-two-knfsw" target="_blank">Making AI Reliable with RAG: A Practical Guide</a> – By Gerry Wolfe</li>
-        <li><a href="https://www.intificia.com/blog/the-hidden-costs-of-large-ai-models" target="_blank">The Hidden Costs of Large AI Models</a> – By Gerry Wolfe</li>
-      </ul>
-      <p>Read more on <a href="https://www.intificia.com/blog" target="_blank">Intificia Blog</a>.</p>
-    </div>
-    <hr class="sixteen columns"/>
-  </div>
+        <!-- The Forge Pillar -->
+        <section id="forge" class="glass p-8 rounded-2xl flex flex-col border-t-4 border-t-indigo-500">
+            <div class="mb-8">
+                <div class="flex items-center justify-between mb-2">
+                    <h2 class="text-3xl font-bold">The Forge</h2>
+                    <span class="text-[10px] border border-indigo-500/50 text-indigo-400 px-2 py-1 rounded uppercase tracking-widest">R&amp;D</span>
+                </div>
+                <p class="text-indigo-400 font-semibold mb-4 text-xs tracking-widest uppercase">Intellectual Engine of Lambda Engine</p>
+                <p class="text-slate-300 leading-relaxed">
+                    Theoretical research into the logic of LLMs. These award-winning projects provide the semantic infrastructure and alignment math that powers every deterministic solution at Lambda Engine.
+                </p>
+            </div>
 
-  <div id="trivia" class="container">
-    <div class="sixteen columns">
-      <h3><i class="fas fa-lightbulb"></i> Relevant Trivia</h3>
-      <p>As an endurance athlete (triathlons, marathon swims), I've learned patience and incremental success – much like training AI models.</p>
-      <p>Favorite quote: "Our actions may be impeded... but there can be no impeding our intentions... What stands in the way becomes the way." – Marcus Aurelius (applies to AI challenges).</p>
-      <p>Personality: <a href="https://www.16personalities.com/entj-personality" target="_blank">ENTJ</a> – Natural leader, quick to grasp complexities in AI projects.</p>
-    </div>
-    <hr class="sixteen columns"/>
-  </div>
+            <div class="grid gap-4 mb-8">
+                <!-- ReasonDB -->
+                <div onclick="window.location.href='/reason-db'" class="bg-slate-900/50 p-5 rounded-xl border border-slate-700 card-hover cursor-pointer">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-lg">ReasonDB</h3>
+                        <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-1 rounded uppercase tracking-tighter">Best Overall Paper • OCOAI 2025</span>
+                    </div>
+                    <p class="text-sm text-slate-400">Embedded semantic reasoning database architecture - the deterministic memory layer behind mission-critical agents.</p>
+                </div>
 
-  <div id="contact" class="container">
-    <div class="sixteen columns">
-      <h3><i class="fas fa-envelope"></i> Contact</h3>
-    </div>
-    <div class="four columns">
-      <p class="contact"><a href="https://github.com/crywolfe"><i class="fab fa-github"></i> GitHub</a></p>
-    </div>
-    <div class="four columns">
-      <p class="contact"><a href="https://linkedin.com/in/gerrywolfe"><i class="fab fa-linkedin"></i> LinkedIn</a></p>
-    </div>
-    <div class="four columns">
-      <p class="contact"><a href="mailto:gwolfe@intificia.com"><i class="fas fa-envelope"></i> Email</a></p>
-    </div>
-    <div class="four columns">
-      <p class="contact"><a href="https://intificia.com"><i class="fas fa-globe"></i> Intificia.com</a></p>
-    </div>
-  </div>
+                <!-- Tarski Loss -->
+                <div onclick="window.location.href='/tarski-loss'" class="bg-slate-900/50 p-5 rounded-xl border border-slate-700 card-hover cursor-pointer">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-lg">Tarski Loss</h3>
+                        <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-1 rounded uppercase tracking-tighter">Logical Alignment</span>
+                    </div>
+                    <p class="text-sm text-slate-400">A novel loss function ensuring logical consistency through Tarskian semantic constraints - foundational for verifiable AI.</p>
+                </div>
 
-  <footer class="nav_bar_bottom">
-    <div class="container">
-      <p>&copy; 2025 Gerry Wolfe. All rights reserved.</p>
-    </div>
-  </footer>
+                <!-- ThinkGit -->
+                <div onclick="window.open('https://marketplace.visualstudio.com/items?itemName=GerryWolfe.thinkgit', '_blank')" class="bg-slate-900/50 p-5 rounded-xl border border-slate-700 card-hover cursor-pointer">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-lg">ThinkGit</h3>
+                        <span class="text-[10px] bg-sky-500/20 text-sky-300 px-2 py-1 rounded uppercase tracking-tighter">VS Code Extension</span>
+                    </div>
+                    <p class="text-sm text-slate-400">AI-powered Git workflow for VS Code. Turn natural language into precise commits, branches, and PRs with architected intent.</p>
+                </div>
+            </div>
+
+            <div class="mt-auto pt-6 border-t border-slate-800">
+                <div class="flex flex-wrap gap-6 text-sm">
+                    <a href="/thinkgit" class="text-slate-400 hover:text-[#00d4ff] flex items-center gap-1 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                        ThinkGit
+                    </a>
+                    <a href="/nosh-n-neurons" class="text-slate-400 hover:text-[#00d4ff] flex items-center gap-1 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        Nosh-n-Neurons
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-auto border-t border-slate-800 py-10 text-center">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+            <p class="text-slate-500 text-sm tracking-wide">© 2026 GERRY WOLFE • ARCHITECTED IN NORTH DAKOTA </p><p class="text-slate-500 text-sm tracking-wide">BUILT WITH PRIVACY AND SECURITY IN MIND FOR HIGH-STAKES SYSTEMS</p>
+            
+            <a href="https://lambda.gerrywolfe.com" 
+               class="inline-flex items-center gap-2 text-slate-400 hover:text-[#00d4ff] text-sm transition-colors">
+                <span>Lambda Engine Consultancy</span>
+                <span class="text-xl">→</span>
+            </a>
+            
+            <p class="text-slate-500 text-xs">Deterministic AI • Agentic Systems • Logical Guardrails</p>
+        </div>
+    </footer>
 
 </body>
 </html>
