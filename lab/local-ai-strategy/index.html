@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local AI Infrastructure Stack & Strategy Hub • Enhanced</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        html {
+            font-size: 20px;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b1329;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+        .layer-btn.active {
+            border-color: #6366f1 !important;
+            background-color: #1e293b;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        .metric-value {
+            font-variant-numeric: tabular-nums;
+        }
+        .code-block {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+        .interactive-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .interactive-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .nav-tab {
+            position: relative;
+        }
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, #6366f1, #a5b4fc);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-indigo-500 selection:text-white">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header Banner -->
+        <header class="border-b border-slate-800 pb-6 mb-8">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                <div>
+                    <div class="flex items-center gap-3">
+                        <span class="px-3 py-1 text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-full">Strategic Briefing Explorer v2</span>
+                        <span class="px-2.5 py-0.5 text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded">Podcast-Enhanced</span>
+                    </div>
+                    <h1 class="text-3xl lg:text-4xl font-extrabold text-white tracking-tight mt-2">Local AI Infrastructure &amp; Sovereign Deployment Stack</h1>
+                    <p class="text-slate-400 text-sm mt-1.5 max-w-2xl">A comprehensive, interactive playbook for secure local compute, model serving, agentic workflows, and regulated-industry governance. Inspired by Nufar Gaspar on The AI Daily Brief (June 2026) — extended with production realities, legal tech considerations, and forward-looking tools.</p>
+                    
+                    <!-- Forces Callout -->
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-900 border border-slate-700 rounded-full text-xs">
+                            <span class="text-emerald-400">●</span>
+                            <span class="font-medium">Core Forces:</span> <span class="text-slate-300">Cost • Control • Access • Fragility • Resilience</span>
+                        </div>
+                        <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-300 rounded-full text-xs">
+                            <span class="font-semibold">Fable 5 Trigger:</span> <span class="text-amber-200/80">Vendor &amp; geopolitical risk highlighted</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-3 bg-slate-900 border border-slate-800 rounded-2xl p-3 text-sm">
+                    <div class="flex items-center gap-2">
+                        <div class="h-2.5 w-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                        <span class="font-medium text-emerald-400">Interactive Sovereignty Matrix</span>
+                    </div>
+                    <div class="h-4 w-px bg-slate-700"></div>
+                    <button onclick="exportConfig()" 
+                            class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg transition-colors">
+                        <span>Export Config</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
+            <!-- Left Side: Interactive Stack Layers & Enhanced Simulator -->
+            <section class="lg:col-span-5 flex flex-col gap-6">
+                <!-- Stack Selection Header -->
+                <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="text-indigo-400 font-bold text-lg">▲</span>
+                            <h2 class="text-sm font-bold text-slate-200 uppercase tracking-wider">Local AI Layer Architectures (Bottom-Up)</h2>
+                        </div>
+                        <span class="text-[10px] px-2 py-0.5 bg-slate-800 text-slate-400 rounded">5 Layers</span>
+                    </div>
+                    
+                    <!-- Vertical Stack Blocks -->
+                    <div class="flex flex-col-reverse gap-3">
+                        <button onclick="selectLayer(1)" id="btn-layer-1" 
+                                class="layer-btn w-full text-left bg-slate-900 hover:bg-slate-800/80 border-2 border-slate-700 hover:border-slate-600 rounded-xl p-4 transition-all duration-200 text-left active-layer-border">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <span class="text-xs text-slate-500 font-semibold tracking-wider block">LAYER 1 — FOUNDATION</span>
+                                    <span class="text-sm font-bold text-white">Physical Hardware (CPU vs GPU / VRAM)</span>
+                                </div>
+                            </div>
+                        </button>
+                        
+                        <button onclick="selectLayer(2)" id="btn-layer-2" 
+                                class="layer-btn w-full text-left bg-slate-900 hover:bg-slate-800/80 border-2 border-slate-700 hover:border-slate-600 rounded-xl p-4 transition-all duration-200">
+                            <div>
+                                <span class="text-xs text-slate-500 font-semibold tracking-wider block">LAYER 2 — KNOWLEDGE</span>
+                                <span class="text-sm font-bold text-white">Open Weights &amp; Model Scaling / Quantization</span>
+                            </div>
+                        </button>
+                        
+                        <button onclick="selectLayer(3)" id="btn-layer-3" 
+                                class="layer-btn w-full text-left bg-slate-900 hover:bg-slate-800/80 border-2 border-slate-700 hover:border-slate-600 rounded-xl p-4 transition-all duration-200">
+                            <div>
+                                <span class="text-xs text-slate-500 font-semibold tracking-wider block">LAYER 3 — SERVING</span>
+                                <span class="text-sm font-bold text-white">Inferencing Engines (Ollama • vLLM • LM Studio)</span>
+                            </div>
+                        </button>
+                        
+                        <button onclick="selectLayer(4)" id="btn-layer-4" 
+                                class="layer-btn w-full text-left bg-slate-900 hover:bg-slate-800/80 border-2 border-slate-700 hover:border-slate-600 rounded-xl p-4 transition-all duration-200">
+                            <div>
+                                <span class="text-xs text-slate-500 font-semibold tracking-wider block">LAYER 4 — ORCHESTRATION</span>
+                                <span class="text-sm font-bold text-white">Agent Harnesses &amp; Control (LangGraph • Open WebUI • Custom)</span>
+                            </div>
+                        </button>
+                        
+                        <button onclick="selectLayer(5)" id="btn-layer-5" 
+                                class="layer-btn w-full text-left bg-slate-900 hover:bg-slate-800/80 border-2 border-slate-700 hover:border-slate-600 rounded-xl p-4 transition-all duration-200">
+                            <div>
+                                <span class="text-xs text-slate-500 font-semibold tracking-wider block">LAYER 5 — INTEGRATION</span>
+                                <span class="text-sm font-bold text-white">Automation Interfaces &amp; Business Workflows</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Enhanced Simulator -->
+                <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-5">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-2">
+                            <span class="text-emerald-400 font-bold text-lg">⚙️</span>
+                            <h2 class="text-sm font-bold text-slate-200 uppercase tracking-wider">VRAM Fitment &amp; Production Simulator</h2>
+                        </div>
+                        <span onclick="resetSimulator()" class="cursor-pointer text-xs text-slate-500 hover:text-slate-300">Reset</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                        <!-- Model Size -->
+                        <div>
+                            <label class="block text-xs text-slate-400 uppercase font-semibold tracking-wider mb-1">Model Base Size</label>
+                            <select id="sim-model" onchange="runSimulation()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-indigo-500">
+                                <option value="3">XS (1-3B) — Mobile / Edge</option>
+                                <option value="8">S (3-7B) — Laptop</option>
+                                <option value="12" selected>S-Capable (7-14B) — Gemma-class</option>
+                                <option value="32">M (27-35B) — Workstation</option>
+                                <option value="72">L (70B+) — High-End / Cluster</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Quantization -->
+                        <div>
+                            <label class="block text-xs text-slate-400 uppercase font-semibold tracking-wider mb-1">Precision / Quantization</label>
+                            <select id="sim-quant" onchange="runSimulation()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-indigo-500">
+                                <option value="4" selected>4-bit Q4 (Standard Efficient)</option>
+                                <option value="8">8-bit Q8 (Higher Quality)</option>
+                                <option value="16">FP16 (Full Precision)</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Context -->
+                        <div>
+                            <label class="block text-xs text-slate-400 uppercase font-semibold tracking-wider mb-1">Context Window (KV Cache Impact)</label>
+                            <select id="sim-context" onchange="runSimulation()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-indigo-500">
+                                <option value="8" selected>8K tokens (Standard)</option>
+                                <option value="32">32K tokens (Expanded)</option>
+                                <option value="128">128K tokens (Enterprise Docs)</option>
+                                <option value="256">256K tokens (Deep Reasoning)</option>
+                            </select>
+                        </div>
+                        
+                        <!-- VRAM -->
+                        <div>
+                            <label class="block text-xs text-slate-400 uppercase font-semibold tracking-wider mb-1">Hardware VRAM Capacity</label>
+                            <select id="sim-vram" onchange="runSimulation()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-indigo-500">
+                                <option value="8">8 GB (Base Laptop / Mac Air)</option>
+                                <option value="16">16 GB (Pro Laptop / RTX 4060-class)</option>
+                                <option value="24" selected>24 GB (RTX 4090 / Studio)</option>
+                                <option value="48">48 GB (High-End Workstation)</option>
+                                <option value="96">96+ GB (Professional / Multi-GPU)</option>
+                            </select>
+                        </div>
+                        
+                        <!-- NEW: Concurrent Users -->
+                        <div class="md:col-span-2">
+                            <label class="block text-xs text-slate-400 uppercase font-semibold tracking-wider mb-1">Concurrent Users / Effective Batch Size <span class="text-amber-400">(Illustrates Queue Decay)</span></label>
+                            <select id="sim-concurrent" onchange="runSimulation()" class="w-full bg-slate-950 border border-slate-700 text-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-indigo-500">
+                                <option value="1" selected>1 User (Solo / Development)</option>
+                                <option value="2">2 Users</option>
+                                <option value="4">4 Users (Small Team)</option>
+                                <option value="8">8+ Users (Team / Light Production)</option>
+                            </select>
+                            <p class="text-[10px] text-slate-500 mt-0.5">Higher concurrency increases effective memory pressure and queuing latency on single-GPU nodes.</p>
+                        </div>
+                    </div>
+
+                    <!-- Results -->
+                    <div class="mt-2">
+                        <div class="flex justify-between text-xs font-semibold mb-1.5">
+                            <span class="text-slate-400">Estimated VRAM Utilization</span>
+                            <span id="sim-status-percentage" class="text-emerald-400 font-mono font-bold">0%</span>
+                        </div>
+                        
+                        <div class="w-full bg-slate-950 border border-slate-700 h-3.5 rounded-full overflow-hidden">
+                            <div id="sim-progress-bar" class="h-full transition-all duration-300 bg-emerald-500" style="width: 0%"></div>
+                        </div>
+                        
+                        <!-- Chart -->
+                        <div class="mt-4 bg-slate-950 border border-slate-700 rounded-xl p-3">
+                            <canvas id="vram-chart" height="90"></canvas>
+                        </div>
+                        
+                        <!-- Energy & Recommendation -->
+                        <div id="sim-recommendation" class="mt-3 p-3 rounded-xl text-xs border bg-slate-950 border-slate-700 text-slate-300">
+                            <!-- Populated by JS -->
+                        </div>
+                        
+                        <div id="sim-alert-box" class="mt-3 p-3 rounded-xl text-xs flex items-start gap-2.5 transition-all">
+                            <!-- Dynamic alert -->
+                        </div>
+                        
+                        <div class="mt-2 text-[10px] text-slate-500 flex items-center gap-1">
+                            <span>⚡</span> 
+                            <span>Energy estimate included below. KV cache is an approximation — real usage varies by architecture (use monitoring tools in production).</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Side: Dynamic Detail Display -->
+            <section class="lg:col-span-7">
+                <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 min-h-[520px] h-full flex flex-col">
+                    <div id="layer-detail-container" class="flex-1">
+                        <!-- Injected dynamically -->
+                    </div>
+                    
+                    <div class="border-t border-slate-700 pt-4 mt-auto flex justify-between items-center text-xs">
+                        <span class="text-slate-500 font-semibold uppercase tracking-wider">Architecture Metadata • Podcast-Aligned + Production Extensions</span>
+                        <span id="slide-ref-name" class="font-mono text-indigo-400 bg-indigo-950/40 px-2.5 py-1 rounded text-[10px]">Layered Dependencies</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Tabbed Strategic Center -->
+        <section class="mb-12">
+            <div class="border-b border-slate-800 mb-6 flex items-center justify-between">
+                <nav class="flex space-x-1 overflow-x-auto pb-1" aria-label="Tabs">
+                    <button onclick="switchTab('levels')" class="tab-btn nav-tab border-b-2 border-indigo-500 text-white pb-3 px-4 text-sm font-semibold whitespace-nowrap active" id="tab-levels-btn">
+                        4 Levels of Vendor Independence
+                    </button>
+                    <button onclick="switchTab('insights')" class="tab-btn nav-tab border-b-2 border-transparent text-slate-400 hover:text-slate-200 pb-3 px-4 text-sm font-semibold whitespace-nowrap" id="tab-insights-btn">
+                        5 Actionable Insights
+                    </button>
+                    <button onclick="switchTab('blindspots')" class="tab-btn nav-tab border-b-2 border-transparent text-slate-400 hover:text-slate-200 pb-3 px-4 text-sm font-semibold whitespace-nowrap" id="tab-blindspots-btn">
+                        5 Critical Engineering Blind Spots
+                    </button>
+                    <button onclick="switchTab('financial')" class="tab-btn nav-tab border-b-2 border-transparent text-slate-400 hover:text-slate-200 pb-3 px-4 text-sm font-semibold whitespace-nowrap" id="tab-financial-btn">
+                        Economics, TCO &amp; Roadmap
+                    </button>
+                </nav>
+            </div>
+
+            <div id="tab-content-area">
+                <!-- Tab 1: 4 Levels of Vendor Independence -->
+                <div id="tab-levels" class="tab-pane block">
+                    <div class="p-4 bg-indigo-500/5 border border-indigo-500/20 rounded-2xl text-sm text-indigo-200 mb-6">
+                        The local AI journey is a spectrum of control. Inspired by the four levels framework from the podcast, with added emphasis on the Fable 5 incident as a catalyst for rethinking deep vendor dependence.
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 interactive-card">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-bold uppercase tracking-widest text-indigo-400">Level 1</span>
+                                <span class="text-[10px] px-2 py-0.5 bg-emerald-500/10 text-emerald-400 rounded">Fastest Start</span>
+                            </div>
+                            <h3 class="font-bold text-lg text-white mb-2">Multi-Provider Routing</h3>
+                            <p class="text-slate-400 text-sm">Dynamically route across providers (OpenRouter, LiteLLM, etc.) for cost/performance optimization and immediate failover. ~10-minute setup.</p>
+                            <div class="mt-4 text-xs border-t border-slate-700 pt-3 text-slate-500">Best for: Prototyping, cost-sensitive workloads, graceful degradation.</div>
+                        </div>
+                        
+                        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 interactive-card">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-bold uppercase tracking-widest text-indigo-400">Level 2</span>
+                            </div>
+                            <h3 class="font-bold text-lg text-white mb-2">Managed Cloud Platforms</h3>
+                            <p class="text-slate-400 text-sm">Enterprise VPCs on AWS Bedrock, Vertex AI, Azure AI, or dedicated managed services. High availability within vendor SLAs.</p>
+                            <div class="mt-4 text-xs border-t border-slate-700 pt-3 text-slate-500">Trade-off: Convenience with some lock-in and external data movement.</div>
+                        </div>
+                        
+                        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 interactive-card">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-bold uppercase tracking-widest text-indigo-400">Level 3</span>
+                            </div>
+                            <h3 class="font-bold text-lg text-white mb-2">Self-Hosted / Private Cloud</h3>
+                            <p class="text-slate-400 text-sm">Dedicated instances (EC2/GCP VMs with vLLM/Ollama) or private cloud GPU rentals. Full stack ownership while leveraging cloud elasticity.</p>
+                            <div class="mt-4 text-xs border-t border-slate-700 pt-3 text-slate-500">Ideal bridge: Strong control + professional ops tooling.</div>
+                        </div>
+                        
+                        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 interactive-card border-emerald-500/40">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-bold uppercase tracking-widest text-emerald-400">Level 4</span>
+                                <span class="text-[10px] px-2 py-0.5 bg-emerald-500/10 text-emerald-400 rounded">Maximum Sovereignty</span>
+                            </div>
+                            <h3 class="font-bold text-lg text-white mb-2">Fully Local / Air-Gapped</h3>
+                            <p class="text-slate-400 text-sm">Complete offline execution on owned hardware. Absolute data insulation and zero external API surface.</p>
+                            <div class="mt-4 text-xs border-t border-slate-700 pt-3 text-slate-500">Trade-off: You own the hardware lifecycle, updates, and scaling.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 text-xs text-slate-400 bg-slate-900/50 p-3 rounded-xl border border-slate-700">
+                        <strong class="text-emerald-400">Podcast Insight:</strong> The Anthropic Fable 5 incident (frontier model serving hundreds of millions disrupted by external action) underscored the value of moving sensitive or critical workloads toward higher sovereignty levels.
+                    </div>
+                </div>
+
+                <!-- Tab 2: 5 Actionable Insights -->
+                <div id="tab-insights" class="tab-pane hidden space-y-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5">
+                            <div class="flex items-start gap-3">
+                                <span class="font-mono text-indigo-400 font-bold text-lg mt-0.5">01</span>
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-white">Audit &amp; Divert Low-Complexity Work</h4>
+                                    <p class="text-sm text-slate-400 mt-1">Route routine formatting, classification, and summarization to local models. Reserve frontier models for high-value reasoning.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5">
+                            <div class="flex items-start gap-3">
+                                <span class="font-mono text-indigo-400 font-bold text-lg mt-0.5">02</span>
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-white">Prioritize Absolute Data Sovereignty</h4>
+                                    <p class="text-sm text-slate-400 mt-1">In legal, financial, and healthcare — client agreements often prohibit raw data leaving controlled environments. Level 4 creates a compliance shield.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5">
+                            <div class="flex items-start gap-3">
+                                <span class="font-mono text-indigo-400 font-bold text-lg mt-0.5">03</span>
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-white">Match Hardware to Workload Reality</h4>
+                                    <p class="text-sm text-slate-400 mt-1">7-14B class models on strong local workstations deliver excellent quality/latency balance for most professional tasks. Larger models need dedicated VRAM.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5">
+                            <div class="flex items-start gap-3">
+                                <span class="font-mono text-indigo-400 font-bold text-lg mt-0.5">04</span>
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-white">Build Local Redundancy</h4>
+                                    <p class="text-sm text-slate-400 mt-1">Local secondary engines provide operational continuity during cloud outages or policy changes. Hybrid routing adds resilience.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 md:col-span-2">
+                            <div class="flex items-start gap-3">
+                                <span class="font-mono text-indigo-400 font-bold text-lg mt-0.5">05</span>
+                                <div class="flex-1">
+                                    <h4 class="font-bold text-white">Spec Infrastructure Around Dedicated VRAM + Concurrency</h4>
+                                    <p class="text-sm text-slate-400 mt-1">Interactive speed is governed by dedicated VRAM and headroom for KV cache + concurrent load. The "16 GB trap" leads to thrashing under real team usage. Plan for peak concurrency from day one.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3: 5 Critical Engineering Blind Spots (Extended) -->
+                <div id="tab-blindspots" class="tab-pane hidden space-y-5">
+                    <div class="p-4 bg-amber-500/5 border border-amber-500/20 rounded-2xl text-sm text-amber-200 mb-4">
+                        Production environments reveal bottlenecks rarely visible in single-user testing. These extend the podcast discussion with real-world operational realities.
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="bg-slate-900 border-l-4 border-amber-500 border border-slate-700 rounded-2xl p-5">
+                            <h4 class="font-bold text-white flex items-center gap-2">The KV Cache VRAM Tax</h4>
+                            <p class="text-sm text-slate-400 mt-2">Static model weights are only part of the equation. KV cache grows with context length and can easily double or triple memory requirements. The simulator above demonstrates this dynamically.</p>
+                            <div class="mt-3 text-xs bg-slate-950 p-2.5 rounded">Reality: Many teams size only for weights and hit OOM on long documents or multi-turn reasoning.</div>
+                        </div>
+                        
+                        <div class="bg-slate-900 border-l-4 border-amber-500 border border-slate-700 rounded-2xl p-5">
+                            <h4 class="font-bold text-white flex items-center gap-2">Concurrent Queue Decay &amp; Throughput</h4>
+                            <p class="text-sm text-slate-400 mt-2">Single-user testing feels instant. Real team usage on one GPU causes sequential queuing and exponential latency degradation. The concurrent selector in the simulator illustrates this.</p>
+                            <div class="mt-3 text-xs bg-slate-950 p-2.5 rounded">Solution path: vLLM batching, multi-GPU, or intelligent routing for production.</div>
+                        </div>
+                        
+                        <div class="bg-slate-900 border-l-4 border-amber-500 border border-slate-700 rounded-2xl p-5">
+                            <h4 class="font-bold text-white flex items-center gap-2">Hybrid Semantic Triage (Dynamic Routing)</h4>
+                            <p class="text-sm text-slate-400 mt-2">All-or-nothing local is rarely optimal. Use a fast local model as a front-line classifier/sanitizer. Escalate only non-sensitive or high-complexity queries to cloud models.</p>
+                            <div class="mt-3 text-xs bg-slate-950 p-2.5 rounded">See the interactive Hybrid Routing Explorer below for a practical implementation.</div>
+                        </div>
+                        
+                        <div class="bg-slate-900 border-l-4 border-amber-500 border border-slate-700 rounded-2xl p-5">
+                            <h4 class="font-bold text-white flex items-center gap-2">Licensing &amp; Supply-Chain Realities</h4>
+                            <p class="text-sm text-slate-400 mt-2">"Open weights" ≠ Apache 2.0 freedom. Llama, Gemma, and others carry commercial restrictions (user thresholds, training prohibitions). Always verify provenance and license terms.</p>
+                            <div class="mt-3 text-xs bg-slate-950 p-2.5 rounded">Best practice: Maintain a model card registry and hash verification for downloaded weights.</div>
+                        </div>
+                        
+                        <!-- NEW 5th Blind Spot -->
+                        <div class="bg-slate-900 border-l-4 border-amber-500 border border-slate-700 rounded-2xl p-5 md:col-span-2">
+                            <h4 class="font-bold text-white flex items-center gap-2">Observability, Energy &amp; Operational Overhead</h4>
+                            <p class="text-sm text-slate-400 mt-2">Local production requires monitoring (GPU utilization, token metrics, queue depth), power/thermal management, and update cadence. Without observability (OpenTelemetry + Grafana/Prometheus), you fly blind on performance and cost.</p>
+                            <div class="mt-3 text-xs bg-slate-950 p-2.5 rounded">The simulator now surfaces rough energy estimates. Plan for dedicated ops effort or managed Level 3 tooling.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 4: Economics, TCO & Roadmap -->
+                <div id="tab-financial" class="tab-pane hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Deployment Options -->
+                        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5">
+                            <h3 class="font-bold text-white mb-4 flex items-center gap-2">Deployment Economics</h3>
+                            
+                            <div class="space-y-4 text-sm">
+                                <div class="p-3.5 bg-slate-950 rounded-xl border border-slate-700">
+                                    <div class="font-semibold text-emerald-400 text-xs tracking-wider">ON-PREMISES APPLIANCE</div>
+                                    <div class="font-bold mt-1">Dedicated Workstation / Server</div>
+                                    <div class="text-xs text-slate-400 mt-1">High-bandwidth VRAM cards in your facility.</div>
+                                    <div class="text-xs font-mono text-emerald-300 mt-2">$4,500 – $12,000+ one-time CAPEX</div>
+                                </div>
+                                
+                                <div class="p-3.5 bg-slate-950 rounded-xl border border-slate-700">
+                                    <div class="font-semibold text-indigo-400 text-xs tracking-wider">PRIVATE CLOUD / VPC</div>
+                                    <div class="font-bold mt-1">Dedicated GPU Instances</div>
+                                    <div class="text-xs text-slate-400 mt-1">AWS/GCP/Azure locked VPC with vLLM or Ollama.</div>
+                                    <div class="text-xs font-mono text-indigo-300 mt-2">$350 – $1,200 / month OPEX</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- TCO Calculator -->
+                        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 lg:col-span-2">
+                            <h3 class="font-bold text-white mb-3">Interactive TCO &amp; ROI Explorer</h3>
+                            <p class="text-xs text-slate-400 mb-4">Estimate 12-month savings of moving workloads local vs. continued cloud spend. Adjust inputs to model your scenario.</p>
+                            
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                                <div>
+                                    <label class="text-xs text-slate-400 block mb-1">Monthly Token Volume (millions)</label>
+                                    <input id="tco-volume" type="number" value="50" oninput="calculateTCO()" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-1.5 text-sm">
+                                </div>
+                                <div>
+                                    <label class="text-xs text-slate-400 block mb-1">Cloud Cost per 1M tokens ($)</label>
+                                    <input id="tco-cloud-cost" type="number" value="8" step="0.5" oninput="calculateTCO()" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-1.5 text-sm">
+                                </div>
+                                <div>
+                                    <label class="text-xs text-slate-400 block mb-1">Hardware / Setup CAPEX ($)</label>
+                                    <input id="tco-hardware" type="number" value="6500" oninput="calculateTCO()" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-1.5 text-sm">
+                                </div>
+                                <div>
+                                    <label class="text-xs text-slate-400 block mb-1">Power + Maintenance ($/mo)</label>
+                                    <input id="tco-power" type="number" value="180" oninput="calculateTCO()" class="w-full bg-slate-950 border border-slate-700 rounded px-3 py-1.5 text-sm">
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4 p-4 bg-slate-950 rounded-xl border border-slate-700 grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                                <div>
+                                    <div class="text-xs text-slate-400">Projected Annual Cloud Spend</div>
+                                    <div id="tco-cloud-annual" class="text-2xl font-bold text-white font-mono mt-1">$0</div>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-slate-400">Local Annual Cost (est.)</div>
+                                    <div id="tco-local-annual" class="text-2xl font-bold text-white font-mono mt-1">$0</div>
+                                </div>
+                                <div class="border-l border-slate-700 pl-4">
+                                    <div class="text-xs text-emerald-400">Est. 12-Month Savings</div>
+                                    <div id="tco-savings" class="text-2xl font-bold text-emerald-400 font-mono mt-1">$0</div>
+                                    <div id="tco-breakeven" class="text-xs text-slate-400 mt-0.5"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: Interactive Hybrid Routing Explorer -->
+        <section class="mb-12">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-lg">🔀</span>
+                <h2 class="text-xl font-bold text-white">Hybrid Semantic Triage Explorer</h2>
+                <span class="text-xs px-2.5 py-1 bg-indigo-500/10 text-indigo-400 rounded-full">Interactive • Extends Blind Spot #3</span>
+            </div>
+            <p class="text-sm text-slate-400 mb-4 max-w-3xl">Use this decision helper to explore when to keep processing fully local vs. intelligently escalate to cloud models. Tailored for regulated workflows (legal, finance, healthcare).</p>
+            
+            <div class="bg-slate-900 border border-slate-700 rounded-2xl p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1.5">Data Sensitivity</label>
+                        <select id="hybrid-sensitivity" onchange="updateHybridRecommendation()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm">
+                            <option value="high">High (Privileged / Client Confidential / PII)</option>
+                            <option value="medium" selected>Medium (Internal but sensitive)</option>
+                            <option value="low">Low (Public or anonymized)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1.5">Reasoning Complexity</label>
+                        <select id="hybrid-complexity" onchange="updateHybridRecommendation()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm">
+                            <option value="low">Low (Formatting, classification, extraction)</option>
+                            <option value="medium" selected>Medium (Analysis, drafting, summarization)</option>
+                            <option value="high">High (Multi-step reasoning, novel strategy, deep research)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1.5">Domain Specificity</label>
+                        <select id="hybrid-domain" onchange="updateHybridRecommendation()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm">
+                            <option value="high">High (Legal contracts, financial models, medical)</option>
+                            <option value="medium" selected>Medium (General professional)</option>
+                            <option value="low">Low (General knowledge)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="hybrid-result" class="mt-6 p-5 bg-slate-950 border border-slate-700 rounded-2xl min-h-[110px]">
+                    <!-- Dynamic recommendation populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: Compliance & Governance for Regulated Industries -->
+        <section class="mb-12">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-lg">🛡️</span>
+                <h2 class="text-xl font-bold text-white">Compliance &amp; Governance Checklist</h2>
+                <span class="text-xs px-2.5 py-1 bg-emerald-500/10 text-emerald-400 rounded-full">Legal / Regulated Focus</span>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 text-sm">
+                    <div class="font-semibold text-emerald-400 mb-2">Data Sovereignty &amp; Air-Gapping</div>
+                    <ul class="space-y-1.5 text-slate-300 text-xs">
+                        <li class="flex gap-2"><span class="text-emerald-400">✓</span> All inference runs on controlled hardware</li>
+                        <li class="flex gap-2"><span class="text-emerald-400">✓</span> No raw client data leaves the environment</li>
+                        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Local vector DB (Qdrant / LanceDB) for RAG</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 text-sm">
+                    <div class="font-semibold text-emerald-400 mb-2">Auditability &amp; Provenance</div>
+                    <ul class="space-y-1.5 text-slate-300 text-xs">
+                        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Log every inference (model version, prompt hash, output)</li>
+                        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Maintain model cards + weight hash registry</li>
+                        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Integrate with existing SIEM / e-discovery tools</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 text-sm">
+                    <div class="font-semibold text-emerald-400 mb-2">Human-in-the-Loop &amp; Governance</div>
+                    <ul class="space-y-1.5 text-slate-300 text-xs">
+                        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Deterministic modes (temp=0, fixed seed) for repeatable outputs</li>
+                        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Output validation / redaction pipelines before delivery</li>
+                        <li class="flex gap-2"><span class="text-emerald-400">✓</span> Privilege review gates for sensitive matters</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-3 text-xs text-slate-400">These controls map directly to common requirements in legal tech, financial services, and healthcare. They are significantly easier to implement and audit in Level 3/4 architectures.</div>
+        </section>
+
+        <!-- NEW: Quick Starts & Integrations -->
+        <section class="mb-12">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-lg">🚀</span>
+                <h2 class="text-xl font-bold text-white">Quick Starts &amp; Production Integrations</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 text-sm">
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5">
+                    <div class="font-semibold mb-2">Ollama (Fastest Local Start)</div>
+                    <div class="code-block bg-slate-950 p-3 rounded text-xs text-emerald-300 overflow-x-auto">ollama run gemma3:12b<br>ollama serve  # API on :11434</div>
+                    <button onclick="copyToClipboard(this, 'ollama run gemma3:12b\nollama serve')" class="mt-2 text-xs px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded">Copy</button>
+                </div>
+                
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5">
+                    <div class="font-semibold mb-2">Open WebUI (Beautiful Frontend)</div>
+                    <div class="code-block bg-slate-950 p-3 rounded text-xs text-emerald-300 overflow-x-auto">docker run -d -p 3000:8080 \<br>  -v ollama:/root/.ollama \<br>  --name open-webui ghcr.io/open-webui/open-webui:main</div>
+                    <button onclick="copyToClipboard(this, 'docker run -d -p 3000:8080 -v ollama:/root/.ollama --name open-webui ghcr.io/open-webui/open-webui:main')" class="mt-2 text-xs px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded">Copy</button>
+                </div>
+                
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5">
+                    <div class="font-semibold mb-2">vLLM (High-Throughput Production)</div>
+                    <div class="code-block bg-slate-950 p-3 rounded text-xs text-emerald-300 overflow-x-auto">vllm serve meta-llama/Llama-3.1-70B-Instruct \<br>  --gpu-memory-utilization 0.9</div>
+                    <button onclick="copyToClipboard(this, 'vllm serve meta-llama/Llama-3.1-70B-Instruct --gpu-memory-utilization 0.9')" class="mt-2 text-xs px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded">Copy</button>
+                    <div class="text-[10px] text-slate-500 mt-1">Excellent for concurrent team use (Level 3).</div>
+                </div>
+                
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5">
+                    <div class="font-semibold mb-2">Local RAG + Agent (Qdrant + LangGraph)</div>
+                    <div class="code-block bg-slate-950 p-3 rounded text-xs text-emerald-300 overflow-x-auto"># Example: Local vector store + agent<br>from qdrant_client import QdrantClient<br># + LangGraph workflow with Ollama backend</div>
+                    <button onclick="copyToClipboard(this, 'from qdrant_client import QdrantClient  # Local RAG example')" class="mt-2 text-xs px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded">Copy</button>
+                </div>
+                
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5">
+                    <div class="font-semibold mb-2">IDE Integration (Cursor / Continue.dev)</div>
+                    <div class="code-block bg-slate-950 p-3 rounded text-xs text-emerald-300 overflow-x-auto">Base URL: http://localhost:11434<br>Model: gemma3:12b or your local model</div>
+                    <button onclick="copyToClipboard(this, 'Base URL: http://localhost:11434')" class="mt-2 text-xs px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded">Copy</button>
+                </div>
+                
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5">
+                    <div class="font-semibold mb-2">Observability Starter</div>
+                    <div class="text-xs text-slate-400">Prometheus + Grafana + OpenTelemetry exporters for vLLM/Ollama. Track GPU util, tokens/sec, queue depth, and energy in real time.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: Benchmarking Note -->
+        <section class="mb-12">
+            <div class="bg-slate-900/60 border border-slate-700 rounded-2xl p-6">
+                <h3 class="font-bold text-white mb-2">Benchmarking &amp; Evaluation Guidance</h3>
+                <p class="text-sm text-slate-400">Before committing to production, run domain-specific evals. Compare local vs. cloud on your actual workflows (contract clause extraction, risk identification, document summarization). Use consistent test sets, measure quality (human review or LLM-as-judge), latency, and cost equivalence. Tools like HELM, local arena-style comparisons, or simple prompt harnesses work well. Re-evaluate after major model or quantization changes.</p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="border-t border-slate-800 pt-6 text-center text-xs text-slate-500">
+            <p>Enhanced Local AI Strategy Hub • Framework inspired by Nufar Gaspar on <span class="text-indigo-400">The AI Daily Brief</span> (June 2026 Operator’s Cut). Extended with production engineering, legal-tech governance, interactive tools, and TCO modeling for real-world adoption.</p>
+            <p class="mt-1">Built for professionals navigating sovereign AI infrastructure. All estimates are directional — validate with your hardware and workloads.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Tailwind script
+        function initializeTailwind() {
+            document.documentElement.style.setProperty('--accent', '#6366f1');
+        }
+
+        // Layer data (enhanced)
+        const layers = {
+            1: {
+                title: "Layer 1: Physical Hardware Tier",
+                tag: "Foundation • VRAM is King",
+                specs: "NVIDIA RTX / Apple Silicon Unified Memory / Multi-GPU Nodes",
+                metric: "Parallel Compute Throughput vs Sequential CPU",
+                html: `
+                    <div class="space-y-4 text-sm text-slate-300">
+                        <p>All local AI performance ultimately depends on hardware, specifically dedicated high-bandwidth VRAM. CPUs can run models but are severely limited for parallel matrix operations that dominate inference.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-700">
+                                <div class="text-xs font-bold text-slate-400">CPU-Bound Reality</div>
+                                <div class="text-xs mt-1 text-slate-400">Sequential execution. Acceptable for tiny models or CPU-only edge but impractical for production interactive use.</div>
+                            </div>
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-700">
+                                <div class="text-xs font-bold text-indigo-400">GPU / Unified Memory Advantage</div>
+                                <div class="text-xs mt-1 text-slate-400">Massive parallelism. 10-30x+ speedups on matrix math. The simulator above helps right-size your hardware investment.</div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="font-semibold text-white mb-2">Practical Hardware Tiers (2026 guidance)</div>
+                            <ul class="text-xs space-y-1.5 text-slate-400 pl-1">
+                                <li><strong>Entry (~$800–$2k add-on):</strong> Existing desktop + consumer GPU</li>
+                                <li><strong>Professional Appliance ($5k–$12k):</strong> Dedicated workstation with high VRAM (24–48 GB+)</li>
+                                <li><strong>Team / Production ($15k+ or cloud Level 3):</strong> Multi-GPU server or managed private cloud instances</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            2: {
+                title: "Layer 2: Open Weights & Model Optimization",
+                tag: "Knowledge Base • Size vs Quality Tradeoffs",
+                specs: "Llama 3.x / Gemma 3 / Qwen3 / Mistral / DeepSeek families",
+                metric: "Parameter Count × Quantization × Context",
+                html: `
+                    <div class="space-y-4 text-sm text-slate-300">
+                        <p>This layer is where capability meets feasibility. Open weights give you ownership. Quantization and context management determine what actually fits and runs well on your hardware.</p>
+                        
+                        <div>
+                            <div class="font-semibold text-white mb-2">Size Categories (Approximate 2026)</div>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                                <div class="bg-slate-950 p-3 rounded">1-4B: Fast on-device, basic tasks</div>
+                                <div class="bg-slate-950 p-3 rounded">7-14B: Excellent generalist (recommended starting point for most professional work)</div>
+                                <div class="bg-slate-950 p-3 rounded">30B–70B+: Frontier-level reasoning when hardware allows</div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-slate-950 border border-slate-700 p-4 rounded-xl text-xs">
+                            <strong class="text-indigo-400">Quantization Insight:</strong> 4-bit compression typically reduces memory footprint by ~75% with minimal quality loss for most tasks. The simulator demonstrates the real-world impact including KV cache.
+                        </div>
+                    </div>
+                `
+            },
+            3: {
+                title: "Layer 3: Serving & Inference Engines",
+                tag: "Runtime • The Translation Layer",
+                specs: "Ollama (ease) • vLLM (throughput) • LM Studio (desktop) • TGI / LocalAI",
+                metric: "Tokens/sec • Concurrency • OpenAI-Compatible API",
+                html: `
+                    <div class="space-y-4 text-sm text-slate-300">
+                        <p>The serving layer turns weights into a usable service. It manages memory, exposes APIs, and determines how many concurrent users you can realistically support.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-700">
+                                <div class="font-bold text-white">Ollama</div>
+                                <div class="text-slate-400 mt-1">Simplest path. One-command model management and OpenAI-compatible API on localhost:11434. Ideal for development and small teams.</div>
+                            </div>
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-700">
+                                <div class="font-bold text-white">vLLM</div>
+                                <div class="text-slate-400 mt-1">PagedAttention for high throughput and efficient batching. Best for Level 3 production or teams with concurrent demand.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-xs text-slate-400">Pro tip: Most modern IDE extensions (Cursor, Continue.dev, Aider) support swapping the base URL to your local Ollama or vLLM endpoint with zero code changes.</div>
+                    </div>
+                `
+            },
+            4: {
+                title: "Layer 4: Application Harness & Agent Orchestration",
+                tag: "Workflow Logic • From Chat to Agents",
+                specs: "Open WebUI • LangGraph / CrewAI • Custom harnesses • Hermes-style autonomy",
+                metric: "State Management • Tool Use • Multi-Step Planning",
+                html: `
+                    <div class="space-y-4 text-sm text-slate-300">
+                        <p>This is where raw inference becomes useful work. Chat interfaces are table stakes. True leverage comes from agentic systems that plan, use tools, maintain state, and iterate.</p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-700">
+                                <div class="text-xs font-bold text-indigo-400">Chat-First (Open WebUI, LM Studio)</div>
+                                <div class="text-xs mt-1">Excellent for human-in-the-loop exploration and quick iteration. Easy to add RAG with local vector stores.</div>
+                            </div>
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-700">
+                                <div class="text-xs font-bold text-indigo-400">Agentic Orchestration (LangGraph, CrewAI)</div>
+                                <div class="text-xs mt-1">Build reliable multi-step workflows with cycles, checkpoints, and human approval gates. Run entirely locally with Ollama/vLLM backends.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-xs bg-slate-950 p-3 rounded">Local vector databases (Qdrant, LanceDB, Chroma) pair beautifully here for grounded, private RAG without sending data anywhere.</div>
+                    </div>
+                `
+            },
+            5: {
+                title: "Layer 5: Application Interaction & Business Integration",
+                tag: "Automation Surface • Where Value is Delivered",
+                specs: "Custom endpoints • Scheduled jobs • Webhooks • IDE / Document system integrations",
+                metric: "Seamless Workflow Embedding",
+                html: `
+                    <div class="space-y-4 text-sm text-slate-300">
+                        <p>The top layer is highly customizable. Once the lower layers are solid, you can embed local intelligence into existing business processes with minimal friction.</p>
+                        
+                        <ul class="text-xs space-y-2 text-slate-400">
+                            <li><strong>Scheduled Intelligence:</strong> Overnight document processing, morning briefings, compliance scans.</li>
+                            <li><strong>Event-Driven:</strong> Webhook triggers from email, tickets, or document uploads → local agent action.</li>
+                            <li><strong>Developer Surface:</strong> Clean local SDKs and OpenAI-compatible endpoints for your internal tools and scripts.</li>
+                            <li><strong>Legal Tech Examples:</strong> Evidence Thread-style analysis, redaction pipelines, risk scoring, contract clause extraction — all with full data control.</li>
+                        </ul>
+                        
+                        <div class="text-xs text-emerald-300 bg-emerald-950/30 p-3 rounded">You gain sovereignty, near-zero marginal cost at scale, and resilience. In return you take ownership of hardware, updates, monitoring, and compliance configuration.</div>
+                    </div>
+                `
+            }
+        };
+
+        let vramChart = null;
+
+        function selectLayer(layerId) {
+            // Deselect all
+            document.querySelectorAll('.layer-btn').forEach(btn => {
+                btn.classList.remove('active', 'border-indigo-500', 'bg-slate-800/80', 'ring-2', 'ring-indigo-500/20');
+                btn.classList.add('border-slate-700');
+            });
+
+            const activeBtn = document.getElementById(`btn-layer-${layerId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active', 'border-indigo-500', 'bg-slate-800/80', 'ring-2', 'ring-indigo-500/20');
+                activeBtn.classList.remove('border-slate-700');
+            }
+
+            const data = layers[layerId];
+            const container = document.getElementById('layer-detail-container');
+            
+            container.innerHTML = `
+                <div class="border-b border-slate-700 pb-4 mb-4">
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase bg-indigo-500/10 text-indigo-400 rounded">${data.tag}</span>
+                    </div>
+                    <h3 class="text-2xl font-black text-white mt-2 tracking-tight">${data.title}</h3>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5 text-xs">
+                    <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-700">
+                        <div class="text-slate-500 font-bold uppercase tracking-wider text-[10px]">Technical Target</div>
+                        <div class="text-slate-200 font-medium mt-0.5">${data.specs}</div>
+                    </div>
+                    <div class="bg-slate-950/60 p-3 rounded-xl border border-slate-700">
+                        <div class="text-slate-500 font-bold uppercase tracking-wider text-[10px]">Key Operational Metric</div>
+                        <div class="text-slate-200 font-medium mt-0.5">${data.metric}</div>
+                    </div>
+                </div>
+                
+                <div>${data.html}</div>
+            `;
+        }
+
+        // Enhanced Simulation with concurrent, energy, chart, and recommendations
+        function runSimulation() {
+            const modelSize = parseInt(document.getElementById('sim-model').value);
+            const quantization = parseInt(document.getElementById('sim-quant').value);
+            const contextSize = parseInt(document.getElementById('sim-context').value);
+            const hwVram = parseInt(document.getElementById('sim-vram').value);
+            const concurrent = parseInt(document.getElementById('sim-concurrent').value);
+
+            // Weights memory (GB)
+            const weightsVram = (modelSize * quantization) / 8;
+            
+            // System + inference overhead
+            const systemOverhead = 1.8;
+            
+            // KV Cache heuristic (improved with concurrent influence)
+            const baseKv = contextSize * 0.042;
+            const kvCacheOverhead = baseKv * (1 + (concurrent - 1) * 0.15); // modest multiplier for concurrency pressure
+            
+            const estimatedVram = weightsVram + systemOverhead + kvCacheOverhead;
+            const utilization = (estimatedVram / hwVram) * 100;
+            const utilizationPercentage = Math.min(Math.round(utilization), 160);
+
+            // UI updates
+            const progressBar = document.getElementById('sim-progress-bar');
+            const percentText = document.getElementById('sim-status-percentage');
+            const alertBox = document.getElementById('sim-alert-box');
+            const recBox = document.getElementById('sim-recommendation');
+
+            percentText.innerHTML = `${utilizationPercentage}% <span class="text-xs font-normal">(${estimatedVram.toFixed(1)} GB / ${hwVram} GB)</span>`;
+            progressBar.style.width = `${Math.min(utilizationPercentage, 100)}%`;
+
+            // Energy rough estimate (directional)
+            const powerDraw = Math.round(120 + (hwVram / 2) + (concurrent * 25)); // very rough
+            const energyNote = `Est. sustained power: ~${powerDraw}W (varies by GPU efficiency &amp; utilization)`;
+
+            // Determine status and recommendation
+            let statusClass, statusIcon, statusTitle, statusMessage, recMessage;
+
+            if (estimatedVram > hwVram * 1.05) {
+                statusClass = "bg-rose-500/10 border border-rose-500/30 text-rose-300";
+                progressBar.className = "bg-rose-500 h-full transition-all duration-300";
+                percentText.className = "text-rose-400 font-bold";
+                statusIcon = "⚠️";
+                statusTitle = "Out of Memory Risk";
+                statusMessage = "Total allocation (weights + KV cache + overhead) exceeds available VRAM. Expect fallback to CPU or crashes under load. Reduce context, quantize further, or upgrade hardware.";
+                recMessage = `Recommendation: Drop to 4-bit or lower context. Consider Level 3 private cloud for this workload size. ${energyNote}`;
+            } else if (utilizationPercentage > 85 || concurrent >= 4) {
+                statusClass = "bg-amber-500/10 border border-amber-500/30 text-amber-300";
+                progressBar.className = "bg-amber-500 h-full transition-all duration-300";
+                percentText.className = "text-amber-400 font-bold";
+                statusIcon = "⏳";
+                statusTitle = "Tight Fit / High Utilization";
+                statusMessage = "Limited headroom for peak load or longer context. Concurrent users will likely experience queuing and higher latency.";
+                recMessage = `Recommendation: Monitor closely. Add batching (vLLM) or plan hardware refresh. ${energyNote}`;
+            } else {
+                statusClass = "bg-emerald-500/10 border border-emerald-500/30 text-emerald-300";
+                progressBar.className = "bg-emerald-500 h-full transition-all duration-300";
+                percentText.className = "text-emerald-400 font-bold";
+                statusIcon = "✓";
+                statusTitle = "Healthy Fit";
+                statusMessage = "Model + KV cache fit comfortably with good headroom. Suitable for interactive and moderate concurrent use.";
+                recMessage = `Recommendation: Excellent starting point. You have room to increase context or add users. ${energyNote}`;
+            }
+
+            alertBox.className = `mt-3 p-3 rounded-2xl text-xs flex items-start gap-3 transition-all ${statusClass}`;
+            alertBox.innerHTML = `
+                <span class="text-lg mt-0.5">${statusIcon}</span>
+                <div>
+                    <strong class="block font-bold">${statusTitle}</strong>
+                    <span>${statusMessage}</span>
+                </div>
+            `;
+
+            recBox.innerHTML = `
+                <div class="flex items-start gap-2">
+                    <span class="text-emerald-400 mt-0.5">→</span>
+                    <div class="flex-1">
+                        <div class="font-semibold text-emerald-300 text-xs tracking-wider">ACTIONABLE GUIDANCE</div>
+                        <div class="mt-0.5">${recMessage}</div>
+                    </div>
+                </div>
+            `;
+
+            // Update Chart.js breakdown
+            updateVRAMChart(weightsVram, kvCacheOverhead, systemOverhead, hwVram, estimatedVram);
+        }
+
+        function updateVRAMChart(weights, kv, overhead, totalHw, totalUsed) {
+            const ctx = document.getElementById('vram-chart');
+            if (!ctx) return;
+
+            if (vramChart) {
+                vramChart.destroy();
+            }
+
+            const headroom = Math.max(0, totalHw - totalUsed);
+
+            vramChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Breakdown'],
+                    datasets: [
+                        {
+                            label: 'Model Weights',
+                            data: [weights],
+                            backgroundColor: '#6366f1',
+                            borderColor: '#4f46e5',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'KV Cache (Context)',
+                            data: [kv],
+                            backgroundColor: '#a5b4fc',
+                            borderColor: '#6366f1',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'System Overhead',
+                            data: [overhead],
+                            backgroundColor: '#64748b',
+                            borderColor: '#475569',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Headroom',
+                            data: [headroom],
+                            backgroundColor: '#166534',
+                            borderColor: '#15803d',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, grid: { color: '#334155' }, ticks: { color: '#64748b' } },
+                        y: { 
+                            stacked: true, 
+                            grid: { color: '#334155' }, 
+                            ticks: { color: '#64748b', callback: (v) => v + ' GB' },
+                            max: Math.max(totalHw * 1.1, totalUsed * 1.1)
+                        }
+                    },
+                    plugins: {
+                        legend: { 
+                            position: 'bottom',
+                            labels: { color: '#94a3b8', boxWidth: 12, padding: 15, font: { size: 10 } }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => ctx.raw.toFixed(1) + ' GB'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function resetSimulator() {
+            document.getElementById('sim-model').value = '12';
+            document.getElementById('sim-quant').value = '4';
+            document.getElementById('sim-context').value = '8';
+            document.getElementById('sim-vram').value = '24';
+            document.getElementById('sim-concurrent').value = '1';
+            runSimulation();
+        }
+
+        // Tab switching
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.add('hidden');
+                pane.classList.remove('block');
+            });
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('border-indigo-500', 'text-white', 'active');
+                btn.classList.add('border-transparent', 'text-slate-400');
+            });
+
+            const target = document.getElementById(`tab-${tabId}`);
+            if (target) {
+                target.classList.remove('hidden');
+                target.classList.add('block');
+            }
+
+            const activeBtn = document.getElementById(`tab-${tabId}-btn`);
+            if (activeBtn) {
+                activeBtn.classList.add('border-indigo-500', 'text-white', 'active');
+                activeBtn.classList.remove('border-transparent', 'text-slate-400');
+            }
+        }
+
+        // Hybrid Routing Explorer
+        function updateHybridRecommendation() {
+            const sensitivity = document.getElementById('hybrid-sensitivity').value;
+            const complexity = document.getElementById('hybrid-complexity').value;
+            const domain = document.getElementById('hybrid-domain').value;
+
+            const resultBox = document.getElementById('hybrid-result');
+
+            let recommendation = '';
+            let color = 'emerald';
+
+            if (sensitivity === 'high') {
+                recommendation = `<strong class="text-emerald-400">Strongly recommend FULLY LOCAL (Level 4)</strong><br>Process and store everything on-premise. Use local triage model for initial review/redaction. Escalate only heavily sanitized or non-privileged excerpts if absolutely necessary.`;
+                color = 'emerald';
+            } else if (sensitivity === 'medium' && complexity === 'high') {
+                recommendation = `<strong class="text-amber-400">Hybrid recommended</strong><br>Local model handles initial analysis, entity extraction, and redaction. Route only the sanitized, high-complexity reasoning portion to a powerful cloud model with strict logging and human review.`;
+                color = 'amber';
+            } else if (sensitivity === 'low' || complexity === 'low') {
+                recommendation = `<strong class="text-sky-400">Local-first with optional cloud escalation</strong><br>Handle the majority locally for speed and cost. Use cloud only for occasional frontier-level reasoning on non-sensitive content.`;
+                color = 'sky';
+            } else {
+                recommendation = `<strong class="text-emerald-400">Local preferred</strong><br>Strong balance of control and performance. Most professional workloads in this quadrant run excellently on capable 7-14B local models.`;
+                color = 'emerald';
+            }
+
+            resultBox.innerHTML = `
+                <div class="flex items-start gap-3">
+                    <div class="text-2xl mt-0.5">→</div>
+                    <div class="flex-1">
+                        <div class="uppercase text-xs tracking-[1.5px] font-bold text-${color}-400 mb-1">RECOMMENDED APPROACH</div>
+                        <div class="text-sm leading-relaxed text-slate-200">${recommendation}</div>
+                        <div class="mt-2 text-[10px] text-slate-500">This is a decision-support heuristic. Always apply human judgment and your organization's specific policies.</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // TCO Calculator
+        function calculateTCO() {
+            const volume = parseFloat(document.getElementById('tco-volume').value) || 0;
+            const cloudCostPerM = parseFloat(document.getElementById('tco-cloud-cost').value) || 0;
+            const hardware = parseFloat(document.getElementById('tco-hardware').value) || 0;
+            const monthlyPower = parseFloat(document.getElementById('tco-power').value) || 0;
+
+            const annualCloud = volume * 12 * cloudCostPerM;
+            const annualLocal = (hardware / 3) + (monthlyPower * 12); // simple 3-year amortization
+
+            const savings = annualCloud - annualLocal;
+            const breakevenMonths = hardware > 0 ? Math.ceil((hardware / (annualCloud / 12 - monthlyPower)) || 0) : 0;
+
+            document.getElementById('tco-cloud-annual').innerText = '$' + annualCloud.toLocaleString(undefined, {maximumFractionDigits: 0});
+            document.getElementById('tco-local-annual').innerText = '$' + annualLocal.toLocaleString(undefined, {maximumFractionDigits: 0});
+            
+            const savingsEl = document.getElementById('tco-savings');
+            savingsEl.innerText = (savings >= 0 ? '+' : '') + '$' + Math.abs(savings).toLocaleString(undefined, {maximumFractionDigits: 0});
+            savingsEl.style.color = savings >= 0 ? '#4ade80' : '#f87171';
+
+            document.getElementById('tco-breakeven').innerText = breakevenMonths > 0 ? `Breakeven ~${breakevenMonths} months` : 'Immediate positive ROI';
+        }
+
+        // Copy to clipboard helper
+        function copyToClipboard(element, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = element.innerText;
+                element.innerText = 'Copied!';
+                element.style.backgroundColor = '#166534';
+                setTimeout(() => {
+                    element.innerText = originalText;
+                    element.style.backgroundColor = '';
+                }, 1600);
+            }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                const originalText = element.innerText;
+                element.innerText = 'Copied!';
+                setTimeout(() => { element.innerText = originalText; }, 1600);
+            });
+        }
+
+        // Export current simulator config
+        function exportConfig() {
+            const config = {
+                timestamp: new Date().toISOString(),
+                modelSize: document.getElementById('sim-model').value,
+                quantization: document.getElementById('sim-quant').value,
+                context: document.getElementById('sim-context').value,
+                vram: document.getElementById('sim-vram').value,
+                concurrent: document.getElementById('sim-concurrent').value,
+                note: "Exported from Local AI Strategy Hub Enhanced"
+            };
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(config, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", "local-ai-config.json");
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        // Initialize everything
+        function initializeApp() {
+            initializeTailwind();
+
+            // Default layer
+            selectLayer(1);
+
+            // Default simulator run
+            setTimeout(() => {
+                runSimulation();
+            }, 150);
+
+            // Default hybrid recommendation
+            setTimeout(() => {
+                const hybridBox = document.getElementById('hybrid-result');
+                if (hybridBox) {
+                    hybridBox.innerHTML = `
+                        <div class="text-sm text-slate-300">Select options above to see a tailored hybrid routing recommendation. This tool helps operationalize the "dynamic triage" concept from the podcast.</div>
+                    `;
+                }
+            }, 300);
+
+            // Initialize TCO with defaults
+            setTimeout(() => {
+                calculateTCO();
+            }, 400);
+
+            // Keyboard support for simulator (optional enhancement)
+            document.addEventListener('keydown', function(e) {
+                if (e.key === '/' && document.activeElement.tagName === 'BODY') {
+                    e.preventDefault();
+                    const modelSelect = document.getElementById('sim-model');
+                    if (modelSelect) modelSelect.focus();
+                }
+            });
+
+            // Make sure tabs start correctly
+            const firstTab = document.getElementById('tab-levels-btn');
+            if (firstTab) firstTab.classList.add('active', 'border-indigo-500', 'text-white');
+        }
+
+        // Boot the application
+        window.onload = initializeApp;
+    </script>
+</body>
+</html>
