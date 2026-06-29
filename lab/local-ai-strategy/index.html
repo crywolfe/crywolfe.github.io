@@ -72,11 +72,11 @@
             <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
                 <div>
                     <div class="flex items-center gap-3">
-                        <span class="px-3 py-1 text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-full">Strategic Briefing Explorer v2</span>
-                        <span class="px-2.5 py-0.5 text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded">Podcast-Enhanced</span>
+                        <span class="px-3 py-1 text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-full">Strategic Briefing Explorer v3</span>
+                        <span class="px-2.5 py-0.5 text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded">Podcast + Engine Series</span>
                     </div>
                     <h1 class="text-3xl lg:text-4xl font-extrabold text-white tracking-tight mt-2">Local AI Infrastructure &amp; Sovereign Deployment Stack</h1>
-                    <p class="text-slate-400 text-sm mt-1.5 max-w-2xl">A comprehensive, interactive playbook for secure local compute, model serving, agentic workflows, and regulated-industry governance. Inspired by Nufar Gaspar on The AI Daily Brief (June 2026) — extended with production realities, legal tech considerations, and forward-looking tools.</p>
+                    <p class="text-slate-400 text-sm mt-1.5 max-w-2xl">A comprehensive, interactive playbook for secure local compute, model serving, agentic workflows, and regulated-industry governance — extended with engine decision trees, prefill/decode mechanics, production realities, legal tech considerations, and forward-looking tools.</p>
                     
                     <!-- Forces Callout -->
                     <div class="mt-4 flex flex-wrap gap-2">
@@ -437,11 +437,32 @@
                             <div class="mt-3 text-xs bg-slate-950 p-2.5 rounded">Best practice: Maintain a model card registry and hash verification for downloaded weights.</div>
                         </div>
                         
-                        <!-- NEW 5th Blind Spot -->
+                        <!-- 5th Blind Spot -->
                         <div class="bg-slate-900 border-l-4 border-amber-500 border border-slate-700 rounded-2xl p-5 md:col-span-2">
                             <h4 class="font-bold text-white flex items-center gap-2">Observability, Energy &amp; Operational Overhead</h4>
                             <p class="text-sm text-slate-400 mt-2">Local production requires monitoring (GPU utilization, token metrics, queue depth), power/thermal management, and update cadence. Without observability (OpenTelemetry + Grafana/Prometheus), you fly blind on performance and cost.</p>
                             <div class="mt-3 text-xs bg-slate-950 p-2.5 rounded">The simulator now surfaces rough energy estimates. Plan for dedicated ops effort or managed Level 3 tooling.</div>
+                        </div>
+
+                        <!-- 6th Blind Spot -->
+                        <div class="bg-slate-900 border-l-4 border-rose-500 border border-slate-700 rounded-2xl p-5 md:col-span-2">
+                            <h4 class="font-bold text-white flex items-center gap-2">VRAM Capacity ≠ Bandwidth — Fit Is Not Speed</h4>
+                            <p class="text-sm text-slate-400 mt-2">Teams optimize for VRAM fit and declare success. But decode speed is governed by memory bandwidth, not capacity. An Apple M3 Ultra (819 GB/s unified bandwidth) can fit enormous models — but an H100 SXM (3.35 TB/s HBM) decodes faster when the model fits, because decode is reading weights and KV cache on every single token.</p>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3 text-xs">
+                                <div class="bg-slate-950 p-2.5 rounded border border-slate-700">
+                                    <div class="text-rose-400 font-semibold mb-1">Consumer GPU (RTX 4090)</div>
+                                    <div class="text-slate-400">~1 TB/s bandwidth, 24 GB VRAM. Fast decode for models that fit. Hard ceiling at 24 GB.</div>
+                                </div>
+                                <div class="bg-slate-950 p-2.5 rounded border border-slate-700">
+                                    <div class="text-sky-400 font-semibold mb-1">Apple M3 Ultra (unified)</div>
+                                    <div class="text-slate-400">~819 GB/s, up to 192 GB shared. Massive capacity advantage; bandwidth trails HBM.</div>
+                                </div>
+                                <div class="bg-slate-950 p-2.5 rounded border border-slate-700">
+                                    <div class="text-emerald-400 font-semibold mb-1">H100 SXM (HBM3)</div>
+                                    <div class="text-slate-400">3.35 TB/s, 80 GB HBM. Best decode throughput when the model fits. Smallest capacity of the three.</div>
+                                </div>
+                            </div>
+                            <div class="mt-3 text-xs bg-slate-950 p-2.5 rounded text-slate-400">The VRAM simulator above shows fit. The Engine Decision Tree accounts for bandwidth. Always profile decode throughput separately from VRAM utilization.</div>
                         </div>
                     </div>
                 </div>
@@ -598,6 +619,78 @@
             <div class="mt-3 text-xs text-slate-400">These controls map directly to common requirements in legal tech, financial services, and healthcare. They are significantly easier to implement and audit in Level 3/4 architectures.</div>
         </section>
 
+        <!-- Engine Decision Tree -->
+        <section class="mb-12">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-lg">🧭</span>
+                <h2 class="text-xl font-bold text-white">Inference Engine Decision Tree</h2>
+                <span class="text-xs px-2.5 py-1 bg-indigo-500/10 text-indigo-400 rounded-full">Interactive • 2026 Engine Map</span>
+            </div>
+            <p class="text-sm text-slate-400 mb-4 max-w-3xl">You don't pick an inference engine first. You pick a hardware strategy, a workload shape, and a serving model. The engine follows. Select your context below.</p>
+
+            <div class="bg-slate-900 border border-slate-700 rounded-2xl p-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1.5">Hardware Platform</label>
+                        <select id="engine-hardware" onchange="updateEngineRecommendation()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm outline-none focus:border-indigo-500">
+                            <option value="laptop">Laptop / Edge / CPU-heavy / Odd Hardware</option>
+                            <option value="mac">Mac (Apple Silicon — M3/M4 series)</option>
+                            <option value="single-rtx" selected>Single RTX 3090 / 4090 / 5090</option>
+                            <option value="multi-rtx">2–4× Consumer NVIDIA GPUs</option>
+                            <option value="h100">8× H100 / H200 Node</option>
+                            <option value="nvidia-dc">B200 / GB200 / GB300 Datacenter</option>
+                            <option value="amd">AMD MI300 / MI325 / MI350+</option>
+                            <option value="intel">Intel Xeon / Core Ultra / Arc</option>
+                            <option value="mobile">Browser / Mobile / App-Native</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1.5">Workload Shape</label>
+                        <select id="engine-workload" onchange="updateEngineRecommendation()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm outline-none focus:border-indigo-500">
+                            <option value="local-dev" selected>Solo dev / local experimentation</option>
+                            <option value="local-agent">Local agent / coding assistant</option>
+                            <option value="team">Internal team (concurrent users)</option>
+                            <option value="prod">Customer-facing production</option>
+                            <option value="long-ctx">Long-context / MoE / complex routing</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-slate-400 mb-1.5">Primary Priority</label>
+                        <select id="engine-priority" onchange="updateEngineRecommendation()" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm outline-none focus:border-indigo-500">
+                            <option value="simplicity">Simplicity / Quick start</option>
+                            <option value="portability">Portability / Runs anywhere</option>
+                            <option value="performance" selected>Max performance / Throughput</option>
+                            <option value="sovereignty">Data sovereignty / Air-gap</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="engine-result" class="p-5 bg-slate-950 border border-slate-700 rounded-2xl min-h-[160px]">
+                    <div class="text-sm text-slate-400">Select your hardware and workload above to get an engine recommendation.</div>
+                </div>
+
+                <!-- Prefill vs Decode explainer -->
+                <div class="mt-6 border-t border-slate-700 pt-5">
+                    <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Why This Matters: The Two Phases of Inference</div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-950 border border-indigo-500/30 rounded-xl p-4">
+                            <div class="text-xs font-bold text-indigo-400 mb-1">PREFILL — Compute-Bound</div>
+                            <div class="text-xs text-slate-300">Reads the entire prompt and builds the initial KV cache. Compute-intensive. Long prompts = prefill dominates. Attention kernels and chunked prefill matter most.</div>
+                            <div class="text-[10px] text-slate-500 mt-2">Short prompt + long answer → decode dominates throughput</div>
+                        </div>
+                        <div class="bg-slate-950 border border-emerald-500/30 rounded-xl p-4">
+                            <div class="text-xs font-bold text-emerald-400 mb-1">DECODE — Memory-Bandwidth-Bound</div>
+                            <div class="text-xs text-slate-300">Generates one token at a time, repeatedly reading weights and KV cache. Decode speed tracks memory bandwidth — not peak compute. The bottleneck for most interactive workloads.</div>
+                            <div class="text-[10px] text-slate-500 mt-2">Long prompt + short answer → prefill dominates cost</div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-[10px] text-slate-500 bg-slate-900 p-2.5 rounded">
+                        This distinction explains why an H100 (3.35 TB/s HBM) decodes much faster than a Mac Studio with unified memory, even when both fit the same model. VRAM determines fit — bandwidth determines speed.
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- NEW: Quick Starts & Integrations -->
         <section class="mb-12">
             <div class="flex items-center gap-3 mb-4">
@@ -607,9 +700,13 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 text-sm">
                 <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5">
-                    <div class="font-semibold mb-2">Ollama (Fastest Local Start)</div>
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="font-semibold">Ollama (Dev / Solo Start)</div>
+                        <span class="text-[10px] px-2 py-0.5 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded font-semibold">⚠ NOT FOR PRODUCTION</span>
+                    </div>
                     <div class="code-block bg-slate-950 p-3 rounded text-xs text-emerald-300 overflow-x-auto">ollama run gemma3:12b<br>ollama serve  # API on :11434</div>
                     <button onclick="copyToClipboard(this, 'ollama run gemma3:12b\nollama serve')" class="mt-2 text-xs px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded">Copy</button>
+                    <div class="mt-2 text-[10px] text-rose-300/80">Ollama lacks production security, backpressure, routing, and SLA behavior. Use for local dev and single-user workflows only. Graduate to vLLM for team serving.</div>
                 </div>
                 
                 <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5">
@@ -644,18 +741,137 @@
             </div>
         </section>
 
-        <!-- NEW: Benchmarking Note -->
+        <!-- Benchmarking Framework -->
         <section class="mb-12">
-            <div class="bg-slate-900/60 border border-slate-700 rounded-2xl p-6">
-                <h3 class="font-bold text-white mb-2">Benchmarking &amp; Evaluation Guidance</h3>
-                <p class="text-sm text-slate-400">Before committing to production, run domain-specific evals. Compare local vs. cloud on your actual workflows (contract clause extraction, risk identification, document summarization). Use consistent test sets, measure quality (human review or LLM-as-judge), latency, and cost equivalence. Tools like HELM, local arena-style comparisons, or simple prompt harnesses work well. Re-evaluate after major model or quantization changes.</p>
+            <div class="flex items-center gap-3 mb-4">
+                <span class="text-lg">📊</span>
+                <h2 class="text-xl font-bold text-white">Benchmarking Framework</h2>
+                <span class="text-xs px-2.5 py-1 bg-amber-500/10 text-amber-400 rounded-full">Interactive Checklist</span>
+            </div>
+            <p class="text-sm text-slate-400 mb-1 max-w-3xl">A benchmark number without context is noise. Track your readiness score below — check off each item as you capture it before committing to an engine in production.</p>
+            <p class="text-[11px] text-rose-400/80 mb-4">Anti-pattern: "I got 180 tok/s." That tells you almost nothing without the items below.</p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
+                <!-- Context Checklist -->
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Benchmark Context</div>
+                        <div id="score-context" class="text-xs font-mono text-emerald-400">0 / 5</div>
+                    </div>
+                    <div class="space-y-2 text-xs">
+                        <label class="flex items-start gap-2.5 cursor-pointer group">
+                            <input type="checkbox" onchange="updateScore()" class="mt-0.5 accent-indigo-500 shrink-0">
+                            <span class="text-slate-300 group-hover:text-white transition-colors"><strong>Model:</strong> exact architecture, parameter count, active MoE params</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 cursor-pointer group">
+                            <input type="checkbox" onchange="updateScore()" class="mt-0.5 accent-indigo-500 shrink-0">
+                            <span class="text-slate-300 group-hover:text-white transition-colors"><strong>Weights:</strong> dtype, quant format, group size, calibration dataset</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 cursor-pointer group">
+                            <input type="checkbox" onchange="updateScore()" class="mt-0.5 accent-indigo-500 shrink-0">
+                            <span class="text-slate-300 group-hover:text-white transition-colors"><strong>Engine:</strong> version, commit hash, backend, relevant flags</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 cursor-pointer group">
+                            <input type="checkbox" onchange="updateScore()" class="mt-0.5 accent-indigo-500 shrink-0">
+                            <span class="text-slate-300 group-hover:text-white transition-colors"><strong>Hardware:</strong> GPU SKU, VRAM, memory bandwidth, interconnect type</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 cursor-pointer group">
+                            <input type="checkbox" onchange="updateScore()" class="mt-0.5 accent-indigo-500 shrink-0">
+                            <span class="text-slate-300 group-hover:text-white transition-colors"><strong>Workload:</strong> input/output length distributions, concurrency, streaming</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Metrics Checklist -->
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Metrics to Track</div>
+                        <div id="score-metrics" class="text-xs font-mono text-emerald-400">0 / 7</div>
+                    </div>
+                    <div class="space-y-2 text-xs">
+                        <label class="flex items-start gap-2.5 cursor-pointer group">
+                            <input type="checkbox" onchange="updateScore()" class="mt-0.5 accent-indigo-500 shrink-0">
+                            <span class="text-slate-300 group-hover:text-white transition-colors"><strong>TTFT</strong> — Time to First Token (measures prefill speed)</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 cursor-pointer group">
+                            <input type="checkbox" onchange="updateScore()" class="mt-0.5 accent-indigo-500 shrink-0">
+                            <span class="text-slate-300 group-hover:text-white transition-colors"><strong>TPOT</strong> — Time Per Output Token (measures decode / bandwidth)</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 cursor-pointer group">
+                            <input type="checkbox" onchange="updateScore()" class="mt-0.5 accent-indigo-500 shrink-0">
+                            <span class="text-slate-300 group-hover:text-white transition-colors"><strong>p50 / p95 / p99 latency</strong> — never averages alone</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 cursor-pointer group">
+                            <input type="checkbox" onchange="updateScore()" class="mt-0.5 accent-indigo-500 shrink-0">
+                            <span class="text-slate-300 group-hover:text-white transition-colors"><strong>Prefill vs decode throughput</strong> — measured separately</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 cursor-pointer group">
+                            <input type="checkbox" onchange="updateScore()" class="mt-0.5 accent-indigo-500 shrink-0">
+                            <span class="text-slate-300 group-hover:text-white transition-colors"><strong>Tokens/sec and req/sec</strong> at realistic concurrency levels</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 cursor-pointer group">
+                            <input type="checkbox" onchange="updateScore()" class="mt-0.5 accent-indigo-500 shrink-0">
+                            <span class="text-slate-300 group-hover:text-white transition-colors"><strong>GPU memory at target context length</strong> — check headroom</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 cursor-pointer group">
+                            <input type="checkbox" onchange="updateScore()" class="mt-0.5 accent-indigo-500 shrink-0">
+                            <span class="text-slate-300 group-hover:text-white transition-colors"><strong>KV cache hit rate</strong> if your app has repeated prefixes</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Anti-patterns Checklist -->
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Anti-patterns Avoided</div>
+                        <div id="score-antipatterns" class="text-xs font-mono text-emerald-400">0 / 6</div>
+                    </div>
+                    <div class="space-y-2 text-xs">
+                        <label class="flex items-start gap-2.5 cursor-pointer group">
+                            <input type="checkbox" onchange="updateScore()" class="mt-0.5 accent-rose-500 shrink-0">
+                            <span class="text-slate-300 group-hover:text-white transition-colors">Not comparing engines on single-user tok/s only</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 cursor-pointer group">
+                            <input type="checkbox" onchange="updateScore()" class="mt-0.5 accent-rose-500 shrink-0">
+                            <span class="text-slate-300 group-hover:text-white transition-colors">Testing actual prompt + output length distribution (not toy examples)</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 cursor-pointer group">
+                            <input type="checkbox" onchange="updateScore()" class="mt-0.5 accent-rose-500 shrink-0">
+                            <span class="text-slate-300 group-hover:text-white transition-colors">Testing at realistic concurrency (not solo only)</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 cursor-pointer group">
+                            <input type="checkbox" onchange="updateScore()" class="mt-0.5 accent-rose-500 shrink-0">
+                            <span class="text-slate-300 group-hover:text-white transition-colors">Not assuming quantization formats are interchangeable across engines</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 cursor-pointer group">
+                            <input type="checkbox" onchange="updateScore()" class="mt-0.5 accent-rose-500 shrink-0">
+                            <span class="text-slate-300 group-hover:text-white transition-colors">Not trusting NVIDIA benchmark charts for AMD / Apple hardware</span>
+                        </label>
+                        <label class="flex items-start gap-2.5 cursor-pointer group">
+                            <input type="checkbox" onchange="updateScore()" class="mt-0.5 accent-rose-500 shrink-0">
+                            <span class="text-slate-300 group-hover:text-white transition-colors">Re-testing after driver, CUDA/ROCm, model, or engine upgrades</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Readiness Score -->
+            <div id="benchmark-readiness" class="bg-slate-900/60 border border-slate-700 rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center gap-4">
+                <div class="flex-1">
+                    <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Benchmark Readiness Score</div>
+                    <div class="w-full bg-slate-950 border border-slate-700 h-2.5 rounded-full overflow-hidden mt-2">
+                        <div id="readiness-bar" class="h-full bg-slate-600 transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div id="readiness-label" class="text-sm font-bold text-slate-500 shrink-0">0 / 18 — Start checking off items above</div>
             </div>
         </section>
 
         <!-- Footer -->
         <footer class="border-t border-slate-800 pt-6 text-center text-xs text-slate-500">
-            <p>Enhanced Local AI Strategy Hub • Framework inspired by Nufar Gaspar on <span class="text-indigo-400">The AI Daily Brief</span> (June 2026 Operator’s Cut). Extended with production engineering, legal-tech governance, interactive tools, and TCO modeling for real-world adoption.</p>
-            <p class="mt-1">Built for professionals navigating sovereign AI infrastructure. All estimates are directional — validate with your hardware and workloads.</p>
+            <p>Local AI Infrastructure &amp; Sovereign Deployment Stack • Last updated June 2026</p>
+            <p class="mt-1">Sources: <span class="text-slate-400">Nufar Gaspar</span> on <span class="text-indigo-400">The AI Daily Brief</span> (June 2026 Operator’s Cut) · <span class="text-slate-400">Ahmad Osman</span>, <span class="text-indigo-400">Inference Engines for LLMs &amp; Local AI Hardware (2026 Edition)</span></p>
+            <p class="mt-1">All VRAM and cost estimates are directional — validate against your hardware, workload distribution, and engine version. Re-benchmark after major engine or driver upgrades.</p>
         </footer>
     </div>
 
@@ -724,25 +940,52 @@
             },
             3: {
                 title: "Layer 3: Serving & Inference Engines",
-                tag: "Runtime • The Translation Layer",
-                specs: "Ollama (ease) • vLLM (throughput) • LM Studio (desktop) • TGI / LocalAI",
-                metric: "Tokens/sec • Concurrency • OpenAI-Compatible API",
+                tag: "Prefill × Decode × Serving Model → Engine Follows",
+                specs: "llama.cpp • MLX • ExLlamaV2/V3 • vLLM • SGLang • TensorRT-LLM • Dynamo",
+                metric: "Prefill (compute-bound) → Decode (bandwidth-bound) → Concurrency → Cost",
                 html: `
                     <div class="space-y-4 text-sm text-slate-300">
-                        <p>The serving layer turns weights into a usable service. It manages memory, exposes APIs, and determines how many concurrent users you can realistically support.</p>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-700">
-                                <div class="font-bold text-white">Ollama</div>
-                                <div class="text-slate-400 mt-1">Simplest path. One-command model management and OpenAI-compatible API on localhost:11434. Ideal for development and small teams.</div>
+                        <p>The inference engine is not "the model." It is the traffic cop, memory manager, kernel dispatcher, scheduler, cache accountant, parallelism planner, and API surface. You don't pick an engine first — you pick a hardware strategy, a workload shape, and a serving model. <span class="text-slate-400 italic">The engine follows.</span></p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                            <div class="bg-slate-950 border border-indigo-500/30 p-3 rounded-xl">
+                                <div class="font-bold text-indigo-400 mb-1">PREFILL — Compute-Bound</div>
+                                <div class="text-slate-400">Reads the entire prompt, builds initial KV cache. Long prompts = prefill dominates. Chunked prefill and attention kernels matter most here.</div>
                             </div>
-                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-700">
-                                <div class="font-bold text-white">vLLM</div>
-                                <div class="text-slate-400 mt-1">PagedAttention for high throughput and efficient batching. Best for Level 3 production or teams with concurrent demand.</div>
+                            <div class="bg-slate-950 border border-emerald-500/30 p-3 rounded-xl">
+                                <div class="font-bold text-emerald-400 mb-1">DECODE — Bandwidth-Bound</div>
+                                <div class="text-slate-400">Generates one token at a time, reading weights and KV cache repeatedly. Decode speed tracks memory bandwidth, not peak compute. This is the bottleneck for most interactive workloads.</div>
                             </div>
                         </div>
-                        
-                        <div class="text-xs text-slate-400">Pro tip: Most modern IDE extensions (Cursor, Continue.dev, Aider) support swapping the base URL to your local Ollama or vLLM endpoint with zero code changes.</div>
+
+                        <div class="font-semibold text-white text-xs uppercase tracking-wider mt-1">Engine Families</div>
+                        <div class="grid grid-cols-1 gap-2 text-xs">
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-700 flex gap-3">
+                                <span class="text-slate-500 font-mono w-20 shrink-0">llama.cpp</span>
+                                <span class="text-slate-300">Portability king. Runs on ARM, x86, Metal, CUDA, Vulkan, ROCm, CPU+GPU hybrid. Best when hardware is weird, offline, or edge-oriented. <span class="text-rose-400">Not for multi-node production.</span></span>
+                            </div>
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-700 flex gap-3">
+                                <span class="text-slate-500 font-mono w-20 shrink-0">MLX / MLX-LM</span>
+                                <span class="text-slate-300">Mac-first. Unified memory means large models fit that wouldn't in 24 GB VRAM. Bandwidth tradeoff vs HBM. <span class="text-rose-400">Server not production-ready.</span></span>
+                            </div>
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-700 flex gap-3">
+                                <span class="text-slate-500 font-mono w-20 shrink-0">ExLlamaV2/V3</span>
+                                <span class="text-slate-300">Consumer CUDA engine. V2: single RTX with EXL2 quantization. V3: 2–4 GPU setups, expert parallelism, MoE. Enthusiast-grade performance with rougher edges.</span>
+                            </div>
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-700 flex gap-3">
+                                <span class="text-slate-500 font-mono w-20 shrink-0">vLLM</span>
+                                <span class="text-slate-300">Default open-source production server. PagedAttention, continuous batching, chunked prefill, prefix caching, FP8/INT8/GPTQ/AWQ. Start here for serious serving.</span>
+                            </div>
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-700 flex gap-3">
+                                <span class="text-slate-500 font-mono w-20 shrink-0">SGLang</span>
+                                <span class="text-slate-300">When the workload gets ugly: long context, MoE, structured outputs, routing. Prefill-decode disaggregation separates compute-intensive prefill from bandwidth-intensive decode.</span>
+                            </div>
+                            <div class="bg-slate-950 p-3 rounded-xl border border-slate-700 flex gap-3">
+                                <span class="text-slate-500 font-mono w-20 shrink-0">TRT-LLM + Dynamo</span>
+                                <span class="text-slate-300">NVIDIA-max performance. FP8 on H100, FP4 on B200. Dynamo sits above for fleet orchestration, KV-aware routing, disaggregation, and autoscaling.</span>
+                            </div>
+                        </div>
+                        <div class="text-xs text-slate-500 bg-slate-950/60 p-2.5 rounded">Use the Engine Decision Tree section below to find the right engine for your hardware + workload combination.</div>
                     </div>
                 `
             },
@@ -1131,6 +1374,117 @@
             downloadAnchor.remove();
         }
 
+        // Engine Decision Tree data
+        const engineData = {
+            laptop: { primary: 'llama.cpp', secondary: null, avoid: 'vLLM, SGLang, TensorRT-LLM', desc: 'llama.cpp is the portability king. Runs on ARM NEON/Metal/CUDA/Vulkan/ROCm/CPU+GPU hybrid offload. When hardware is weird, offline, edge-oriented, or not a datacenter — llama.cpp. The HTTP server supports OpenAI-compatible routes, continuous batching, speculative decoding, and multimodal.', note: 'RPC multi-node backend is explicitly documented as proof-of-concept, fragile, and insecure. Do not use llama.cpp for multi-GPU production serving.', color: 'emerald' },
+            mac: { primary: 'MLX / MLX-LM', secondary: 'llama.cpp (for GGUF / portability)', avoid: 'Ollama for production, vLLM (not native to Apple stack)', desc: "MLX is Apple's array framework for Apple Silicon. Unified memory means the CPU and GPU share the same pool — no VRAM/RAM split. Large quantized models fit that wouldn't on a 24 GB consumer GPU. Tradeoff: bandwidth trails H100 HBM, so decode is slower at equal model size. MLX-LM adds LoRA fine-tuning, distributed inference, and a large HF model ecosystem.", note: "MLX-LM's own server warns it is not recommended for production — only basic security checks are implemented. Use for dev and team-internal workflows.", color: 'sky' },
+            'single-rtx': { primary: 'ExLlamaV2', secondary: 'vLLM (if serving multiple users), llama.cpp (GGUF/portability)', avoid: 'TensorRT-LLM (overkill), Dynamo (fleet-scale only)', desc: "ExLlamaV2 is the enthusiast's local CUDA engine — built to make a consumer RTX punch above its weight. Paged attention, dynamic batching, prompt caching, KV cache deduplication, speculative decoding, and EXL2 quantization with optimized kernels.", note: "If you're serving more than 1–2 concurrent users, switch to vLLM. Its scheduler and continuous batching outperform ExLlamaV2 at meaningful concurrency.", color: 'indigo' },
+            'multi-rtx': { primary: 'ExLlamaV3', secondary: 'vLLM (serving behavior), SGLang (long-context / routing)', avoid: 'llama.cpp multi-GPU (RPC is fragile), TensorRT-LLM (NVIDIA enterprise)', desc: 'ExLlamaV3 extends the consumer CUDA philosophy to 2–4 GPU setups. Flexible tensor-parallel and expert-parallel inference for consumer hardware, EXL3 quantization format (QTIP-based), continuous dynamic batching, MoE support, and OpenAI-compatible server via TabbyAPI. The frontier for local multi-GPU setups.', note: 'Without NVLink, pipeline parallelism can outperform tensor parallelism. Test both configurations. Expect rougher edges than production servers — some models do not yet support all parallelism modes in V3.', color: 'indigo' },
+            h100: { primary: 'vLLM', secondary: 'SGLang (long-context/MoE/routing), TensorRT-LLM (max NVIDIA perf), Dynamo (multi-node fleet)', avoid: 'llama.cpp, ExLlamaV2/V3 (wrong tier)', desc: 'vLLM is the default open-source production server. PagedAttention, continuous batching, chunked prefill, prefix caching, extensive quantization (FP8, MXFP8, INT8, GPTQ, AWQ, GGUF), multi-LoRA, tensor/pipeline/expert parallelism, and OpenAI + Anthropic-compatible APIs. The starting point for any 8×H100 deployment.', note: 'vLLM gives you a very good engine — it still requires systems thinking. Tune batching, context length, GPU memory utilization, and parallelism layout for your workload shape.', color: 'emerald' },
+            'nvidia-dc': { primary: 'TensorRT-LLM + Dynamo', secondary: 'vLLM (flexibility), SGLang (complex serving patterns)', avoid: 'llama.cpp, ExLlamaV2/V3, any portable-first engine', desc: "TensorRT-LLM is NVIDIA's max-performance stack with custom kernels for attention, GEMMs, and MoE. FP8 on H100/H200 can double performance and halve memory vs FP16. FP4 on B200 pushes further. Dynamo sits above engines for fleet orchestration, disaggregated prefill/decode, KV-aware routing, and autoscaling across vLLM, SGLang, and TRT-LLM nodes.", note: 'You trade portability for performance. AMD, Intel, and Apple are not targets. Benchmark TensorRT-LLM vs vLLM vs SGLang before committing — the delta is worth measuring at this scale.', color: 'amber' },
+            amd: { primary: 'vLLM (ROCm)', secondary: 'SGLang (ROCm)', avoid: 'TensorRT-LLM (NVIDIA-only), ExLlamaV2/V3 (CUDA-only)', desc: 'vLLM and SGLang both support AMD via ROCm. Start here. MI300/MI350 have competitive memory bandwidth and capacity — but CUDA kernel coverage gaps remain. Performance characteristics differ from NVIDIA benchmarks.', note: 'Do not assume NVIDIA benchmark numbers transfer cleanly to AMD. Validate all performance claims on your actual MI300/MI350 hardware. ROCm support is improving rapidly.', color: 'rose' },
+            intel: { primary: 'OpenVINO GenAI', secondary: 'ONNX Runtime GenAI (for app embedding / VS Code AI Toolkit)', avoid: 'vLLM, TensorRT-LLM (NVIDIA-focused)', desc: "OpenVINO GenAI is Intel's optimized story for Xeon CPUs, Arc GPUs, Core Ultra, and NPUs. Provides OpenAI-compatible serving with continuous batching and paged attention. ONNX Runtime GenAI supports CPU, CUDA, DirectML, TensorRT-RTX, OpenVINO, QNN, and WebGPU.", note: 'Intel NPU support through Core Ultra is emerging and worth tracking for edge/on-device AI. Benchmark against llama.cpp on the same hardware as a baseline.', color: 'sky' },
+            mobile: { primary: 'MLC LLM / WebLLM', secondary: 'ONNX Runtime GenAI (for app-native / Windows)', avoid: 'vLLM, llama.cpp server, any datacenter engine', desc: 'MLC LLM is the compiler-first universal deployment engine with OpenAI-compatible APIs across REST, Python, JavaScript, iOS, and Android. WebLLM brings inference to the browser via WebGPU. ONNX Runtime GenAI supports CPU, DirectML, WebGPU, and QNN for app-native deployment.', note: 'Model size constraints are very real. 1–4B quantized models are the practical ceiling for browser and mobile. This is a rapidly evolving space — re-evaluate capabilities every few months.', color: 'purple' }
+        };
+
+        function updateEngineRecommendation() {
+            const hardware = document.getElementById('engine-hardware').value;
+            const workload = document.getElementById('engine-workload').value;
+            const priority = document.getElementById('engine-priority').value;
+            const result = document.getElementById('engine-result');
+            const data = engineData[hardware];
+            if (!data) return;
+
+            let primaryEngine = data.primary;
+            let note = data.note;
+
+            if (hardware === 'single-rtx' && (workload === 'team' || workload === 'prod')) {
+                primaryEngine = 'vLLM';
+                note = "Single GPU + multiple users: vLLM's scheduler and continuous batching outperform ExLlamaV2 at meaningful concurrency. ExLlamaV2 shines for solo or 1–2 user setups.";
+            }
+            if (hardware === 'h100' && workload === 'long-ctx') {
+                primaryEngine = 'SGLang';
+                note = "Long context + MoE + routing: SGLang's prefill-decode disaggregation prevents long prefill batches from spiking decode latency. Its RadixAttention prefix caching is best-in-class for shared-prefix workloads.";
+            }
+            if (priority === 'portability' && hardware !== 'mac' && hardware !== 'mobile') {
+                primaryEngine = 'llama.cpp';
+                note = 'Portability priority: llama.cpp is the only engine that runs everywhere — CUDA, Metal, Vulkan, ROCm, CPU, hybrid. Accept the production serving limitations and plan to graduate to vLLM when concurrency demands it.';
+            }
+            if (priority === 'sovereignty' && (hardware === 'single-rtx' || hardware === 'laptop' || hardware === 'mac')) {
+                note = 'Air-gap + sovereignty: ' + note + ' Ensure no telemetry flags are enabled in your engine config, and run an isolated network segment.';
+            }
+
+            const colorClasses = { emerald: 'text-emerald-400', indigo: 'text-indigo-400', sky: 'text-sky-400', amber: 'text-amber-400', rose: 'text-rose-400', purple: 'text-purple-400' };
+            const borderClasses = { emerald: 'border-emerald-500/30', indigo: 'border-indigo-500/30', sky: 'border-sky-500/30', amber: 'border-amber-500/30', rose: 'border-rose-500/30', purple: 'border-purple-500/30' };
+            const cc = colorClasses[data.color] || 'text-slate-400';
+            const bc = borderClasses[data.color] || 'border-slate-600';
+
+            result.innerHTML = `
+                <div>
+                    <div class="text-[10px] uppercase tracking-[1.5px] font-bold text-slate-500 mb-1">RECOMMENDED ENGINE</div>
+                    <div class="text-2xl font-black text-white mb-3">${primaryEngine}</div>
+                    <p class="text-sm text-slate-300 leading-relaxed mb-4">${data.desc}</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs mb-3">
+                        ${data.secondary ? `<div class="bg-slate-900 border border-slate-700 rounded-lg p-3"><div class="text-slate-500 font-semibold mb-1">ALSO CONSIDER</div><div class="text-slate-300">${data.secondary}</div></div>` : ''}
+                        <div class="bg-rose-500/5 border border-rose-500/20 rounded-lg p-3"><div class="text-rose-400 font-semibold mb-1">AVOID</div><div class="text-slate-300">${data.avoid}</div></div>
+                    </div>
+                    <div class="p-3 bg-amber-500/5 border border-amber-500/20 rounded-lg text-xs text-amber-200"><span class="font-semibold text-amber-400">Note: </span>${note}</div>
+                </div>
+            `;
+        }
+
+        // Benchmarking readiness score
+        function updateScore() {
+            const all = document.querySelectorAll('#benchmark-readiness ~ * input[type=checkbox], .bg-slate-900 input[type=checkbox]');
+            const checkboxes = document.querySelectorAll('input[type=checkbox]');
+            let checked = 0;
+            checkboxes.forEach(cb => { if (cb.checked) checked++; });
+            const total = checkboxes.length;
+            const pct = Math.round((checked / total) * 100);
+
+            const bar = document.getElementById('readiness-bar');
+            const label = document.getElementById('readiness-label');
+            const scores = [
+                document.getElementById('score-context'),
+                document.getElementById('score-metrics'),
+                document.getElementById('score-antipatterns')
+            ];
+            const groups = document.querySelectorAll('.bg-slate-900.border.border-slate-700.rounded-2xl.p-5');
+
+            // Update per-group scores
+            let g = 0, groupChecked = 0;
+            checkboxes.forEach((cb, i) => {
+                if (i > 0 && checkboxes[i-1].closest('.bg-slate-900') !== cb.closest('.bg-slate-900')) {
+                    if (scores[g]) scores[g].textContent = groupChecked + ' / ' + (i - (g === 0 ? 0 : g === 1 ? 5 : 12));
+                    g++; groupChecked = 0;
+                }
+                if (cb.checked) groupChecked++;
+            });
+
+            // Count per-panel
+            const panels = ['score-context', 'score-metrics', 'score-antipatterns'];
+            const panelCounts = [5, 7, 6];
+            let offset = 0;
+            panels.forEach((id, idx) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                let cnt = 0;
+                for (let i = offset; i < offset + panelCounts[idx]; i++) {
+                    if (checkboxes[i] && checkboxes[i].checked) cnt++;
+                }
+                el.textContent = cnt + ' / ' + panelCounts[idx];
+                offset += panelCounts[idx];
+            });
+
+            if (bar) bar.style.width = pct + '%';
+            if (bar) bar.className = 'h-full transition-all duration-300 ' + (pct >= 80 ? 'bg-emerald-500' : pct >= 50 ? 'bg-amber-500' : 'bg-rose-500');
+
+            const msgs = ['0 / 18 — Start checking off items above', '— Capturing context', '— Tracking core metrics', '— Getting rigorous', '— Production-grade benchmark'];
+            const tier = pct === 0 ? 0 : pct < 30 ? 1 : pct < 60 ? 2 : pct < 90 ? 3 : 4;
+            if (label) label.textContent = checked + ' / ' + total + ' ' + (msgs[tier] || '');
+            if (label) label.className = 'text-sm font-bold shrink-0 ' + (pct >= 80 ? 'text-emerald-400' : pct >= 50 ? 'text-amber-400' : 'text-rose-400');
+        }
+
         // Initialize everything
         function initializeApp() {
             initializeTailwind();
@@ -1170,6 +1524,16 @@
             // Make sure tabs start correctly
             const firstTab = document.getElementById('tab-levels-btn');
             if (firstTab) firstTab.classList.add('active', 'border-indigo-500', 'text-white');
+
+            // Initialize engine decision tree
+            setTimeout(() => {
+                updateEngineRecommendation();
+            }, 500);
+
+            // Initialize benchmark score
+            setTimeout(() => {
+                updateScore();
+            }, 600);
         }
 
         // Boot the application
