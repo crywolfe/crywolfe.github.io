@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Software Factories: A Field Reference</title>
+<meta name="description" content="The mental model for building an agent-operated software factory, grounded in lessons from two shipped applications, with sources.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Libre+Franklin:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E9E3D0; --panel:#FBF7EA; --ink:#221D14; --dim:#6B604C; --line:#D3C9A9;
+  --amber:#B5451E; --amber-bg:#F4DCC2;
+  --steel:#2B5568; --steel-bg:#DCE6E2;
+  --moss:#4F6E4B; --moss-bg:#E5EBDA;
+  --slate:#6B6F63; --slate-bg:#E9E5D6;
+  --violet:#5B4A75; --violet-bg:#EBE6EF;
+  --mono:'IBM Plex Mono',monospace; --sans:'Libre Franklin',system-ui,sans-serif; --disp:'Big Shoulders Display',sans-serif;
+  --navy:#102336; --navy2:#183349; --navyline:#2E4E67; --navyink:#EEE7D3; --navydim:#9CB0BC;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:18.5px;line-height:1.62;
+  background-image:linear-gradient(var(--line) 1px, transparent 1px),linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size:56px 56px;background-position:-1px -1px;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 28px}
+nav.rail{display:flex;flex-wrap:wrap;gap:4px 14px;padding:14px 0;border-bottom:1px solid var(--line);margin-bottom:6px;position:sticky;top:0;z-index:50;
+  background-color:var(--paper);
+  background-image:linear-gradient(var(--line) 1px, transparent 1px),linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size:56px 56px;background-position:-1px -1px;
+}
+nav.rail a{text-decoration:none;color:var(--dim);font-family:var(--mono);font-size:12.5px;padding:4px 0}
+nav.rail a:hover,nav.rail a:focus-visible{color:var(--ink)}
+nav.rail a .n{color:var(--amber);font-weight:600;margin-right:5px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--steel);outline-offset:2px}
+main{padding:8px 0 80px}
+header.masthead{background:var(--navy);color:var(--navyink);padding:38px 36px 32px;margin-top:20px;
+  background-image:linear-gradient(var(--navyline) 1px, transparent 1px),linear-gradient(90deg, var(--navyline) 1px, transparent 1px);background-size:28px 28px;
+}
+.eyebrow{font-family:var(--mono);font-size:12.5px;letter-spacing:.2em;color:#D89B72;text-transform:uppercase;margin-bottom:12px}
+h1{font-family:var(--disp);font-weight:800;font-size:clamp(38px,5.5vw,62px);line-height:.96;letter-spacing:.005em;text-transform:uppercase}
+h1 .thin{font-weight:600;color:var(--navydim)}
+.masthead p.sub{margin-top:14px;max-width:60ch;color:var(--navydim);font-size:16.5px}
+section{margin-top:56px;scroll-margin-top:20px}
+.stn{display:flex;align-items:baseline;gap:14px;border-bottom:2px solid var(--ink);padding-bottom:9px;margin-bottom:20px}
+.stn .num{font-family:var(--mono);font-weight:600;font-size:13px;color:var(--panel);background:var(--ink);padding:3px 9px}
+.stn h2{font-family:var(--disp);font-weight:800;font-size:clamp(26px,3vw,34px);text-transform:uppercase}
+h3{font-family:var(--disp);font-weight:700;font-size:19px;margin:24px 0 10px;text-transform:uppercase}
+p{max-width:74ch;margin-bottom:12px}
+p.note{color:var(--dim);font-size:15.5px}
+ul.tight{margin:6px 0 14px 20px;max-width:74ch}
+ul.tight li{margin-bottom:6px}
+strong{font-weight:600}
+a.inline{color:var(--steel);text-decoration-thickness:1px;text-underline-offset:3px}
+.twin,.triad{display:grid;gap:16px;margin:16px 0}
+.twin{grid-template-columns:1fr 1fr}
+.triad{grid-template-columns:1fr 1fr 1fr}
+.principle{border:1px solid var(--ink);background:var(--panel);padding:16px 18px}
+.principle .k{font-family:var(--mono);font-size:12.5px;letter-spacing:.13em;color:var(--amber);text-transform:uppercase;margin-bottom:7px}
+.principle h4{font-family:var(--disp);font-size:19px;font-weight:700;margin-bottom:5px}
+.principle p{font-size:16.5px;color:var(--dim);margin:0}
+.chip{display:inline-block;font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.08em;padding:2px 8px;border:1px solid;vertical-align:1px}
+.chip.opus{color:var(--steel);border-color:var(--steel);background:var(--steel-bg)}
+.chip.sonnet{color:var(--moss);border-color:var(--moss);background:var(--moss-bg)}
+.chip.haiku{color:var(--slate);border-color:var(--slate);background:var(--slate-bg)}
+.chip.fable{color:var(--violet);border-color:var(--violet);background:var(--violet-bg)}
+table{width:100%;border-collapse:collapse;margin:14px 0;background:var(--panel);border:1px solid var(--ink);font-size:16.5px}
+th{font-family:var(--mono);font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;text-align:left;color:var(--dim);border-bottom:1px solid var(--ink);padding:10px 12px}
+td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.role{font-weight:600}
+figure{margin:20px 0;border:1px solid var(--ink);background:var(--panel);padding:18px 16px 6px}
+figcaption{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);padding:9px 4px;border-top:1px solid var(--line);margin-top:16px}
+svg{display:block;width:100%;height:auto}
+.gate{border:1px solid var(--amber);background:var(--amber-bg);padding:13px 17px;margin:14px 0;max-width:74ch}
+.gate .k{font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;color:var(--amber);font-weight:600;text-transform:uppercase;display:block;margin-bottom:4px}
+.gate p{margin:0;font-size:15px}
+.ladder{margin:14px 0;border:1px solid var(--ink);background:var(--panel)}
+.rung{display:grid;grid-template-columns:64px 170px 1fr;border-bottom:1px solid var(--line)}
+.rung:last-child{border-bottom:none}
+.rung .lv{font-family:var(--mono);font-size:12.5px;font-weight:600;display:flex;align-items:center;justify-content:center;border-right:1px solid var(--line);color:var(--amber)}
+.rung .nm{font-family:var(--mono);font-size:13px;font-weight:600;padding:11px 13px;border-right:1px solid var(--line)}
+.rung .ds{padding:11px 13px;font-size:14.5px;color:var(--dim)}
+.compare{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--ink);margin:14px 0;background:var(--panel)}
+.compare .col{padding:15px 17px}
+.compare .col+.col{border-left:1px solid var(--line)}
+.compare .lbl{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px;display:block}
+.compare .lbl.thin{color:var(--slate)}
+.compare .lbl.locked{color:var(--amber)}
+.compare .brief{font-size:15px;font-style:italic;color:var(--dim);margin-bottom:9px}
+.compare ul{margin:0 0 0 18px;font-size:14px}
+.compare li{margin-bottom:5px}
+.compare .outcome{margin-top:9px;padding-top:9px;border-top:1px dashed var(--line);font-family:var(--mono);font-size:12px;font-weight:600}
+.lessons{border:1px solid var(--ink);background:var(--panel)}
+.lesson{display:grid;grid-template-columns:56px 1fr;border-bottom:1px solid var(--line)}
+.lesson:last-child{border-bottom:none}
+.lesson .ln{font-family:var(--mono);font-weight:700;font-size:15px;color:var(--panel);background:var(--ink);display:flex;align-items:center;justify-content:center}
+.lesson .lc{padding:14px 18px}
+.lesson h4{font-family:var(--disp);font-size:16.5px;font-weight:700;margin-bottom:5px;text-transform:none}
+.lesson p{font-size:15px;margin:0;color:var(--dim)}
+.srcs{border:1px solid var(--ink)}
+.src{display:grid;grid-template-columns:96px 1fr;border-bottom:1px solid var(--line)}
+.src:last-child{border-bottom:none}
+.src .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;padding:12px 12px;color:var(--dim);border-right:1px solid var(--line);text-transform:uppercase;background:var(--panel)}
+.src .bd{padding:11px 14px;font-size:14.5px;background:var(--panel)}
+.src .bd a{color:var(--steel);text-decoration-thickness:1px;text-underline-offset:3px;word-break:break-all}
+.src .bd span{display:block;color:var(--dim);font-size:13px}
+footer{margin-top:56px;border-top:1px solid var(--line);padding-top:14px;font-family:var(--mono);font-size:11.5px;color:var(--dim);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+@media(max-width:760px){
+  .twin,.triad{grid-template-columns:1fr}
+  .rung{grid-template-columns:48px 1fr}
+  .rung .ds{grid-column:1/-1;border-top:1px solid var(--line)}
+  .compare{grid-template-columns:1fr}
+  .compare .col+.col{border-left:none;border-top:1px solid var(--line)}
+  .lesson{grid-template-columns:1fr}
+  .lesson .ln{justify-content:flex-start;padding:8px 18px 0}
+  .src{grid-template-columns:1fr}
+  .src .tag{border-right:none;border-bottom:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="rail" aria-label="Stops">
+  <a href="#stn1"><span class="n">01</span>What a factory is</a>
+  <a href="#stn2"><span class="n">02</span>Model + harness</a>
+  <a href="#stn3"><span class="n">03</span>Knowledge layer</a>
+  <a href="#stn4"><span class="n">04</span>Agent roles</a>
+  <a href="#stn5"><span class="n">05</span>The loop</a>
+  <a href="#stn6"><span class="n">06</span>Eval designs the product</a>
+  <a href="#stn7"><span class="n">07</span>Lessons from the field</a>
+  <a href="#stn8"><span class="n">08</span>Delivery discipline</a>
+  <a href="#stn9"><span class="n">09</span>Sources</a>
+</nav>
+<main>
+<header class="masthead">
+  <div class="eyebrow">Field reference · Agentic engineering</div>
+  <h1>Software<br>Factories <span class="thin">/ 2026</span></h1>
+  <p class="sub">The mental model for building a contract enforcement machine, not a code generator, grounded in lessons from two applications actually shipped through one.</p>
+</header>
+<section id="stn1">
+  <div class="stn"><span class="num">STOP 01</span><h2>What a software factory is</h2></div>
+  <p>A software factory is a contract enforcement machine, not a code generator: version-controlled files that let a human specify what "done" means once, spec plus acceptance criteria, then let role-separated agents build, verify, and ship against that contract with as little further human involvement as the gates allow. Five layers do that work: what the model sees, what it remembers, who does what, how work gets checked, how it reaches production. Underinvest in one and the rest stays weak: agents with no shared knowledge layer produce inconsistent code; a strong knowledge layer with no delivery gates ships unverified code.</p>
+  <figure>
+    <svg viewBox="0 0 940 260" role="img" aria-label="Five layers connected by a line: Context, Knowledge, Agent, Workflow, Delivery, with a feedback loop back to the start">
+      <defs><marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#221D14"/></marker></defs>
+      <line x1="17" y1="150" x2="924" y2="150" stroke="#221D14" stroke-width="2"/>
+      <g font-family="IBM Plex Mono" text-anchor="middle">
+        <g><rect x="17" y="54" width="175" height="88" fill="#FBF7EA" stroke="#221D14"/>
+          <text x="104.5" y="79" font-size="12.5" font-weight="600" fill="#221D14" letter-spacing="1">CONTEXT</text>
+          <text x="104.5" y="99" font-size="11.5" fill="#6B604C">what the model</text>
+          <text x="104.5" y="114" font-size="11.5" fill="#6B604C">sees right now</text>
+          <text x="104.5" y="134" font-size="11" fill="#B5451E">prompt, files, output</text>
+          <circle cx="57" cy="150" r="7" fill="#E9E3D0" stroke="#221D14"/><circle cx="152" cy="150" r="7" fill="#E9E3D0" stroke="#221D14"/></g>
+        <g><rect x="200" y="54" width="175" height="88" fill="#FBF7EA" stroke="#221D14"/>
+          <text x="287.5" y="79" font-size="12.5" font-weight="600" fill="#221D14" letter-spacing="1">KNOWLEDGE</text>
+          <text x="287.5" y="99" font-size="11.5" fill="#6B604C">persistent memory,</text>
+          <text x="287.5" y="114" font-size="11.5" fill="#6B604C">loaded and earned</text>
+          <text x="287.5" y="134" font-size="11" fill="#B5451E">CLAUDE.md · skills</text>
+          <circle cx="240" cy="150" r="7" fill="#E9E3D0" stroke="#221D14"/><circle cx="335" cy="150" r="7" fill="#E9E3D0" stroke="#221D14"/></g>
+        <g><rect x="383" y="54" width="175" height="88" fill="#FBF7EA" stroke="#221D14"/>
+          <text x="470.5" y="79" font-size="12.5" font-weight="600" fill="#221D14" letter-spacing="1">AGENT</text>
+          <text x="470.5" y="99" font-size="11.5" fill="#6B604C">focused workers,</text>
+          <text x="470.5" y="114" font-size="11.5" fill="#6B604C">own tools &amp; model</text>
+          <text x="470.5" y="134" font-size="11" fill="#B5451E">restricted, one role</text>
+          <circle cx="423" cy="150" r="7" fill="#E9E3D0" stroke="#221D14"/><circle cx="518" cy="150" r="7" fill="#E9E3D0" stroke="#221D14"/></g>
+        <g><rect x="566" y="54" width="175" height="88" fill="#FBF7EA" stroke="#221D14"/>
+          <text x="653.5" y="79" font-size="12.5" font-weight="600" fill="#221D14" letter-spacing="1">WORKFLOW</text>
+          <text x="653.5" y="99" font-size="11.5" fill="#6B604C">explore, plan,</text>
+          <text x="653.5" y="114" font-size="11.5" fill="#6B604C">verify, ship</text>
+          <text x="653.5" y="134" font-size="11" fill="#B5451E">gated, every step</text>
+          <circle cx="606" cy="150" r="7" fill="#E9E3D0" stroke="#221D14"/><circle cx="701" cy="150" r="7" fill="#E9E3D0" stroke="#221D14"/></g>
+        <g><rect x="749" y="54" width="175" height="88" fill="#FBF7EA" stroke="#221D14"/>
+          <text x="836.5" y="79" font-size="12.5" font-weight="600" fill="#221D14" letter-spacing="1">DELIVERY</text>
+          <text x="836.5" y="99" font-size="11.5" fill="#6B604C">output reaches</text>
+          <text x="836.5" y="114" font-size="11.5" fill="#6B604C">production safely</text>
+          <text x="836.5" y="134" font-size="11" fill="#B5451E">fails closed, always</text>
+          <circle cx="789" cy="150" r="7" fill="#E9E3D0" stroke="#221D14"/><circle cx="884" cy="150" r="7" fill="#E9E3D0" stroke="#221D14"/></g>
+      </g>
+      <path d="M 884 186 L 884 216 L 57 216 L 57 190" fill="none" stroke="#6B604C" stroke-width="1.4" stroke-dasharray="4 4" marker-end="url(#arr)"/>
+      <text x="470.5" y="208" text-anchor="middle" font-family="IBM Plex Mono" font-size="11.5" fill="#6B604C" letter-spacing="1">FEEDBACK: EVERY REPEATED CORRECTION BECOMES A RULE, A GATE, OR A RECORDED FIX</text>
+      <text x="17" y="244" font-family="IBM Plex Mono" font-size="11.5" fill="#6B604C">FIG 1.0 · FIVE LAYERS, ONE LOOP</text>
+    </svg>
+    <figcaption>Model: freeCodeCamp's five-layer factory (Stop 09 sources)</figcaption>
+  </figure>
+  <div class="twin">
+    <div class="principle">
+      <div class="k">Governing principle</div>
+      <h4>Context is the scarce resource</h4>
+      <p>Performance degrades as the context window fills. Every design choice below, restricted agents, on-demand skills, a lean knowledge file, exists to protect it.</p>
+    </div>
+    <div class="principle">
+      <div class="k">Governing principle</div>
+      <h4>Verification closes the loop</h4>
+      <p>Work that "looks done" isn't verified. Without a check that can actually run and fail, you are the check. Give it one and the loop closes without you.</p>
+    </div>
+  </div>
+  <p class="note">This is Claude Code's version of the shape; the shape itself isn't Claude-specific. Every serious agentic coding stack ends up with the same five concerns, just under different file names.</p>
+</section>
+<section id="stn2">
+  <div class="stn"><span class="num">STOP 02</span><h2>Agent = model + harness</h2></div>
+  <p>The model is the engine: raw intelligence, the same in every run. The harness, memory, tool access, structured output, validators, is what turns that engine into something reliable enough to run unattended. When something fails repeatedly, fix the harness; re-prompting the same weak setup just produces the same failure with different wording.</p>
+  <p>One harness decision does more work than any other: <strong>route by judgment vs. execution, not by preference.</strong> Planning, architecture, and adversarial review need the strongest reasoning available, mistakes there are unrecoverable downstream. Implementation, tests, and routine cleanup don't; a cheaper, faster model does that work about as well and several times cheaper.</p>
+  <table>
+    <thead><tr><th>Factory role</th><th>Tier</th><th>Preferred model</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td class="role">Interview, spec, architecture planning</td><td><span class="chip opus">JUDGMENT</span></td><td>Opus · Grok 4.5 · GPT-5.6 Sol</td><td>Malformed decomposition here is unrecoverable downstream; prevention is cheaper than correction.</td></tr>
+      <tr><td class="role">Adversarial / security review</td><td><span class="chip opus">JUDGMENT</span></td><td>Opus · Grok 4.5 · GPT-5.6 Sol</td><td>Subtle edge-case reasoning is where the premium actually pays for itself.</td></tr>
+      <tr><td class="role">Implementation, tests, routine cleanup</td><td><span class="chip sonnet">EXECUTION</span></td><td>Sonnet · Composer 2.5 · GPT-5.6 Terra</td><td>Roughly 97 to 99 percent of top-tier coding quality at a fraction of the cost, and faster.</td></tr>
+      <tr><td class="role">Read-only research, navigation</td><td><span class="chip haiku">RESEARCH</span></td><td>Haiku · GPT-5.6 Luna</td><td>Fast, cheap, read-only. Escalate if output needs correction more than roughly a fifth of the time.</td></tr>
+      <tr><td class="role">Ambiguous, multi-day, needs investigation</td><td><span class="chip fable">FRONTIER</span></td><td>Fable 5 · no clean external analog yet</td><td>Reserved for work too large or too uncertain for a single sitting.</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Vendor names as of July 2026; check current lineups before quoting them, this moves fast on every side.</p>
+</section>
+<section id="stn3">
+  <div class="stn"><span class="num">STOP 03</span><h2>The knowledge layer</h2></div>
+  <p>"What Claude knows about this project" is really three separate mechanisms, each with a different cost and a different job. Confusing them is the most common way this layer goes wrong.</p>
+  <div class="triad">
+    <div class="principle">
+      <div class="k">Always loaded</div>
+      <h4>Project memory</h4>
+      <p>Read at the start of every session whether it's relevant or not (CLAUDE.md in Claude Code). Facts only: commands, conventions, gotchas. Cheap to write, expensive to bloat, a rule that keeps getting ignored belongs in a gate instead.</p>
+    </div>
+    <div class="principle">
+      <div class="k">Loaded on demand</div>
+      <h4>Skills</h4>
+      <p>Domain knowledge and repeatable procedures, pulled into context only when a task actually calls for them. No per-session cost. This is where the workflow skills in Stop 05 live.</p>
+    </div>
+    <div class="principle">
+      <div class="k">Written after every run</div>
+      <h4>Memory log</h4>
+      <p>What the factory accumulates on its own, not what you hand-author: repeated corrections turned into recorded fixes. This is what makes a second project start stronger than the first, the most mature and most skipped of the three mechanisms; see lessons 5 and 8 in <a class="inline" href="#stn7">Stop 07</a>.</p>
+    </div>
+  </div>
+  <p>The rule for what belongs in the always-loaded file: for each line, ask "would removing this cause a mistake?" If not, cut it. Everything else, API conventions, glossaries, one-off procedures, belongs in a skill instead, where it costs nothing until it's actually used.</p>
+</section>
+<section id="stn4">
+  <div class="stn"><span class="num">STOP 04</span><h2>Agent roles</h2></div>
+  <p>Split work across roles with their own tools and their own model, rather than one generalist doing everything in one long session. This solves two problems at once: it protects context (research doesn't pollute the conversation that writes the code), and it makes behavior match intent, a reviewer that has no write access cannot accidentally fix what it was supposed to only report.</p>
+  <table>
+    <thead><tr><th>Role</th><th>Tools</th><th>Tier</th><th>Job</th></tr></thead>
+    <tbody>
+      <tr><td class="role">Researcher</td><td>Read-only</td><td><span class="chip haiku">RESEARCH</span></td><td>Maps relevant code, reports a summary. Proposes nothing.</td></tr>
+      <tr><td class="role">Spec writer</td><td>Read + write specs</td><td><span class="chip opus">JUDGMENT</span></td><td>Turns a request into a self-contained spec, including the acceptance pack (Stop 06).</td></tr>
+      <tr><td class="role">Builder</td><td>Read, edit, write, run</td><td><span class="chip sonnet">EXECUTION</span></td><td>Implements against the spec, runs its own checks as it goes.</td></tr>
+      <tr><td class="role">Test writer</td><td>Read, write, run</td><td><span class="chip sonnet">EXECUTION</span></td><td>Writes and runs tests against each acceptance criterion, evidence attached.</td></tr>
+      <tr><td class="role">Validator</td><td>Read-only, no write</td><td><span class="chip opus">JUDGMENT</span></td><td>Adversarial review of the diff against the spec. Reports gaps; fixes nothing.</td></tr>
+    </tbody>
+  </table>
+  <div class="gate"><span class="k">Two restrictions, not one</span><p>If a hidden acceptance pack exists (Stop 06), the validator's context should never contain it, not just be blocked from editing it. Tool restrictions stop it from changing the pack; that alone doesn't stop it from unconsciously writing toward a test it can read. Both restrictions matter, independently.</p></div>
+  <p class="note">A reviewer instructed to find gaps will report some even when the work is sound. Tell it to flag only what affects correctness or a stated requirement, and to say plainly when the work passes; otherwise the factory over-engineers its own output.</p>
+  <p class="note">This role discipline holds even with no subagents dispatched at all: spec before code, review kept separate from implementation, no peeking at held-back cases to tailor a fix. It's a workflow contract first, multi-process infrastructure second; see lesson 7 in <a class="inline" href="#stn7">Stop 07</a>.</p>
+</section>
+<section id="stn5">
+  <div class="stn"><span class="num">STOP 05</span><h2>The workflow loop</h2></div>
+  <p>The core loop, five steps, with a rework path when verification fails:</p>
+  <figure>
+    <svg viewBox="0 0 1000 220" role="img" aria-label="Explore, plan, implement, verify, ship, with a rework path from verify back to implement">
+      <defs><marker id="arr2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#221D14"/></marker></defs>
+      <g font-family="IBM Plex Mono" text-anchor="middle">
+        <rect x="22" y="50" width="175" height="68" fill="#FBF7EA" stroke="#221D14"/>
+        <text x="109.5" y="76" font-size="14" font-weight="600" fill="#221D14">1 · EXPLORE</text>
+        <text x="109.5" y="96" font-size="12" fill="#6B604C">scoped, delegated</text>
+        <line x1="197" y1="84" x2="217" y2="84" stroke="#221D14" stroke-width="1.6" marker-end="url(#arr2)"/>
+
+        <rect x="217" y="50" width="175" height="68" fill="#FBF7EA" stroke="#221D14"/>
+        <text x="304.5" y="76" font-size="14" font-weight="600" fill="#221D14">2 · PLAN</text>
+        <text x="304.5" y="96" font-size="12" fill="#6B604C">the spec persists</text>
+        <line x1="392" y1="84" x2="412" y2="84" stroke="#221D14" stroke-width="1.6" marker-end="url(#arr2)"/>
+
+        <rect x="412" y="50" width="175" height="68" fill="#FBF7EA" stroke="#221D14"/>
+        <text x="499.5" y="76" font-size="14" font-weight="600" fill="#221D14">3 · IMPLEMENT</text>
+        <text x="499.5" y="96" font-size="12" fill="#6B604C">fresh session</text>
+        <line x1="587" y1="84" x2="607" y2="84" stroke="#221D14" stroke-width="1.6" marker-end="url(#arr2)"/>
+
+        <rect x="607" y="50" width="175" height="68" fill="#F4DCC2" stroke="#B5451E" stroke-width="1.6"/>
+        <text x="694.5" y="76" font-size="14" font-weight="600" fill="#221D14">4 · VERIFY</text>
+        <text x="694.5" y="96" font-size="12" fill="#6B604C">tests + review</text>
+        <line x1="782" y1="84" x2="802" y2="84" stroke="#221D14" stroke-width="1.6" marker-end="url(#arr2)"/>
+
+        <rect x="802" y="50" width="175" height="68" fill="#FBF7EA" stroke="#221D14"/>
+        <text x="889.5" y="76" font-size="14" font-weight="600" fill="#221D14">5 · SHIP</text>
+        <text x="889.5" y="96" font-size="12" fill="#6B604C">evidence attached</text>
+      </g>
+      <path d="M 694.5 118 L 694.5 152 L 499.5 152 L 499.5 121" fill="none" stroke="#B5451E" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arr2)"/>
+      <text x="597" y="146" text-anchor="middle" font-family="IBM Plex Mono" font-size="11.5" fill="#B5451E">GATE FAILS → REWORK, RE-VERIFY</text>
+      <text x="22" y="205" font-family="IBM Plex Mono" font-size="12" fill="#6B604C">FIG 5.0 · SKIP PLANNING ONLY WHEN THE DIFF FITS IN ONE SENTENCE</text>
+    </svg>
+    <figcaption>The spec is the memory that survives between sessions; nothing else does</figcaption>
+  </figure>
+  <h3>The verification ladder</h3>
+  <div class="ladder">
+    <div class="rung"><span class="lv">L1</span><span class="nm">In-prompt</span><span class="ds">"Run the tests, iterate until they pass." Costs your attention every time.</span></div>
+    <div class="rung"><span class="lv">L2</span><span class="nm">Re-check on each turn</span><span class="ds">An evaluator re-checks the condition after every turn until it holds.</span></div>
+    <div class="rung"><span class="lv">L3</span><span class="nm">Blocking gate</span><span class="ds">A hook or script blocks completion until the check passes. Not infinitely overridable.</span></div>
+    <div class="rung"><span class="lv">L4</span><span class="nm">Second opinion</span><span class="ds">A fresh session or subagent tries to refute the result. The implementer is never the final grader.</span></div>
+  </div>
+  <p class="note">Each rung trades setup time for less of your attention. L3 and L4 are what let a run finish unattended and still be trusted.</p>
+</section>
+<section id="stn6">
+  <div class="stn"><span class="num">STOP 06</span><h2>Eval designs the product</h2></div>
+  <p>The acceptance cases written and locked before implementation shape a product more than framework choice does. This is the single most load-bearing idea in this whole reference, confirmed directly by the two applications behind Stop 07: identical stack, identical framework, and the only thing that differed between a system that hedges and cites nothing reliably and one that refuses cleanly and cites correctly was the shape of the holdout tests. Eval is upstream specification, not downstream testing.</p>
+  <div class="triad">
+    <div class="principle">
+      <div class="k">01 · Fixes the shape</div>
+      <h4>Acceptance cases decide the architecture</h4>
+      <p>Locked before implementation, they determine whether the build ends up a cite-or-refuse system or a chatbot. Nobody has to write "make it deterministic" as a requirement; the eval makes it one.</p>
+    </div>
+    <div class="principle">
+      <div class="k">02 · Forces structure</div>
+      <h4>Structured expects, structured product</h4>
+      <p><code>refuse</code>, required citation fields, exact JSON schema, <code>not_contains</code> checks push toward a deterministic core. "Sounds smart in chat" grading pushes toward conversational drift instead.</p>
+    </div>
+    <div class="principle">
+      <div class="k">03 · Survives being gamed</div>
+      <h4>Public and hidden packs, both locked</h4>
+      <p>A build graded only on cases its own team can see learns the answer key, not the task. Hash the pack at intake; fail the gate if it changes after. A test that quotes the holdout question is leakage, not coverage.</p>
+    </div>
+  </div>
+  <h3>Thin brief vs. locked brief</h3>
+  <p>Same one-line request; the acceptance pack, not the prompt, is what determines what gets built.</p>
+  <div class="compare">
+    <div class="col">
+      <span class="lbl thin">Thin brief</span>
+      <p class="brief">"Build an assistant that answers questions about case law."</p>
+      <ul><li>Grading: does the answer sound informed and complete?</li><li>No refusal condition, no citation format, no banned phrasing</li></ul>
+      <div class="outcome" style="color:var(--slate)">RESULT → fluent chatbot, confident on facts it doesn't have.</div>
+    </div>
+    <div class="col">
+      <span class="lbl locked">Locked brief</span>
+      <p class="brief">Same request, pack locked first:</p>
+      <ul><li><code>refuse: true</code> when no citation exists in corpus</li><li>Required <code>citations[]</code> field, strict output schema, public/hidden split</li></ul>
+      <div class="outcome" style="color:var(--amber)">RESULT → cite-or-refuse core; still passes with the model disabled.</div>
+    </div>
+  </div>
+  <div class="gate"><span class="k">Fail closed</span><p>Budget exhausted without a full pass is a FAIL report, not a partial ship. The default on an unresolved gate is no.</p></div>
+  <p>Placement matters as much as content. The pack gets drafted alongside the spec, not after it. The validator grades against it, public cases only, always. The hidden pack stays sealed through development and runs exactly once, at the gate, by a session that never saw it during implementation, that's L4 on the verification ladder, not an extra step bolted on.</p>
+</section>
+<section id="stn7">
+  <div class="stn"><span class="num">STOP 07</span><h2>Lessons from the field</h2></div>
+  <p>Everything above is the theory. This is what held up and what broke across two applications actually shipped through one gate-enforced factory, same stack, same harness, different acceptance packs.</p>
+  <div class="lessons">
+    <div class="lesson"><span class="ln">1</span><div class="lc"><h4>Eval shape designs the product more than the stack</h4><p>Both apps: FastAPI plus static HTML. What differed was the holdouts: cite-or-refuse forced real retrieval; a structured-diff requirement forced structured output. Same code skeleton, two different products, because the tests were different.</p></div></div>
+    <div class="lesson"><span class="ln">2</span><div class="lc"><h4>Agents will cheat the eval unless something stops them</h4><p>"Gaming" the eval means passing it without doing the real work, the fastest way to satisfy a test is often to find the answer key, not solve the problem. An early version of one app "passed" by matching hardcoded answers; it only started doing real retrieval once two defenses made that impossible, an anti-hardcode check that blocks answer keys embedded in code, and secret paraphrased test cases the agent never sees during development. A test that quotes the exact holdout question is leakage, not coverage: it rewards memorizing the test, not solving the problem.</p></div></div>
+    <div class="lesson"><span class="ln">3</span><div class="lc"><h4>Invest in intake and scenario packs, not mid-run questions</h4><p>Time spent on intake scenarios, fixtures, and fixed refusal strings is the highest-leverage time in the whole run. Mid-run clarifying questions are a factory defect; silent choices belong in a defaults file, decided once.</p></div></div>
+    <div class="lesson"><span class="ln">4</span><div class="lc"><h4>Harness bugs disguise as product failures</h4><p>An eval failed with "connection refused" while the app worked fine by hand, a start-order bug in the harness, not the code being tested. Read the raw gate output before touching product code. Fix the harness once; every future run inherits the fix.</p></div></div>
+    <div class="lesson"><span class="ln">5</span><div class="lc"><h4>Every app it builds should make the next one easier</h4><p>A factory isn't proven by one good build, it's proven by what the second build inherits for free. The first app's port assignment forced the second into port config, lifecycle rules, and process isolation, concerns that only exist once more than one thing is running. If the second app doesn't start from a stronger position than the first did, the factory isn't learning; it's just running the same script twice. Lesson 8 is the mechanism that makes this durable.</p></div></div>
+    <div class="lesson"><span class="ln">6</span><div class="lc"><h4>Deterministic cores beat optional intelligence, for reliability</h4><p>Both shipped apps have an eval-passing path with the model disabled entirely, lexical retrieval, diff heuristics. Optional model calls polish the experience; the holdouts should score the skeleton underneath, not the polish on top.</p></div></div>
+    <div class="lesson"><span class="ln">7</span><div class="lc"><h4>Multi-agent is a workflow contract before it's multi-process</h4><p>Even running solo, in one session with no subagents dispatched, role discipline still mattered: spec before code, independent review, repair only from gate feedback, never peeking at secret cases to tailor a fix.</p></div></div>
+    <div class="lesson"><span class="ln">8</span><div class="lc"><h4>A factory compounds through memory, not just shipped apps</h4><p>A learnings log written after every run closes the loop. Without it, every run re-discovers the same port conflicts and path bugs from scratch.</p></div></div>
+    <div class="lesson"><span class="ln">9</span><div class="lc"><h4>Ship means full-phase eval, not a green public smoke test</h4><p>Public-plus-secret-plus-anti-hardcode at complete satisfaction is the bar. A clean public-only pass is progress, not a ship decision.</p></div></div>
+    <div class="lesson"><span class="ln">10</span><div class="lc"><h4>Bottom line</h4><p>A factory works when it optimizes for provable vertical slices under an eval it cannot cheat, not for one impressive demo. The durable win is a harness that gets slightly harder to game and slightly better at running the next app with less human involvement.</p></div></div>
+  </div>
+</section>
+<section id="stn8">
+  <div class="stn"><span class="num">STOP 08</span><h2>Delivery discipline</h2></div>
+  <p>Verification catches problems before a commit; delivery is what catches what verification missed before it reaches anyone else. Cheap, fast, local checks first; expensive, slow, remote checks last, each layer catching what the one before it didn't.</p>
+  <table>
+    <thead><tr><th>Layer</th><th>Runs</th><th>Catches</th></tr></thead>
+    <tbody>
+      <tr><td class="role">Local hooks</td><td>Every edit</td><td>Format, lint, protected-path violations</td></tr>
+      <tr><td class="role">Pre-commit</td><td>Every commit</td><td>Secrets, fast tests</td></tr>
+      <tr><td class="role">CI / review</td><td>Every merge</td><td>Full acceptance pack, adversarial review on risk paths</td></tr>
+      <tr><td class="role">Human review</td><td>Auth, payments, data handling, always</td><td>Whatever nobody thought to write a scenario for</td></tr>
+    </tbody>
+  </table>
+  <div class="gate"><span class="k">Scenarios over vibes-based review</span><p>Where an acceptance pack exists, let holdout satisfaction be the bar for merge, not a reviewer's sense that the diff looks reasonable. That replaces subjective review, not the mandatory human check on sensitive paths above; a pack you didn't think to write a scenario for is exactly the gap that check exists to catch.</p></div>
+  <p class="note">Auto-fix and auto-review open pull requests. They never merge on their own.</p>
+</section>
+<section id="stn9">
+  <div class="stn"><span class="num">STOP 09</span><h2>Sources</h2></div>
+  <div class="srcs">
+    <div class="src"><span class="tag">Own build</span><div class="bd"><span style="color:var(--ink);font-weight:600">Gate-enforced factory, two shipped applications</span><span>Unpublished. Source for all ten lessons in Stop 07, the anti-gaming principle, the hash-locked pack, and the reviewer information-blindness rule in Stop 04.</span></div></div>
+    <div class="src"><span class="tag">Official</span><div class="bd"><a href="https://code.claude.com/docs/en/best-practices">code.claude.com/docs/en/best-practices</a><span>Claude Code best practices: the loop, context management, verification, plan mode</span></div></div>
+    <div class="src"><span class="tag">Official</span><div class="bd"><a href="https://platform.claude.com/docs/en/about-claude/models/overview">platform.claude.com/docs/en/about-claude/models/overview</a><span>Model lineup and pricing; re-check before quoting to anyone</span></div></div>
+    <div class="src"><span class="tag">Official</span><div class="bd"><a href="https://openai.com/index/gpt-5-6/">openai.com/index/gpt-5-6</a><span>Source for the GPT-5.6 Sol/Terra/Luna tier names in Stop 02's routing table</span></div></div>
+    <div class="src"><span class="tag">Field</span><div class="bd"><a href="https://www.freecodecamp.org/news/how-to-build-software-factory-with-claude-code/">freeCodeCamp: How to Build a Software Factory with Claude Code</a><span>The five-layer model in Stop 01 (May 2026)</span></div></div>
+    <div class="src"><span class="tag">Field</span><div class="bd"><a href="https://alexop.dev/posts/the-software-factory/">alexop.dev: The Software Factory</a><span>Factory-as-product framing behind Stop 07's closing lesson (March 2026)</span></div></div>
+    <div class="src"><span class="tag">Field</span><div class="bd"><a href="https://www.augmentcode.com/guides/ai-model-routing-guide">Augment Code: AI model routing guide</a><span>Judgment/execution tier routing with benchmark data, Stop 02 (June 2026)</span></div></div>
+    <div class="src"><span class="tag">Field</span><div class="bd"><a href="https://cloudnativenow.com/features/gas-town-what-kubernetes-for-ai-coding-agents-actually-looks-like/">Cloud Native Now: Gas Town, Kubernetes for AI coding agents</a><span>Source for "agent = model + harness," Stop 02 (Feb 2026)</span></div></div>
+    <div class="src"><span class="tag">Field</span><div class="bd"><a href="https://paddo.dev/blog/gastown-two-kinds-of-multi-agent/">paddo.dev: Gas Town and the two kinds of multi-agent</a><span>Single-run reliability vs. orchestrated swarms as separate problems (Jan 2026)</span></div></div>
+    <div class="src"><span class="tag">Security</span><div class="bd">OWASP Top 10 for LLM Applications · NIST Secure Software Development Framework<span>Grounding for the mandatory human-review guardrail, Stop 08</span></div></div>
+  </div>
+</section>
+<footer>
+  <span>SOFTWARE FACTORIES · FIELD REFERENCE · JULY 2026</span>
+  <span>VENDOR NAMES AND PRICING MOVE FAST: VERIFY AGAINST OFFICIAL DOCS</span>
+</footer>
+</main>
+</div>
+<script>
+(function(){
+  var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if('IntersectionObserver' in window && !reduced){
+    document.querySelectorAll('section').forEach(function(el){
+      el.style.opacity='0';el.style.transform='translateY(10px)';
+      el.style.transition='opacity .5s ease, transform .5s ease';
+    });
+    var io=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='none';io.unobserve(e.target);}
+      });
+    },{threshold:.06,rootMargin:'0px 0px -40px 0px'});
+    document.querySelectorAll('section').forEach(function(el){io.observe(el);});
+  }
+})();
+</script>
+</body>
+</html>
