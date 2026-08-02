@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loop Engineering • Interactive Roadmap</title>
+    <meta name="description" content="A 14-step interactive roadmap for loop engineering: decide whether a loop is worth building, master the five building blocks, and ship one without creating a money pit.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+        
+        :root {
+            --primary: #6366f1;
+        }
+        
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+        
+        .font-display {
+            font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+            font-weight: 600;
+        }
+
+        .section-header {
+            font-family: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+            letter-spacing: -0.025em;
+        }
+
+        .step-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .step-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        .nav-active {
+            background-color: #6366f1;
+            color: white;
+            border-radius: 6px;
+        }
+
+        .roadmap-step {
+            transition: all 0.3s ease;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .accordion-content.open {
+            max-height: 2000px;
+        }
+
+        .metric {
+            transition: all 0.3s ease;
+        }
+
+        .modern-card {
+            background: #0f172a;
+            border: 1px solid #334155;
+        }
+
+        .glass {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(12px);
+        }
+
+        .loop-gradient {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-link {
+            transition: all 0.1s ease;
+        }
+        
+        .nav-link:hover {
+            color: #6366f1;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .interactive-result {
+            animation: fadeInScale 0.4s ease forwards;
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .flow-step {
+            transition: all 0.2s ease;
+        }
+
+        .flow-step:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgb(99 102 241 / 0.2);
+        }
+
+        .highlight {
+            background: linear-gradient(90deg, #6366f120 0%, transparent 100%);
+            padding-left: 4px;
+            padding-right: 4px;
+            border-radius: 3px;
+        }
+
+        .stat-number {
+            font-variant-numeric: tabular-nums;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200">
+    <!-- NAV -->
+    <nav class="sticky top-0 z-50 bg-slate-950/95 border-b border-slate-800 backdrop-blur-lg">
+        <div class="max-w-screen-2xl mx-auto">
+            <div class="px-8 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-x-3">
+                    <div class="flex items-center gap-x-2">
+                        <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
+                            <i class="fa-solid fa-infinity text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <span class="font-display text-2xl font-semibold tracking-tighter">Loop</span>
+                            <span class="font-display text-2xl font-semibold tracking-tighter text-indigo-400">Engineer</span>
+                        </div>
+                    </div>
+                    <div class="hidden md:flex items-center text-xs px-3 py-1 rounded-full bg-slate-900 border border-slate-700 text-slate-400">
+                        <i class="fa-solid fa-robot mr-1.5"></i>
+                        <span class="font-medium">v2026</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-x-2">
+                    <!-- Progress -->
+                    <div class="hidden lg:flex items-center gap-x-3 bg-slate-900 border border-slate-800 rounded-3xl px-4 py-1.5 text-sm">
+                        <div class="flex items-center gap-x-2">
+                            <div class="text-emerald-400">
+                                <i class="fa-solid fa-check-double"></i>
+                            </div>
+                            <div>
+                                <span id="progress-text" class="font-mono text-emerald-400 font-semibold">0/14</span>
+                                <span class="text-slate-500 text-xs ml-1">STEPS</span>
+                            </div>
+                        </div>
+                        <div class="w-20 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                            <div id="progress-bar" class="h-1.5 bg-gradient-to-r from-emerald-400 to-teal-400 transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <button onclick="toggleDarkMode()" 
+                            class="px-3 py-2 rounded-2xl hover:bg-slate-900 transition-colors border border-slate-800 flex items-center gap-x-2 text-sm">
+                        <i class="fa-solid fa-moon"></i>
+                        <span class="hidden md:inline text-xs">Theme</span>
+                    </button>
+                    
+                    <div class="relative group">
+                        <button onclick="this.nextElementSibling.classList.toggle('hidden')"
+                                class="px-4 py-2 rounded-2xl bg-white text-slate-900 hover:bg-slate-100 transition-all flex items-center gap-x-2 text-sm font-medium">
+                            <i class="fa-brands fa-x-twitter"></i>
+                            <span class="hidden md:inline">Original Threads</span>
+                            <i class="fa-solid fa-chevron-down text-xs ml-1"></i>
+                        </button>
+                        <div class="hidden group-hover:block absolute right-0 mt-1 w-64 bg-slate-900 border border-slate-700 rounded-2xl py-2 text-sm z-50 shadow-xl">
+                            <a href="https://x.com/0xCodez/status/2064374643729773029" target="_blank" 
+                               class="block px-4 py-2 hover:bg-slate-800 flex items-center gap-x-2">
+                                <i class="fa-brands fa-x-twitter"></i>
+                                <span>@0xCodez — 14-step Roadmap</span>
+                            </a>
+                            <a href="https://x.com/addyosmani/status/2064127981161959567" target="_blank" 
+                               class="block px-4 py-2 hover:bg-slate-800 flex items-center gap-x-2">
+                                <i class="fa-brands fa-x-twitter"></i>
+                                <span>@addyosmani — 5 Building Blocks</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="max-w-screen-2xl mx-auto px-8 pt-12 pb-8">
+        <div class="max-w-4xl">
+            <div class="flex items-center gap-x-3 mb-4">
+                <div class="inline-flex items-center gap-x-2 px-4 py-1.5 rounded-3xl bg-slate-900 border border-slate-700 text-sm">
+                    <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                    <span class="font-medium text-emerald-400">14 steps • 3 tiers • From prompter to architect</span>
+                </div>
+            </div>
+            
+            <h1 class="text-6xl md:text-7xl font-display tracking-tighter leading-[0.95] font-semibold">
+                The leverage point<br>
+                <span class="loop-gradient">moved.</span>
+            </h1>
+            
+            <p class="mt-6 max-w-2xl text-xl text-slate-300">
+                Most developers still prompt coding agents by hand. The next era belongs to those who 
+                <span class="font-semibold text-white">design the loops</span> that prompt the agents.
+            </p>
+
+            <div class="mt-8 flex flex-wrap items-center gap-4">
+                <button onclick="document.getElementById('interactive-test').scrollIntoView({ behavior: 'smooth' })" 
+                        class="px-8 py-4 rounded-3xl bg-white text-slate-900 font-semibold flex items-center gap-x-3 hover:bg-slate-100 active:scale-[0.985] transition-all text-lg shadow-xl shadow-indigo-950/50">
+                    <span>Take the 4-Condition Test</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+                
+                <button onclick="document.getElementById('loop-builder').scrollIntoView({ behavior: 'smooth' })" 
+                        class="px-8 py-4 rounded-3xl border border-slate-700 hover:bg-slate-900 transition-all flex items-center gap-x-3 text-lg">
+                    <i class="fa-solid fa-hammer"></i>
+                    <span>Build Your First Loop</span>
+                </button>
+            </div>
+
+            <div class="mt-8 flex items-center gap-x-8 text-sm">
+                <div class="flex items-center gap-x-2">
+                    <img src="https://pbs.twimg.com/profile_images/2054197823738871808/3M0Lf362.jpg" 
+                         class="w-8 h-8 rounded-2xl ring-2 ring-offset-2 ring-offset-slate-950 ring-slate-700" alt="Codez avatar">
+                    <div>
+                        <div class="font-semibold">Codez</div>
+                        <div class="text-xs text-slate-400">@0xCodez • 14-step roadmap</div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-x-2 pl-4 border-l border-slate-700">
+                    <img src="https://pbs.twimg.com/profile_images/2012065253623021570/0BReDfMk.jpg" 
+                         class="w-8 h-8 rounded-2xl ring-2 ring-offset-2 ring-offset-slate-950 ring-slate-700" alt="Addy Osmani avatar">
+                    <div>
+                        <div class="font-semibold">Addy Osmani</div>
+                        <div class="text-xs text-slate-400">@addyosmani • The 5 building blocks</div>
+                    </div>
+                </div>
+                <div class="text-slate-400 text-xs flex items-center gap-x-4">
+                    <div><span class="font-mono font-semibold text-white">6.8M</span> views</div>
+                    <div><span class="font-mono font-semibold text-white">19.7k</span> bookmarks</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STATS BAR -->
+    <div class="max-w-screen-2xl mx-auto px-8 pb-10">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-px bg-slate-800 rounded-3xl p-px">
+            <div class="bg-slate-900 rounded-[22px] px-6 py-4 flex items-center gap-x-4">
+                <i class="fa-solid fa-sync text-3xl text-indigo-400"></i>
+                <div>
+                    <div class="text-3xl font-semibold font-mono">8×</div>
+                    <div class="text-xs uppercase tracking-widest text-slate-400">More code merged daily (Anthropic)</div>
+                </div>
+            </div>
+            <div class="bg-slate-900 rounded-[22px] px-6 py-4 flex items-center gap-x-4">
+                <i class="fa-solid fa-robot text-3xl text-violet-400"></i>
+                <div>
+                    <div class="text-3xl font-semibold font-mono">5</div>
+                    <div class="text-xs uppercase tracking-widest text-slate-400">Core building blocks</div>
+                </div>
+            </div>
+            <div class="bg-slate-900 rounded-[22px] px-6 py-4 flex items-center gap-x-4">
+                <i class="fa-solid fa-shield-halved text-3xl text-emerald-400"></i>
+                <div>
+                    <div class="text-3xl font-semibold font-mono">4</div>
+                    <div class="text-xs uppercase tracking-widest text-slate-400">Conditions to pass first</div>
+                </div>
+            </div>
+            <div class="bg-slate-900 rounded-[22px] px-6 py-4 flex items-center gap-x-4">
+                <i class="fa-solid fa-exclamation-triangle text-3xl text-amber-400"></i>
+                <div>
+                    <div class="text-3xl font-semibold font-mono">11</div>
+                    <div class="text-xs uppercase tracking-widest text-slate-400">Common failure modes</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- THREE TIERS OVERVIEW -->
+    <div class="max-w-screen-2xl mx-auto px-8 pb-12">
+        <div class="flex items-end justify-between mb-6">
+            <div>
+                <div class="uppercase text-xs tracking-[2px] text-indigo-400 font-semibold">The Framework</div>
+                <h2 class="text-4xl font-display tracking-tighter">Three tiers to mastery</h2>
+            </div>
+        </div>
+        
+        <div class="grid md:grid-cols-3 gap-4">
+            <!-- Tier 1 -->
+            <div onclick="document.getElementById('part1').scrollIntoView({ behavior: 'smooth' })" 
+                 class="modern-card rounded-3xl p-6 cursor-pointer hover:border-indigo-500 border border-slate-700 group">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="text-xs font-mono tracking-widest text-indigo-400">TIER 1</div>
+                        <div class="text-2xl font-semibold mt-1">The Why &amp; The Test</div>
+                    </div>
+                    <div class="text-5xl font-display text-indigo-400/30 group-hover:text-indigo-400/60 transition-colors">01-04</div>
+                </div>
+                <div class="mt-8 text-sm text-slate-300">
+                    Decide if loops are even worth building for your work. Run the honest 4-condition test.
+                </div>
+                <div class="mt-4 flex items-center text-xs text-indigo-400 font-medium group-hover:gap-x-2 transition-all">
+                    <span>Start here</span> <i class="fa-solid fa-arrow-right ml-1"></i>
+                </div>
+            </div>
+
+            <!-- Tier 2 -->
+            <div onclick="document.getElementById('part2').scrollIntoView({ behavior: 'smooth' })" 
+                 class="modern-card rounded-3xl p-6 cursor-pointer hover:border-violet-500 border border-slate-700 group">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="text-xs font-mono tracking-widest text-violet-400">TIER 2</div>
+                        <div class="text-2xl font-semibold mt-1">The 5 Building Blocks</div>
+                    </div>
+                    <div class="text-5xl font-display text-violet-400/30 group-hover:text-violet-400/60 transition-colors">05-09</div>
+                </div>
+                <div class="mt-8 text-sm text-slate-300">
+                    Automations, Worktrees, Skills, Connectors, and Sub-agents. The primitives of every reliable loop.
+                </div>
+                <div class="mt-4 flex items-center text-xs text-violet-400 font-medium group-hover:gap-x-2 transition-all">
+                    <span>Master the primitives</span> <i class="fa-solid fa-arrow-right ml-1"></i>
+                </div>
+            </div>
+
+            <!-- Tier 3 -->
+            <div onclick="document.getElementById('part3').scrollIntoView({ behavior: 'smooth' })" 
+                 class="modern-card rounded-3xl p-6 cursor-pointer hover:border-emerald-500 border border-slate-700 group">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="text-xs font-mono tracking-widest text-emerald-400">TIER 3</div>
+                        <div class="text-2xl font-semibold mt-1">Build It Right</div>
+                    </div>
+                    <div class="text-5xl font-display text-emerald-400/30 group-hover:text-emerald-400/60 transition-colors">10-14</div>
+                </div>
+                <div class="mt-8 text-sm text-slate-300">
+                    State files, minimum viable loops, failure modes, comprehension debt, and the security tax.
+                </div>
+                <div class="mt-4 flex items-center text-xs text-emerald-400 font-medium group-hover:gap-x-2 transition-all">
+                    <span>Don't build a money pit</span> <i class="fa-solid fa-arrow-right ml-1"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADDY OSMANI PERSPECTIVE -->
+    <div class="max-w-screen-2xl mx-auto px-8 pb-12">
+        <div class="max-w-4xl mx-auto">
+            <div class="modern-card rounded-3xl p-8 border border-violet-500/30">
+                <div class="flex items-start gap-x-4">
+                    <img src="https://pbs.twimg.com/profile_images/2012065253623021570/0BReDfMk.jpg" 
+                         class="w-12 h-12 rounded-2xl flex-shrink-0 ring-2 ring-offset-2 ring-offset-slate-950 ring-violet-500/50" alt="Addy Osmani">
+                    
+                    <div class="flex-1">
+                        <div class="flex items-center gap-x-2">
+                            <span class="font-semibold">Addy Osmani</span>
+                            <span class="text-xs px-2.5 py-0.5 rounded-full bg-violet-500/10 text-violet-400">@addyosmani</span>
+                        </div>
+                        <div class="mt-1 text-sm text-slate-300 leading-relaxed">
+                            "Loop engineering is replacing yourself as the person who prompts the agent. You design the system that does it instead. 
+                            A loop here can be thought of a recursive goal where you define a purpose and the AI iterates until complete. 
+                            It's roughly five building blocks."
+                        </div>
+                        
+                        <div class="mt-4 text-xs text-violet-400 flex items-center gap-x-2">
+                            <span>Key insight:</span> 
+                            <span class="text-slate-400">"The agent forgets, the repo does not."</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTERACTIVE TEST SECTION -->
+    <div id="interactive-test" class="max-w-screen-2xl mx-auto px-8 py-12 border-t border-slate-800">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex items-center gap-x-3 mb-3">
+                <div class="px-4 py-1 rounded-3xl bg-emerald-900/30 border border-emerald-700 text-emerald-400 text-xs font-semibold tracking-wider">INTERACTIVE TOOL</div>
+            </div>
+            <h2 class="text-4xl font-display tracking-tighter">Should you even build a loop?</h2>
+            <p class="mt-2 text-slate-300 max-w-md">Run the 4-condition test + 30-second checklist. Most developers fail at least one.</p>
+            
+            <!-- 4 Condition Test -->
+            <div class="mt-8 modern-card rounded-3xl p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <div class="font-semibold text-lg">The 4-Condition Test</div>
+                        <div class="text-xs text-slate-400">From AlphaSignal analysis + practical experience</div>
+                    </div>
+                    <div class="text-xs px-3 py-1 bg-slate-800 rounded-2xl text-slate-400">Step 02</div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4" id="condition-checks">
+                    <!-- Populated by JS -->
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-slate-700 flex items-center justify-between">
+                    <div>
+                        <div class="text-xs uppercase tracking-widest text-slate-400">Readiness Score</div>
+                        <div id="readiness-score" class="text-6xl font-semibold font-mono text-white">0<span class="text-3xl text-slate-500">/4</span></div>
+                    </div>
+                    <div id="readiness-verdict" 
+                         class="px-6 py-3 rounded-3xl text-sm font-medium border border-slate-700 max-w-[260px]">
+                        <!-- Dynamic verdict populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 30 Second Checklist -->
+            <div class="mt-6 modern-card rounded-3xl p-8">
+                <div class="flex justify-between mb-5">
+                    <div class="font-semibold">30-Second Loop Check</div>
+                    <div class="text-xs px-3 py-1 bg-slate-800 rounded-2xl text-slate-400">Step 04</div>
+                </div>
+                
+                <div class="space-y-3 text-sm" id="checklist-30s">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <div class="mt-4 text-center">
+                <button onclick="evaluateLoopReadiness()" 
+                        class="px-10 py-3.5 text-sm font-semibold bg-white text-slate-900 rounded-3xl flex items-center gap-x-2 mx-auto hover:bg-slate-100 active:scale-[0.985] transition-all">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span>Evaluate My Task</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PART 1 -->
+    <div id="part1" class="max-w-screen-2xl mx-auto px-8 pt-8 pb-12 border-t border-slate-800">
+        <div class="flex items-center gap-x-4 mb-8">
+            <div class="text-xs font-mono tracking-[3px] text-indigo-400">PART 01 / 03</div>
+            <div class="h-px flex-1 bg-gradient-to-r from-indigo-400/30 to-transparent"></div>
+        </div>
+        
+        <div class="flex items-end gap-x-4 mb-8">
+            <h2 class="text-5xl font-display tracking-tighter">The Why &amp; The Test</h2>
+            <div class="text-sm text-slate-400 pb-1">Steps 01–04</div>
+        </div>
+
+        <div class="space-y-4" id="part1-steps">
+            <!-- Populated dynamically by JS -->
+        </div>
+    </div>
+
+    <!-- PART 2 -->
+    <div id="part2" class="max-w-screen-2xl mx-auto px-8 py-12 border-t border-slate-800 bg-slate-900/30">
+        <div class="flex items-center gap-x-4 mb-8">
+            <div class="text-xs font-mono tracking-[3px] text-violet-400">PART 02 / 03</div>
+            <div class="h-px flex-1 bg-gradient-to-r from-violet-400/30 to-transparent"></div>
+        </div>
+        
+        <div class="flex items-end gap-x-4 mb-8">
+            <h2 class="text-5xl font-display tracking-tighter">The 5 Building Blocks</h2>
+            <div class="text-sm text-slate-400 pb-1">Steps 05–09 • Aligned with Addy Osmani's framework</div>
+        </div>
+
+        <div class="space-y-4" id="part2-steps">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+
+    <!-- LOOP FLOW VISUAL -->
+    <div class="max-w-screen-2xl mx-auto px-8 py-12 border-t border-slate-800">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-8">
+                <div class="text-xs tracking-[2px] text-emerald-400 font-semibold">HOW A HEALTHY LOOP WORKS</div>
+                <h3 class="text-3xl font-display tracking-tighter mt-1">The Minimum Viable Loop</h3>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                <!-- Flow steps -->
+                <div class="flow-step modern-card rounded-3xl p-5 border border-emerald-900/50">
+                    <div class="text-emerald-400 text-xs font-mono mb-2">01 • TRIGGER</div>
+                    <div class="font-semibold">Automation</div>
+                    <div class="text-xs mt-6 text-slate-400">Scheduled run, webhook, or event fires the loop.</div>
+                </div>
+                
+                <div class="flow-step modern-card rounded-3xl p-5 border border-emerald-900/50">
+                    <div class="text-emerald-400 text-xs font-mono mb-2">02 • CONTEXT</div>
+                    <div class="font-semibold">Skill + State</div>
+                    <div class="text-xs mt-6 text-slate-400">SKILL.md + STATE.md give persistent memory &amp; project knowledge.</div>
+                </div>
+                
+                <div class="flow-step modern-card rounded-3xl p-5 border border-emerald-900/50">
+                    <div class="text-emerald-400 text-xs font-mono mb-2">03 • EXECUTE</div>
+                    <div class="font-semibold">Maker Sub-agent</div>
+                    <div class="text-xs mt-6 text-slate-400">Writes code, explores, proposes changes in a clean worktree.</div>
+                </div>
+                
+                <div class="flow-step modern-card rounded-3xl p-5 border border-emerald-900/50">
+                    <div class="text-emerald-400 text-xs font-mono mb-2">04 • VERIFY</div>
+                    <div class="font-semibold">Checker Sub-agent + Gate</div>
+                    <div class="text-xs mt-6 text-slate-400">Objective test / build / linter decides pass or fail.</div>
+                </div>
+                
+                <div class="flow-step modern-card rounded-3xl p-5 border border-emerald-900/50">
+                    <div class="text-emerald-400 text-xs font-mono mb-2">05 • ACT</div>
+                    <div class="font-semibold">Connectors</div>
+                    <div class="text-xs mt-6 text-slate-400">Open PR, update Linear, post in Slack. Human gate for irreversible actions.</div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-4">
+                <div class="inline-flex items-center text-xs text-emerald-400/70">
+                    <i class="fa-solid fa-sync fa-spin-pulse mr-2"></i> 
+                    <span>Feedback loop returns to state + automation</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ONE LOOP IN PRACTICE (from Addy Osmani) -->
+    <div class="max-w-screen-2xl mx-auto px-8 py-10 border-t border-slate-800">
+        <div class="max-w-5xl mx-auto">
+            <div class="flex items-end justify-between mb-6">
+                <div>
+                    <div class="text-xs tracking-[2px] text-violet-400 font-semibold">REAL-WORLD EXAMPLE</div>
+                    <h3 class="text-3xl font-display tracking-tighter">What one healthy loop actually looks like</h3>
+                </div>
+                <div class="text-xs text-slate-400">From Addy Osmani</div>
+            </div>
+
+            <div class="modern-card rounded-3xl p-8">
+                <div class="prose prose-invert max-w-none text-sm">
+                    <p class="text-slate-300">An automation runs every morning on the repo. Its prompt calls a triage skill that reads yesterday’s CI failures, the open issues, the recent commits, and writes the findings into a markdown file or a Linear board.</p>
+                    
+                    <div class="my-6 pl-5 border-l-2 border-violet-500/40 text-sm">
+                        For each finding that is worth doing, the thread:
+                        <ul class="mt-2 space-y-1 text-slate-300">
+                            <li>• Opens an isolated <strong>worktree</strong></li>
+                            <li>• Sends a <strong>sub-agent</strong> to draft the fix</li>
+                            <li>• Sends a second <strong>sub-agent</strong> to review that draft against the project skills and existing tests</li>
+                        </ul>
+                    </div>
+                    
+                    <p class="text-slate-300">Connectors let the loop open the PR and update the ticket. Anything the loop can’t handle lands in the triage inbox. The <strong>state file</strong> is the spine — it remembers what got tried, what passed, what is still open, so tomorrow morning the run picks up where today stopped.</p>
+                </div>
+                
+                <div class="mt-6 pt-6 border-t border-slate-700 flex items-center justify-between text-xs">
+                    <div class="text-emerald-400 flex items-center gap-x-2">
+                        <i class="fa-solid fa-check-double"></i>
+                        <span class="font-medium">You designed it once. You are not prompting any of those steps.</span>
+                    </div>
+                    <button onclick="document.getElementById('loop-builder').scrollIntoView({ behavior: 'smooth' })" 
+                            class="px-4 py-1.5 rounded-2xl border border-slate-600 hover:bg-slate-800 text-xs flex items-center gap-x-2">
+                        <span>Build something similar</span> <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOOP BUILDER -->
+    <div id="loop-builder" class="max-w-screen-2xl mx-auto px-8 py-12 border-t border-slate-800">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex items-center gap-x-3 mb-3">
+                <div class="px-4 py-1 rounded-3xl bg-amber-900/30 border border-amber-700 text-amber-400 text-xs font-semibold tracking-wider">INTERACTIVE BUILDER</div>
+            </div>
+            <h2 class="text-4xl font-display tracking-tighter">Design your first loop</h2>
+            <p class="text-slate-300">Answer a few questions. Get a concrete starter configuration you can implement today.</p>
+            
+            <div class="mt-8 modern-card rounded-3xl p-8">
+                <div class="grid md:grid-cols-2 gap-x-8 gap-y-8">
+                    
+                    <!-- Form fields -->
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-xs font-semibold tracking-wider text-slate-400 mb-2">WHAT TASK ARE YOU AUTOMATING?</label>
+                            <textarea id="task-desc" rows="2" placeholder="E.g. Triage nightly CI failures and draft fix PRs for straightforward ones" 
+                                      class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500"></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-semibold tracking-wider text-slate-400 mb-2">HOW OFTEN DOES THIS TASK HAPPEN?</label>
+                            <select id="frequency" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-4 py-3 text-sm">
+                                <option value="daily">Daily / Nightly</option>
+                                <option value="weekly" selected>Weekly</option>
+                                <option value="on-event">On specific event (PR open, issue created)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-semibold tracking-wider text-slate-400 mb-2">WHAT WILL BE YOUR AUTOMATED VERIFICATION GATE?</label>
+                            <div class="grid grid-cols-2 gap-2 text-sm">
+                                <label class="flex items-center gap-x-2 bg-slate-900 border border-slate-700 px-4 py-3 rounded-2xl cursor-pointer has-[:checked]:border-emerald-500">
+                                    <input type="checkbox" id="gate-tests" checked class="accent-emerald-500"> <span>Unit / Integration tests</span>
+                                </label>
+                                <label class="flex items-center gap-x-2 bg-slate-900 border border-slate-700 px-4 py-3 rounded-2xl cursor-pointer has-[:checked]:border-emerald-500">
+                                    <input type="checkbox" id="gate-lint" checked class="accent-emerald-500"> <span>Linter / Formatter</span>
+                                </label>
+                                <label class="flex items-center gap-x-2 bg-slate-900 border border-slate-700 px-4 py-3 rounded-2xl cursor-pointer has-[:checked]:border-emerald-500">
+                                    <input type="checkbox" id="gate-types" class="accent-emerald-500"> <span>Type checker</span>
+                                </label>
+                                <label class="flex items-center gap-x-2 bg-slate-900 border border-slate-700 px-4 py-3 rounded-2xl cursor-pointer has-[:checked]:border-emerald-500">
+                                    <input type="checkbox" id="gate-build" class="accent-emerald-500"> <span>Successful build</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-xs font-semibold tracking-wider text-slate-400 mb-2">WHERE WILL YOU STORE STATE?</label>
+                            <select id="state-storage" class="w-full bg-slate-900 border border-slate-700 rounded-2xl px-4 py-3 text-sm">
+                                <option value="markdown">Markdown file in repo (STATE.md)</option>
+                                <option value="linear">Linear / Jira board</option>
+                                <option value="github">GitHub Issues + Project</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-semibold tracking-wider text-slate-400 mb-2">TRIGGER TYPE</label>
+                            <div class="flex gap-2">
+                                <label class="flex-1 cursor-pointer">
+                                    <input type="radio" name="trigger" value="schedule" checked class="peer hidden">
+                                    <div class="peer-checked:bg-indigo-600 peer-checked:text-white border border-slate-700 peer-checked:border-indigo-500 px-4 py-3 rounded-2xl text-sm text-center">Schedule</div>
+                                </label>
+                                <label class="flex-1 cursor-pointer">
+                                    <input type="radio" name="trigger" value="webhook" class="peer hidden">
+                                    <div class="peer-checked:bg-indigo-600 peer-checked:text-white border border-slate-700 peer-checked:border-indigo-500 px-4 py-3 rounded-2xl text-sm text-center">Webhook / Event</div>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-semibold tracking-wider text-slate-400 mb-2">DO YOU NEED PARALLEL AGENTS?</label>
+                            <div class="flex items-center gap-x-3">
+                                <label class="flex items-center gap-x-2 text-sm cursor-pointer">
+                                    <input type="radio" name="parallel" value="yes" class="accent-indigo-500"> <span>Yes (use worktrees)</span>
+                                </label>
+                                <label class="flex items-center gap-x-2 text-sm cursor-pointer">
+                                    <input type="radio" name="parallel" value="no" checked class="accent-indigo-500"> <span>No (single agent)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 pt-6 border-t border-slate-700 flex justify-end">
+                    <button onclick="generateLoopSpec()" 
+                            class="px-8 py-3 bg-gradient-to-r from-indigo-500 to-violet-500 text-white font-semibold rounded-3xl flex items-center gap-x-3 text-sm active:scale-[0.985]">
+                        <span>GENERATE MY LOOP SPEC</span>
+                        <i class="fa-solid fa-magic"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Output area -->
+            <div id="loop-spec-output" class="hidden mt-6 modern-card rounded-3xl p-8 border border-emerald-700">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="font-semibold">Your Minimum Viable Loop Spec</div>
+                    <button onclick="copyLoopSpec()" class="text-xs flex items-center gap-x-1.5 px-3 py-1.5 rounded-2xl bg-slate-800 hover:bg-slate-700">
+                        <i class="fa-solid fa-copy"></i> <span>Copy</span>
+                    </button>
+                </div>
+                <div id="loop-spec-content" class="prose prose-invert text-sm max-w-none whitespace-pre-wrap font-mono bg-slate-950 p-5 rounded-2xl text-emerald-300 border border-slate-800"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PART 3 -->
+    <div id="part3" class="max-w-screen-2xl mx-auto px-8 py-12 border-t border-slate-800">
+        <div class="flex items-center gap-x-4 mb-8">
+            <div class="text-xs font-mono tracking-[3px] text-emerald-400">PART 03 / 03</div>
+            <div class="h-px flex-1 bg-gradient-to-r from-emerald-400/30 to-transparent"></div>
+        </div>
+        
+        <div class="flex items-end gap-x-4 mb-8">
+            <h2 class="text-5xl font-display tracking-tighter">Build It Right or Don’t Build It</h2>
+            <div class="text-sm text-slate-400 pb-1">Steps 10–14</div>
+        </div>
+
+        <div class="space-y-4" id="part3-steps">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+
+    <!-- MISTAKES SECTION -->
+    <div class="max-w-screen-2xl mx-auto px-8 py-12 border-t border-slate-800 bg-slate-900/40">
+        <div class="max-w-4xl mx-auto">
+            <h3 class="font-display tracking-tighter text-3xl mb-2">The mistakes that turn loops into money pits</h3>
+            <p class="text-sm text-slate-400 mb-8">These are the patterns that cause loops to fail silently or explode in cost.</p>
+            
+            <div class="grid md:grid-cols-2 gap-3 text-sm" id="mistakes-list">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- CONCLUSION -->
+    <div class="max-w-screen-2xl mx-auto px-8 py-16 border-t border-slate-800">
+        <div class="max-w-3xl mx-auto text-center">
+            <div class="inline-block px-5 py-1 rounded-3xl bg-gradient-to-r from-indigo-500/10 to-violet-500/10 border border-indigo-500/30 text-xs tracking-widest mb-4">THE BOTTOM LINE</div>
+            
+            <h2 class="text-4xl font-display tracking-tighter">The leverage moved.<br>Your job did too.</h2>
+            <div class="mt-3 text-violet-400 font-medium">"Build the loop. Stay the engineer."</div>
+            
+            <div class="mt-6 max-w-md mx-auto text-slate-300">
+                For two years the leverage was in the prompt. That phase is ending. 
+                The next leverage point is one floor up: <span class="font-semibold text-white">the system that decides what agents work on, when, with what gate, and what state survives between runs.</span>
+            </div>
+            
+            <div class="mt-10 flex justify-center gap-x-4">
+                <button onclick="markAllComplete()" 
+                        class="px-6 py-3 rounded-3xl border border-white/70 hover:bg-white hover:text-slate-900 transition-all text-sm font-medium flex items-center gap-x-2">
+                    <i class="fa-solid fa-check-double"></i>
+                    <span>Mark entire roadmap complete</span>
+                </button>
+            </div>
+            
+            <div class="mt-12 text-xs text-slate-500">
+                Sourced from Anthropic engineering docs, Addy Osmani’s work on loop engineering,<br>
+                AlphaSignal analysis, and real-world production patterns • 2026
+            </div>
+        </div>
+    </div>
+
+    <footer class="border-t border-slate-800 py-8 text-center text-xs text-slate-500">
+        Interactive adaptation synthesizing the 14-step roadmap by <a href="https://x.com/0xCodez" target="_blank" class="hover:text-slate-300">@0xCodez</a> 
+        + the five building blocks framework by <a href="https://x.com/addyosmani" target="_blank" class="hover:text-slate-300">@addyosmani</a> • 
+        Built as a learning tool • Not affiliated with any company
+    </footer>
+
+    <script>
+        // Tailwind script
+        function initializeTailwind() {
+            document.documentElement.style.setProperty('--accent', '#6366f1');
+        }
+
+        // Progress tracking with localStorage
+        let completedSteps = new Set();
+        
+        function loadProgress() {
+            const saved = localStorage.getItem('loopRoadmapProgress');
+            if (saved) {
+                completedSteps = new Set(JSON.parse(saved));
+            }
+            updateProgressUI();
+        }
+        
+        function saveProgress() {
+            localStorage.setItem('loopRoadmapProgress', JSON.stringify([...completedSteps]));
+        }
+        
+        function updateProgressUI() {
+            const count = completedSteps.size;
+            const percent = Math.round((count / 14) * 100);
+            
+            const progressText = document.getElementById('progress-text');
+            const progressBar = document.getElementById('progress-bar');
+            
+            if (progressText) progressText.textContent = `${count}/14`;
+            if (progressBar) progressBar.style.width = `${percent}%`;
+        }
+        
+        function toggleStepComplete(stepNum, element) {
+            if (completedSteps.has(stepNum)) {
+                completedSteps.delete(stepNum);
+                element.classList.remove('!border-emerald-500', 'bg-emerald-950/30');
+            } else {
+                completedSteps.add(stepNum);
+                element.classList.add('!border-emerald-500', 'bg-emerald-950/30');
+                
+                // Confetti effect for milestone
+                if (completedSteps.size === 7 || completedSteps.size === 14) {
+                    launchConfetti();
+                }
+            }
+            saveProgress();
+            updateProgressUI();
+        }
+        
+        function markAllComplete() {
+            for (let i = 1; i <= 14; i++) {
+                completedSteps.add(i);
+            }
+            saveProgress();
+            updateProgressUI();
+            
+            // Re-apply styles to all step cards
+            document.querySelectorAll('.step-card').forEach(card => {
+                card.classList.add('!border-emerald-500', 'bg-emerald-950/30');
+            });
+            
+            launchConfetti(80);
+        }
+        
+        function launchConfetti(count = 40) {
+            const colors = ['#6366f1', '#a855f7', '#34d399'];
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const confetto = document.createElement('div');
+                    confetto.style.position = 'fixed';
+                    confetto.style.left = Math.random() * 100 + 'vw';
+                    confetto.style.top = '-10px';
+                    confetto.style.width = '8px';
+                    confetto.style.height = '8px';
+                    confetto.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                    confetto.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetto.style.zIndex = '999999';
+                    confetto.style.pointerEvents = 'none';
+                    document.body.appendChild(confetto);
+                    
+                    const duration = Math.random() * 2500 + 2200;
+                    confetto.animate([
+                        { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
+                        { transform: `translateY(${window.innerHeight + 100}px) rotate(${Math.random() * 600 - 200}deg)`, opacity: 0 }
+                    ], {
+                        duration: duration,
+                        easing: 'cubic-bezier(.32,0,.67,1)'
+                    }).onfinish = () => confetto.remove();
+                }, i * 2);
+            }
+        }
+
+        // Step data
+        const stepsData = {
+            1: {
+                title: "Loop engineering is replacing yourself as the prompter",
+                part: 1,
+                summary: "For two years you held the agent. Now you design a system that holds it for you.",
+                content: `For two years, the way you got something out of a coding agent was: write a prompt, share the context, read what came back, write the next prompt. The agent was a tool and you held it the entire time. That part is ending.
+
+Loop engineering is building a small system that finds the work, hands it to the agent, checks the result, records what happened, and decides the next move — on its own. You design that system once. The system prompts the agent from then on.
+
+Addy Osmani breaks it into six parts.`
+            },
+            2: {
+                title: "Run the 4-condition test before you build anything",
+                part: 1,
+                summary: "Loops earn their cost under four strict conditions. Miss one and the loop costs more than it returns.",
+                content: `The four conditions in plain English:
+
+1. The task repeats. A loop amortizes its setup across many runs. For a one-time job, a good prompt is faster and cheaper.
+
+2. Verification is automated. The loop needs something that can fail the work without you in the room. A test suite, type checker, linter, or build. No automated check means you’re back reading every diff.
+
+3. Your token budget can absorb the waste. Loops re-read context, retry, explore. That burns tokens whether or not the run ships anything.
+
+4. The agent has a senior engineer’s tools. Logs, a reproduction environment, the ability to run the code it writes and see what breaks. Without that, the loop iterates blind.`
+            },
+            3: {
+                title: "Who wins, who loses. Loops favor whoever can spend.",
+                part: 1,
+                summary: "The economics are not universal. People calling it obvious usually have unmetered tokens.",
+                content: `Who actually benefits, in practice:
+
+• Teams with repetitive, machine-checkable work and the budget to run it — continuous test triage, dependency bumps, lint-and-fix passes.
+
+• Codebases with strong existing test suites.
+
+• Async-first teams with multi-agent patterns already in use.
+
+Who should skip it today:
+
+• Solo builders on consumer plans — the token bill arrives before the productivity gain.
+
+• Anyone working on code with no automated verification.
+
+• Teams whose real constraint is review capacity rather than typing speed.
+
+For one-off tasks, exploratory work, or anything where “done” is a judgment call, a single well-aimed prompt still wins.`
+            },
+            4: {
+                title: "The 30-second loop check",
+                part: 1,
+                summary: "The tactical checklist you run on a specific task before turning it into a loop.",
+                content: `Miss one box and keep it as a manual prompt:
+
+1. The task happens at least weekly.
+2. A test, type check, build, or linter can reject bad output.
+3. The agent can run the code it changes.
+4. The loop has a hard stop (token budget, iteration count, or time limit).
+5. A human reviews before merge, deploy, or dependency changes.
+
+Good first loops: CI failure triage, dependency bump PRs, lint-and-fix passes, flaky test reproduction, issue-to-PR drafts on strong test suites.
+
+Bad first loops: Architecture rewrites, auth/payments, production deploys, vague product work.`
+            },
+            5: {
+                title: "Automations: the heartbeat",
+                part: 2,
+                summary: "Automations fire on a schedule, event, or trigger condition. Everything else hangs off them.",
+                content: `What this looks like in practice:
+
+Codex: The Automations tab — pick a project, set a prompt, set a cadence, choose local checkout or background worktree.
+
+Claude Code: /loop for session-scoped cadence, Desktop scheduled tasks, Routines for cloud runs. Pair with hooks.
+
+Two useful primitives:
+• /loop — re-runs on a cadence.
+• /goal — keeps going until a condition you wrote is actually true (maker/checker split on the stop condition itself).`
+            },
+            6: {
+                title: "Worktrees: parallel without chaos",
+                part: 2,
+                summary: "Git worktrees let multiple agents work on the same repo without file collisions.",
+                content: `The second you run more than one agent, files start colliding. A git worktree fixes it — a separate working directory on its own branch sharing the same repo history.
+
+Codex builds worktree support in. Claude Code exposes it directly via --worktree flag and isolation settings.
+
+Worktrees remove mechanical collision, but you are still the ceiling. Your review bandwidth decides how many parallel agents you can actually run.`
+            },
+            7: {
+                title: "Skills: write project knowledge once. Read on every run.",
+                part: 2,
+                summary: "A SKILL.md folder stops the agent from re-deriving your entire project context every cycle.",
+                content: `Both tools use the same format: a folder with SKILL.md containing instructions, metadata, optional scripts, references, and assets.
+
+Why it matters for loops: A loop without skills re-derives your whole project context from zero every cycle. With skills, intent compounds. Conventions, build steps, “we don’t do it like this because of that one incident” — written once, read by every run.`
+            },
+            8: {
+                title: "Connectors: the loop touches your real tools. Via MCP.",
+                part: 2,
+                summary: "Connectors built on Model Context Protocol let the agent read issue trackers, query DBs, hit APIs, post to Slack.",
+                content: `A loop that can only see the filesystem is a tiny loop.
+
+Connectors are the difference between an agent that says “here is the fix” and a loop that opens the PR, links the Linear ticket, and pings the channel once CI is green.
+
+Fastest paying connectors, in order:
+1. GitHub (read repos, create branches, open PRs, comment, react to webhooks)
+2. Linear / Jira
+3. Slack
+4. Sentry / error trackers`
+            },
+            9: {
+                title: "Sub-agents: keep the maker away from the checker",
+                part: 2,
+                summary: "Split the agent that writes code from the agent that verifies it. The model that wrote the code is too nice grading its own homework.",
+                content: `This is the evaluator-optimizer pattern under a new name.
+
+How it works:
+• One agent explores / implements
+• Another verifies against the spec
+
+Codex: Define agents as TOML in .codex/agents/
+Claude Code: .claude/agents/ and agent teams
+
+The usual split inside a loop: explorer, implementer, verifier.
+
+Sub-agents burn more tokens. Spend them where a second opinion is worth paying for.`
+            },
+            10: {
+                title: "The state file. The agent forgets. The file does not.",
+                part: 3,
+                summary: "A markdown file, Linear board, or JSON that lives outside the conversation and holds what’s done and what’s next.",
+                content: `This is the spine of every working loop.
+
+Why it matters: Agents have short memory by default. What they learn this session is gone tomorrow unless you write it down.
+
+Osmani’s rule: the agent forgets, the repo does not.
+
+Two patterns:
+• Markdown in the repo (STATE.md) — version-controlled, simple, best for solo/small teams.
+• External system (Linear, GitHub Issues, database) — survives across repos, queryable, team-visible.
+
+For long-running loops, pair the state file with a standing high-level spec (VISION.md or AGENTS.md).`
+            },
+            11: {
+                title: "The minimum viable loop",
+                part: 3,
+                summary: "Build the smallest loop that works before anything fancy. Four parts, no swarm.",
+                content: `The four parts:
+
+1. One automation — scheduled run that fires on a cadence and stops on a clear condition.
+2. One skill — a single SKILL.md storing project context.
+3. One state file — records what is done and what is next.
+4. One gate — the test, type check, or build that fails bad work automatically.
+
+Order matters: Get one manual run reliable first. Turn it into a skill. Wrap it in a loop. Then schedule it.
+
+Metric that matters: cost per accepted change. If accepted-change rate is below 50%, you’re doing review work the loop was supposed to save you from.`
+            },
+            12: {
+                title: "The Ralph Wiggum loop. Loops that fail quietly.",
+                part: 3,
+                summary: "When an agent meant to emit a completion token only when finished emits it early on a half-done job.",
+                content: `Named by Geoffrey Huntley.
+
+What causes it:
+• No real verifier — just a second agent asked to “review” with no objective signal.
+• Soft completion conditions — “done” defined by the agent’s judgment.
+• No hard stops.
+
+The fix is always the gate from step 11 — something objective that can fail the work (test, build, linter return code).
+
+Other failure modes:
+• Goal drift over long sessions (use VISION.md reread each run)
+• Self-preferential bias (separate verifier sub-agent)
+• Agentic laziness (use /goal with objective stop condition)`
+            },
+            13: {
+                title: "Comprehension debt and cognitive surrender",
+                part: 3,
+                summary: "Two named risks that get sharper as the loop gets better.",
+                content: `Comprehension debt: The faster the loop ships code you didn’t write, the larger the distance between what the repository contains and what you understand.
+
+Cognitive surrender: The pull to stop forming an opinion and accept whatever the loop returns.
+
+Mitigations:
+• Read the diffs.
+• Spot-check the gate regularly.
+• Block the loop from architecture work.
+• Pair-design loops with a teammate.`
+            },
+            14: {
+                title: "The security tax. An unattended loop is an unattended attack surface.",
+                part: 3,
+                summary: "A loop running unattended is also an attack surface running unattended.",
+                content: `Threat model your loop must defend against:
+
+• Generated code shipping unreviewed (add SAST, dependency audit, secret scanning to the gate)
+• Skills as injection vectors (audit skill sources)
+• Credentials in logs (disable verbose logging in production)
+• Permission scope creep (re-audit permissions every 30 days)`
+            }
+        };
+
+        const mistakesList = [
+            "Building a loop without running the 4-condition test",
+            "No objective gate — second agent “reviewing” without tests",
+            "One agent doing both writing and verifying",
+            "No state file — restarts from zero every run",
+            "Vague stop conditions (“done when it looks good”)",
+            "No token budget cap",
+            "Running heavy loops on consumer plans",
+            "Auto-installing un-audited community skills",
+            "Letting loops touch judgment-call work (architecture, auth, payments)",
+            "Not reading the diffs the loop ships",
+            "Skipping the human review gate on irreversible actions"
+        ];
+
+        // Populate steps
+        function populateSteps() {
+            // Part 1
+            const part1Container = document.getElementById('part1-steps');
+            for (let i = 1; i <= 4; i++) {
+                const step = stepsData[i];
+                const isComplete = completedSteps.has(i);
+                
+                const html = `
+                    <div class="step-card modern-card rounded-3xl border ${isComplete ? '!border-emerald-500 bg-emerald-950/30' : 'border-slate-700'} overflow-hidden" data-step="${i}">
+                        <div class="px-8 py-6 flex items-start gap-x-6 cursor-pointer" onclick="toggleAccordion(this, ${i})">
+                            <div class="flex-shrink-0 w-9 h-9 rounded-2xl bg-slate-800 flex items-center justify-center text-lg font-mono font-semibold step-number">${String(i).padStart(2, '0')}</div>
+                            
+                            <div class="flex-1 min-w-0">
+                                <div class="font-semibold text-lg leading-tight pr-8">${step.title}</div>
+                                <div class="text-sm text-slate-400 mt-1.5 line-clamp-2">${step.summary}</div>
+                            </div>
+                            
+                            <div class="flex-shrink-0 flex items-center gap-x-2">
+                                <button onclick="event.stopImmediatePropagation(); toggleStepComplete(${i}, this.closest('.step-card'))" 
+                                        class="px-4 py-1.5 text-xs rounded-2xl border transition-colors ${isComplete ? 'border-emerald-500 text-emerald-400 bg-emerald-950' : 'border-slate-600 hover:bg-slate-800'}">
+                                    <i class="fa-solid ${isComplete ? 'fa-check' : 'fa-check-circle'} mr-1.5"></i>
+                                    <span class="font-medium">${isComplete ? 'Done' : 'Mark done'}</span>
+                                </button>
+                                <i class="fa-solid fa-chevron-down text-slate-400 transition-transform accordion-chevron"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-content px-8 pb-8 text-sm text-slate-300 leading-relaxed border-t border-slate-700 pt-6">
+                            ${step.content.replace(/\n/g, '<br>')}
+                            
+                            <div class="mt-6 flex gap-x-3">
+                                <button onclick="copyStep(${i}, this)" class="text-xs flex items-center gap-x-1.5 px-4 h-9 rounded-2xl border border-slate-600 hover:bg-slate-800 active:bg-slate-700">
+                                    <i class="fa-solid fa-copy"></i> <span class="font-medium">Copy step</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                part1Container.innerHTML += html;
+            }
+
+            // Part 2
+            const part2Container = document.getElementById('part2-steps');
+            for (let i = 5; i <= 9; i++) {
+                const step = stepsData[i];
+                const isComplete = completedSteps.has(i);
+                
+                const html = `
+                    <div class="step-card modern-card rounded-3xl border ${isComplete ? '!border-emerald-500 bg-emerald-950/30' : 'border-slate-700'} overflow-hidden" data-step="${i}">
+                        <div class="px-8 py-6 flex items-start gap-x-6 cursor-pointer" onclick="toggleAccordion(this, ${i})">
+                            <div class="flex-shrink-0 w-9 h-9 rounded-2xl bg-slate-800 flex items-center justify-center text-lg font-mono font-semibold step-number">${String(i).padStart(2, '0')}</div>
+                            
+                            <div class="flex-1 min-w-0">
+                                <div class="font-semibold text-lg leading-tight pr-8">${step.title}</div>
+                                <div class="text-sm text-slate-400 mt-1.5 line-clamp-2">${step.summary}</div>
+                            </div>
+                            
+                            <div class="flex-shrink-0 flex items-center gap-x-2">
+                                <button onclick="event.stopImmediatePropagation(); toggleStepComplete(${i}, this.closest('.step-card'))" 
+                                        class="px-4 py-1.5 text-xs rounded-2xl border transition-colors ${isComplete ? 'border-emerald-500 text-emerald-400 bg-emerald-950' : 'border-slate-600 hover:bg-slate-800'}">
+                                    <i class="fa-solid ${isComplete ? 'fa-check' : 'fa-check-circle'} mr-1.5"></i>
+                                    <span class="font-medium">${isComplete ? 'Done' : 'Mark done'}</span>
+                                </button>
+                                <i class="fa-solid fa-chevron-down text-slate-400 transition-transform accordion-chevron"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-content px-8 pb-8 text-sm text-slate-300 leading-relaxed border-t border-slate-700 pt-6">
+                            ${step.content.replace(/\n/g, '<br>')}
+                            
+                            <div class="mt-6 flex gap-x-3">
+                                <button onclick="copyStep(${i}, this)" class="text-xs flex items-center gap-x-1.5 px-4 h-9 rounded-2xl border border-slate-600 hover:bg-slate-800 active:bg-slate-700">
+                                    <i class="fa-solid fa-copy"></i> <span class="font-medium">Copy step</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                part2Container.innerHTML += html;
+            }
+
+            // Part 3
+            const part3Container = document.getElementById('part3-steps');
+            for (let i = 10; i <= 14; i++) {
+                const step = stepsData[i];
+                const isComplete = completedSteps.has(i);
+                
+                const html = `
+                    <div class="step-card modern-card rounded-3xl border ${isComplete ? '!border-emerald-500 bg-emerald-950/30' : 'border-slate-700'} overflow-hidden" data-step="${i}">
+                        <div class="px-8 py-6 flex items-start gap-x-6 cursor-pointer" onclick="toggleAccordion(this, ${i})">
+                            <div class="flex-shrink-0 w-9 h-9 rounded-2xl bg-slate-800 flex items-center justify-center text-lg font-mono font-semibold step-number">${String(i).padStart(2, '0')}</div>
+                            
+                            <div class="flex-1 min-w-0">
+                                <div class="font-semibold text-lg leading-tight pr-8">${step.title}</div>
+                                <div class="text-sm text-slate-400 mt-1.5 line-clamp-2">${step.summary}</div>
+                            </div>
+                            
+                            <div class="flex-shrink-0 flex items-center gap-x-2">
+                                <button onclick="event.stopImmediatePropagation(); toggleStepComplete(${i}, this.closest('.step-card'))" 
+                                        class="px-4 py-1.5 text-xs rounded-2xl border transition-colors ${isComplete ? 'border-emerald-500 text-emerald-400 bg-emerald-950' : 'border-slate-600 hover:bg-slate-800'}">
+                                    <i class="fa-solid ${isComplete ? 'fa-check' : 'fa-check-circle'} mr-1.5"></i>
+                                    <span class="font-medium">${isComplete ? 'Done' : 'Mark done'}</span>
+                                </button>
+                                <i class="fa-solid fa-chevron-down text-slate-400 transition-transform accordion-chevron"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="accordion-content px-8 pb-8 text-sm text-slate-300 leading-relaxed border-t border-slate-700 pt-6">
+                            ${step.content.replace(/\n/g, '<br>')}
+                            
+                            <div class="mt-6 flex gap-x-3">
+                                <button onclick="copyStep(${i}, this)" class="text-xs flex items-center gap-x-1.5 px-4 h-9 rounded-2xl border border-slate-600 hover:bg-slate-800 active:bg-slate-700">
+                                    <i class="fa-solid fa-copy"></i> <span class="font-medium">Copy step</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                part3Container.innerHTML += html;
+            }
+        }
+
+        function toggleAccordion(headerElement, stepNum) {
+            const content = headerElement.nextElementSibling;
+            const chevron = headerElement.querySelector('.accordion-chevron');
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                chevron.style.transform = 'rotate(0deg)';
+            } else {
+                // Close others in same part
+                const parent = headerElement.closest('#part1-steps, #part2-steps, #part3-steps');
+                if (parent) {
+                    parent.querySelectorAll('.accordion-content.open').forEach(el => {
+                        el.classList.remove('open');
+                        const ch = el.previousElementSibling.querySelector('.accordion-chevron');
+                        if (ch) ch.style.transform = 'rotate(0deg)';
+                    });
+                }
+                
+                content.classList.add('open');
+                chevron.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        function copyStep(stepNum, btnElement) {
+            const step = stepsData[stepNum];
+            const text = `Step ${stepNum}: ${step.title}\n\n${step.content}`;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btnElement.innerHTML;
+                btnElement.innerHTML = `<i class="fa-solid fa-check"></i> <span>Copied!</span>`;
+                setTimeout(() => {
+                    btnElement.innerHTML = originalText;
+                }, 1600);
+            });
+        }
+
+        // Interactive 4-condition test
+        function initializeInteractiveTest() {
+            const container = document.getElementById('condition-checks');
+            
+            const conditions = [
+                { id: 'cond-repeat', label: 'The task repeats (at least weekly)', desc: 'A loop only pays for itself across many runs.' },
+                { id: 'cond-verify', label: 'Verification is automated', desc: 'A test, linter, type check, or build can reject bad output.' },
+                { id: 'cond-budget', label: 'Token budget can absorb waste', desc: 'Loops re-read context and retry — they burn tokens.' },
+                { id: 'cond-tools', label: 'Agent has senior engineer tools', desc: 'Can run code, access logs, and reproduce environments.' }
+            ];
+            
+            conditions.forEach((cond, index) => {
+                const div = document.createElement('div');
+                div.className = `flex gap-x-3 p-4 rounded-2xl border border-slate-700 bg-slate-900/50 cursor-pointer hover:border-indigo-500 transition-colors`;
+                div.innerHTML = `
+                    <div class="pt-0.5">
+                        <input type="checkbox" id="${cond.id}" class="accent-indigo-500 w-4 h-4 mt-1">
+                    </div>
+                    <div class="flex-1">
+                        <label for="${cond.id}" class="font-medium cursor-pointer">${cond.label}</label>
+                        <div class="text-xs text-slate-400 mt-0.5">${cond.desc}</div>
+                    </div>
+                `;
+                
+                // Make whole card clickable
+                div.onclick = (e) => {
+                    if (e.target.tagName !== 'INPUT') {
+                        const checkbox = div.querySelector('input');
+                        checkbox.checked = !checkbox.checked;
+                        updateReadinessScore();
+                    }
+                };
+                
+                container.appendChild(div);
+            });
+            
+            // Attach listeners
+            conditions.forEach(cond => {
+                const checkbox = document.getElementById(cond.id);
+                if (checkbox) {
+                    checkbox.onchange = updateReadinessScore;
+                }
+            });
+            
+            // 30-second checklist
+            const checklistContainer = document.getElementById('checklist-30s');
+            const checklistItems = [
+                "Task happens at least weekly",
+                "Automated gate exists (test / linter / build)",
+                "Agent can run the code it changes",
+                "Loop has a hard stop (budget / iterations / time)",
+                "Human review gate before irreversible actions"
+            ];
+            
+            checklistItems.forEach((item, idx) => {
+                const label = document.createElement('label');
+                label.className = `flex items-center gap-x-3 px-4 py-3 bg-slate-900 border border-slate-700 rounded-2xl cursor-pointer hover:border-slate-600`;
+                label.innerHTML = `
+                    <input type="checkbox" class="accent-emerald-500 w-4 h-4" id="check-${idx}">
+                    <span class="text-sm">${item}</span>
+                `;
+                checklistContainer.appendChild(label);
+                
+                label.onclick = () => {
+                    const cb = label.querySelector('input');
+                    // toggle handled by label
+                };
+            });
+            
+            // Initial score
+            setTimeout(updateReadinessScore, 300);
+        }
+        
+        function updateReadinessScore() {
+            const checkboxes = document.querySelectorAll('#condition-checks input[type="checkbox"]');
+            let score = 0;
+            checkboxes.forEach(cb => { if (cb.checked) score++; });
+            
+            const scoreEl = document.getElementById('readiness-score');
+            const verdictEl = document.getElementById('readiness-verdict');
+            
+            scoreEl.innerHTML = `${score}<span class="text-3xl text-slate-500">/4</span>`;
+            
+            let verdictHTML = '';
+            let verdictClass = '';
+            
+            if (score === 4) {
+                verdictHTML = `<div class="text-emerald-400"><i class="fa-solid fa-check-circle mr-2"></i> <span class="font-semibold">Build the loop.</span> All conditions met.</div>`;
+                verdictClass = 'border-emerald-500 bg-emerald-950/50 text-emerald-300';
+            } else if (score === 3) {
+                verdictHTML = `<div class="text-amber-400"><i class="fa-solid fa-exclamation-circle mr-2"></i> <span class="font-semibold">Close — fix the missing condition first.</span></div>`;
+                verdictClass = 'border-amber-500 bg-amber-950/50 text-amber-300';
+            } else {
+                verdictHTML = `<div class="text-rose-400"><i class="fa-solid fa-times-circle mr-2"></i> <span class="font-semibold">Stick to prompting for now.</span> Too many missing conditions.</div>`;
+                verdictClass = 'border-rose-500 bg-rose-950/50 text-rose-300';
+            }
+            
+            verdictEl.innerHTML = verdictHTML;
+            verdictEl.className = `px-6 py-3 rounded-3xl text-sm font-medium border max-w-[260px] ${verdictClass}`;
+        }
+        
+        function evaluateLoopReadiness() {
+            const scoreEl = document.getElementById('readiness-score');
+            const currentScore = parseInt(scoreEl.textContent);
+            
+            let message = '';
+            let extraAdvice = '';
+            
+            if (currentScore === 4) {
+                message = "Excellent. You passed the 4-condition test. Now run the 30-second checklist above.";
+                extraAdvice = "Recommended first loops: CI triage, dependency bumps, or lint-and-fix passes.";
+            } else if (currentScore === 3) {
+                message = "Almost there. Fix the one missing condition before investing in a loop.";
+                extraAdvice = "Most teams that skip this end up maintaining the loop instead of shipping.";
+            } else {
+                message = "The honest take: loops will cost you more than they return right now.";
+                extraAdvice = "Focus on better single prompts + strong context engineering instead.";
+            }
+            
+            // Show nice toast/modal
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-8 left-1/2 -translate-x-1/2 modern-card border border-slate-600 px-6 py-4 rounded-3xl shadow-2xl max-w-md z-[999] interactive-result`;
+            toast.innerHTML = `
+                <div class="font-semibold mb-1">${message}</div>
+                <div class="text-xs text-slate-300">${extraAdvice}</div>
+                <div class="mt-4 text-right">
+                    <button onclick="this.closest('.fixed').remove()" class="text-xs px-4 py-1.5 rounded-2xl border border-slate-600 hover:bg-slate-800">Got it</button>
+                </div>
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                if (toast.parentNode) toast.parentNode.removeChild(toast);
+            }, 6500);
+        }
+
+        // Loop Builder
+        function generateLoopSpec() {
+            const task = document.getElementById('task-desc').value.trim() || "Triage CI failures and draft simple fix PRs";
+            const frequency = document.getElementById('frequency').value;
+            const stateStorage = document.getElementById('state-storage').value;
+            const parallel = document.querySelector('input[name="parallel"]:checked').value;
+            
+            const gates = [];
+            if (document.getElementById('gate-tests').checked) gates.push('Unit / Integration tests');
+            if (document.getElementById('gate-lint').checked) gates.push('Linter + Formatter');
+            if (document.getElementById('gate-types').checked) gates.push('Type checker');
+            if (document.getElementById('gate-build').checked) gates.push('Successful build');
+            const gateText = gates.length > 0 ? gates.join(' + ') : 'Manual review gate (not recommended)';
+            
+            const triggerType = document.querySelector('input[name="trigger"]:checked').value;
+            const triggerLabel = triggerType === 'schedule' ? 'Scheduled cadence (nightly / weekly)' : 'Event-driven (webhook on PR/issue)';
+            
+            let stateLabel = '';
+            if (stateStorage === 'markdown') stateLabel = 'STATE.md in repository root (version controlled)';
+            else if (stateStorage === 'linear') stateLabel = 'Linear board (team-visible, queryable)';
+            else stateLabel = 'GitHub Issues + Projects';
+            
+            const spec = `MINIMUM VIABLE LOOP — GENERATED SPEC
+=====================================
+
+TASK
+${task}
+
+TRIGGER
+${triggerLabel}  (${frequency})
+
+VERIFICATION GATE (Objective)
+${gateText}
+
+STATE MANAGEMENT
+${stateLabel}
+
+PARALLELISM
+${parallel === 'yes' ? 'Yes — use isolated git worktrees for each agent run' : 'No — single agent per run (recommended for first loop)'}
+
+RECOMMENDED STRUCTURE
+─────────────────────
+.loop/
+├── SKILL.md                 ← Project conventions + build commands
+├── STATE.md                 ← What was done, what is next (or Linear)
+├── automation.yaml          ← Trigger + prompt template
+└── agents/
+    ├── maker.toml           ← Explorer / implementer
+    └── checker.toml         ← Verifier against tests
+
+FIRST RUN CHECKLIST
+□ Get one manual run reliable
+□ Extract context into SKILL.md
+□ Add objective gate
+□ Wrap in automation
+□ Add hard stop (token budget / max iterations)
+□ Human approval gate for merges
+
+METRIC TO WATCH
+Cost per accepted change (target > 50% acceptance rate)
+
+NEXT ACTIONS
+1. Create the SKILL.md with your project rules
+2. Pick one small recurring task and run it manually 3×
+3. Add the gate that would have caught your mistakes
+4. Schedule it
+
+Built with the Loop Engineering roadmap • 2026`;
+
+            const outputDiv = document.getElementById('loop-spec-output');
+            const contentDiv = document.getElementById('loop-spec-content');
+            
+            contentDiv.textContent = spec;
+            outputDiv.style.display = 'block';
+            outputDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        function copyLoopSpec() {
+            const content = document.getElementById('loop-spec-content').textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                const btns = document.querySelectorAll('#loop-spec-output button');
+                if (btns.length > 0) {
+                    const original = btns[0].innerHTML;
+                    btns[0].innerHTML = `<i class="fa-solid fa-check"></i> Copied to clipboard`;
+                    setTimeout(() => {
+                        btns[0].innerHTML = original;
+                    }, 1800);
+                }
+            });
+        }
+
+        // Populate mistakes
+        function populateMistakes() {
+            const container = document.getElementById('mistakes-list');
+            mistakesList.forEach((mistake, index) => {
+                const div = document.createElement('div');
+                div.className = `flex gap-x-3 px-4 py-3.5 bg-slate-900 border border-slate-700 rounded-2xl text-sm`;
+                div.innerHTML = `
+                    <div class="text-rose-400 mt-0.5 flex-shrink-0"><i class="fa-solid fa-exclamation-triangle"></i></div>
+                    <div class="text-slate-200">${mistake}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // Dark mode toggle (simple)
+        function toggleDarkMode() {
+            // Since it's already dark, we can add a light mode variant if wanted.
+            // For now just a fun toggle that slightly changes accent
+            const root = document.documentElement;
+            if (root.style.getPropertyValue('--accent') === '#6366f1') {
+                root.style.setProperty('--accent', '#64748b');
+                document.body.style.filter = 'saturate(0.85)';
+            } else {
+                root.style.setProperty('--accent', '#6366f1');
+                document.body.style.filter = 'none';
+            }
+        }
+
+        // Keyboard shortcuts
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', function(e) {
+                if (e.key === '/' && document.activeElement.tagName === 'BODY') {
+                    e.preventDefault();
+                    const firstStep = document.querySelector('.step-card');
+                    if (firstStep) firstStep.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                
+                if (e.metaKey && e.key === 'k') {
+                    e.preventDefault();
+                    document.getElementById('interactive-test').scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+            
+            // Easter egg: type "loop" to highlight the flow
+            let typed = '';
+            document.addEventListener('keypress', function(e) {
+                typed += e.key.toLowerCase();
+                if (typed.length > 4) typed = typed.slice(-4);
+                if (typed === 'loop') {
+                    typed = '';
+                    const flow = document.querySelector('.flow-step');
+                    if (flow) {
+                        flow.style.transitionDuration = '80ms';
+                        flow.style.boxShadow = '0 0 0 3px rgb(52 211 153 / 0.4)';
+                        setTimeout(() => {
+                            flow.style.boxShadow = '';
+                            flow.style.transitionDuration = '200ms';
+                        }, 900);
+                    }
+                }
+            });
+        }
+
+        // Initialize everything
+        function initialize() {
+            initializeTailwind();
+            loadProgress();
+            populateSteps();
+            initializeInteractiveTest();
+            populateMistakes();
+            setupKeyboardShortcuts();
+            
+            // Initial progress UI update
+            setTimeout(updateProgressUI, 100);
+            
+            // Nice touch: auto-expand first step of part 1 after a delay
+            setTimeout(() => {
+                const firstHeader = document.querySelector('#part1-steps .step-card .px-8');
+                if (firstHeader && window.scrollY < 300) {
+                    // Don't auto open if user is already scrolling
+                }
+            }, 2200);
+            
+            // Easter egg hint in console
+            console.log('%c[Loop Engineer] Pro tip: Press "/" to jump to steps. Cmd/Ctrl+K opens the test.', 'color:#64748b');
+        }
+
+        // Boot
+        window.onload = initialize;
+    </script>
+</body>
+</html>
