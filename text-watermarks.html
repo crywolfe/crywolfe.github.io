@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+  <!-- SEO & Social Meta Tags -->
+  <title>Inside Claude's Invisible Text Watermark — Interactive 3D Explainer</title>
+  <meta name="description" content="An interactive 3D visual explainer of Anthropic Claude's text watermarking mechanism, based on Google DeepMind's SynthID-Text and Scott Aaronson's PRNG theory." />
+  <meta name="keywords" content="Anthropic, Claude, Text Watermark, SynthID-Text, LLM Watermarking, Three.js, AI Safety, EU AI Act" />
+  <meta name="author" content="Interactive AI Explainer" />
+  <meta name="theme-color" content="#0b0f19" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Inside Claude's Invisible Text Watermark — Interactive 3D Explainer" />
+  <meta property="og:description" content="Discover how Claude embeds undetectable, quality-preserving watermarks using pseudorandom number generators and statistical hypothesis testing." />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Inside Claude's Invisible Text Watermark — Interactive 3D Explainer" />
+  <meta name="twitter:description" content="Interactive 3D visualizer showing how LLM generative watermarking works in practice." />
+
+  <!-- SVG Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Three.js + OrbitControls CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- KaTeX + Auto-render extension for math notation -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathOnLoad()"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              200: '#fde68a',
+              300: '#fcd34d',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+              800: '#92400e',
+              900: '#78350f',
+              950: '#451a03',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #0b0f19;
+      color: #f1f5f9;
+      overflow-x: hidden;
+    }
+    .font-serif-claude {
+      font-family: 'Newsreader', Georgia, Cambria, serif;
+    }
+    .font-mono-code {
+      font-family: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.78);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-panel-amber {
+      background: rgba(35, 22, 10, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.3);
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(245, 158, 11, 0.6);
+    }
+    .token-pill {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .token-pill:hover {
+      transform: translateY(-2px);
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.35); }
+      50% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.75); }
+    }
+    .glow-amber {
+      animation: pulseGlow 2.5s infinite ease-in-out;
+    }
+    .gradient-text-amber {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  </style>
+</head>
+<body class="selection:bg-amber-500/30 selection:text-amber-200 antialiased min-h-screen flex flex-col justify-between">
+
+  <!-- TOP APP NAVIGATION -->
+  <header class="sticky top-0 z-50 glass-panel border-b border-slate-800/80 px-4 sm:px-6 py-3.5 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 via-orange-500 to-amber-300 flex items-center justify-center shadow-lg shadow-amber-500/20 shrink-0">
+        <svg class="w-5 h-5 text-slate-950 font-bold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-sm sm:text-base font-bold tracking-tight text-white flex flex-wrap items-center gap-2">
+          <span>Claude Text Watermark</span>
+          <span class="text-[10px] sm:text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-mono">SynthID-Text & Aaronson PRNG</span>
+        </h1>
+        <p class="text-[11px] sm:text-xs text-slate-400">Interactive 3D Visualizer & Statistical Cryptanalysis</p>
+      </div>
+    </div>
+
+    <!-- Quick Navigation Tabs -->
+    <nav class="hidden lg:flex items-center gap-1.5 p-1 bg-slate-900/90 rounded-xl border border-slate-800">
+      <button onclick="switchTab('simulation')" id="tab-btn-simulation" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition bg-amber-500/20 text-amber-300 border border-amber-500/30">
+        1. 3D Token Distribution
+      </button>
+      <button onclick="switchTab('monopoly')" id="tab-btn-monopoly" class="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 transition">
+        2. "Pi vs Dice" Mental Model
+      </button>
+      <button onclick="switchTab('detector')" id="tab-btn-detector" class="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 transition">
+        3. Statistical Detection
+      </button>
+      <button onclick="switchTab('math')" id="tab-btn-math" class="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 transition">
+        4. Theory & EU AI Act
+      </button>
+    </nav>
+
+    <!-- Key Status & Reset -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900/80 border border-slate-800 text-xs">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-slate-400">Secret Key: <code class="text-amber-400 font-mono font-bold" id="headerKeyLabel">0x7F4A...</code></span>
+      </div>
+      <button onclick="resetAll()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition text-xs flex items-center gap-1.5 border border-slate-700" title="Reset Simulation">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+        <span>Reset</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MOBILE NAVIGATION TABS (Visible on < lg) -->
+  <div class="lg:hidden glass-panel border-b border-slate-800 p-2 flex overflow-x-auto gap-2 text-xs custom-scrollbar">
+    <button onclick="switchTab('simulation')" id="tab-mob-simulation" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold">1. 3D Manifold</button>
+    <button onclick="switchTab('monopoly')" id="tab-mob-monopoly" class="whitespace-nowrap px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200">2. Pi vs Dice</button>
+    <button onclick="switchTab('detector')" id="tab-mob-detector" class="whitespace-nowrap px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200">3. Detector Sandbox</button>
+    <button onclick="switchTab('math')" id="tab-mob-math" class="whitespace-nowrap px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200">4. Theory & Law</button>
+  </div>
+
+  <!-- MAIN WRAPPER -->
+  <main class="max-w-7xl mx-auto p-4 sm:p-6 space-y-6 flex-1 w-full">
+
+    <!-- HERO HEADER CARD -->
+    <section class="glass-panel rounded-2xl p-5 sm:p-6 border border-slate-800 relative overflow-hidden">
+      <div class="absolute -right-20 -top-20 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+        <div class="lg:col-span-8 space-y-2.5">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+            <span>Anthropic Watermarking Specification (Aug 2026)</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+            How Claude Embeds Invisible Text Watermarks
+          </h2>
+          <p class="text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
+            Anthropic applies <strong>generative pseudorandom watermarking</strong> (drawing on Google DeepMind's <em>SynthID-Text</em> and Scott Aaronson's PRNG theory). It introduces <strong>zero hidden characters</strong> and maintains <strong>100% natural text quality</strong>. Instead of using standard unseeded random dice, token sampling is driven by a cryptographic hash of the <em>recent context tokens</em> and a <em>secret key</em>.
+          </p>
+        </div>
+
+        <div class="lg:col-span-4 grid grid-cols-2 gap-3">
+          <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800">
+            <div class="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Quality Loss</div>
+            <div class="text-2xl font-black text-emerald-400 mt-1">0.00%</div>
+            <div class="text-[11px] text-slate-500">Non-distortionary sampling</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800">
+            <div class="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Extra Latency</div>
+            <div class="text-2xl font-black text-emerald-400 mt-1">0 ms</div>
+            <div class="text-[11px] text-slate-500">Zero extra tokens / cost</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800">
+            <div class="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">User Privacy</div>
+            <div class="text-lg font-bold text-slate-200 mt-1">Zero Tracking</div>
+            <div class="text-[11px] text-slate-500">No user ID in watermark</div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800">
+            <div class="text-slate-400 text-[11px] uppercase tracking-wider font-semibold">Mandate</div>
+            <div class="text-lg font-bold text-amber-400 mt-1">EU AI Act</div>
+            <div class="text-[11px] text-slate-500">Compliance standard</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1: 3D TOKEN SAMPLING & VOCABULARY MANIFOLD (TAB 1) -->
+    <div id="section-simulation" class="space-y-6">
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- LEFT: 3D Next-Token Probability Manifold (Three.js Canvas) -->
+        <div class="lg:col-span-7 flex flex-col glass-panel rounded-2xl border border-slate-800 overflow-hidden relative min-h-[580px]">
+          <!-- 3D Canvas Top Bar -->
+          <div class="px-4 py-3 bg-slate-900/90 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 z-10">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span>
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-300">3D Token Distribution & Watermark Partition</span>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+              <span class="flex items-center gap-1.5 text-emerald-400 font-medium">
+                <span class="w-2.5 h-2.5 rounded bg-emerald-500 shadow-sm shadow-emerald-500/50"></span> Green ($g=1$)
+              </span>
+              <span class="flex items-center gap-1.5 text-rose-400 font-medium">
+                <span class="w-2.5 h-2.5 rounded bg-rose-500 shadow-sm shadow-rose-500/50"></span> Red ($g=0$)
+              </span>
+            </div>
+          </div>
+
+          <!-- WebGL Canvas Container -->
+          <div id="three-container" class="w-full flex-1 relative cursor-grab active:cursor-grabbing bg-slate-950">
+
+            <!-- Live Hash & Telemetry HUD Overlay -->
+            <div class="absolute top-4 left-4 pointer-events-none z-10 space-y-2 max-w-[85%] sm:max-w-none">
+              <div class="bg-slate-950/85 backdrop-blur border border-slate-800/80 px-3 py-1.5 rounded-lg text-xs font-mono shadow-md">
+                <span class="text-slate-400">Context Window ($H=3$):</span>
+                <span id="canvasContextTokens" class="text-amber-300 font-bold ml-1">["weather", "was", "cold"]</span>
+              </div>
+              <div class="bg-slate-950/85 backdrop-blur border border-slate-800/80 px-3 py-1.5 rounded-lg text-xs font-mono shadow-md">
+                <span class="text-slate-400">PRNG Hash Seed $r_t$:</span>
+                <span id="canvasHashSeed" class="text-emerald-400 font-bold ml-1">0x9E3779B9</span>
+              </div>
+              <div class="bg-slate-950/85 backdrop-blur border border-slate-800/80 px-3 py-1.5 rounded-lg text-xs font-mono shadow-md">
+                <span class="text-slate-400">Entropy Regime:</span>
+                <span id="canvasEntropyType" class="text-cyan-300 font-bold ml-1">High Entropy (Low-Stakes)</span>
+              </div>
+            </div>
+
+            <!-- Canvas Viewport Controls Overlay -->
+            <div class="absolute bottom-4 right-4 z-10 flex gap-2">
+              <button onclick="reset3DCamera()" class="px-2.5 py-1 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-700 text-[11px] text-slate-300 transition shadow">
+                Reset Angle ⟲
+              </button>
+              <button onclick="toggle3DRotation()" id="btnAutoRotate" class="px-2.5 py-1 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-700 text-[11px] text-amber-400 transition shadow">
+                Rotate: ON
+              </button>
+            </div>
+          </div>
+
+          <!-- Bottom Explanation Banner -->
+          <div class="p-3.5 bg-slate-900/90 border-t border-slate-800 text-xs text-slate-300 flex items-center justify-between">
+            <div id="explanationStepText">
+              💡 <strong>How it works:</strong> When choosing between synonyms of near-equal probability (e.g. <em>"overcast"</em> vs <em>"grey"</em>), standard models use unkeyed randomness. Claude uses $r_t = \text{hash}(\text{context}, k)$ to partition the candidate tokens into Green ($g=1$) and Red ($g=0$) buckets.
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Interactive Controls & Generation Arena -->
+        <div class="lg:col-span-5 flex flex-col space-y-4">
+
+          <!-- Mode Selector -->
+          <div class="glass-panel rounded-2xl p-5 border border-slate-800 space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-bold text-white uppercase tracking-wider">Decoding Algorithm</h3>
+              <span class="text-[11px] text-slate-400">Sampling Mode</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <label class="cursor-pointer p-3.5 rounded-xl border border-amber-500/50 bg-amber-500/10 transition flex flex-col space-y-1.5" id="label-mode-wm">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs sm:text-sm font-bold text-amber-300">Claude Watermark</span>
+                  <input type="radio" name="samplingMode" value="watermarked" checked onchange="updateSamplingMode()" class="text-amber-500 focus:ring-amber-500">
+                </div>
+                <p class="text-[11px] text-slate-400 leading-tight">Keyed PRNG selection seeded by preceding tokens.</p>
+              </label>
+
+              <label class="cursor-pointer p-3.5 rounded-xl border border-slate-800 bg-slate-900/50 transition flex flex-col space-y-1.5" id="label-mode-unwm">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs sm:text-sm font-bold text-slate-300">Unwatermarked</span>
+                  <input type="radio" name="samplingMode" value="unwatermarked" onchange="updateSamplingMode()" class="text-slate-500 focus:ring-slate-500">
+                </div>
+                <p class="text-[11px] text-slate-400 leading-tight">Standard unseeded uniform random dice roll.</p>
+              </label>
+            </div>
+
+            <!-- Parameters Sliders -->
+            <div class="space-y-3.5 pt-2 border-t border-slate-800 text-xs">
+
+              <!-- Prompt Scenario Presets -->
+              <div>
+                <label class="block text-slate-300 font-semibold mb-1">Preset Prompt Context</label>
+                <select id="promptSelect" onchange="loadPromptPreset()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-xs focus:ring-amber-500 focus:border-amber-500">
+                  <option value="weather">1. High Entropy / Synonyms: "The weather today was cold and..."</option>
+                  <option value="math">2. Zero Entropy / Factual: "In mathematics, two plus two equals..."</option>
+                  <option value="code">3. Python Syntax / Code: "def calculate_average(scores):..."</option>
+                  <option value="coffee">4. Creative Writing: "The quaint aroma of fresh roast..."</option>
+                </select>
+              </div>
+
+              <!-- Watermarking Key & Context Size -->
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-slate-400 font-medium mb-1">Secret Key $k$</label>
+                  <input type="number" id="secretKeyInput" value="42" onchange="onKeyChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-amber-300 font-mono text-xs font-bold">
+                </div>
+                <div>
+                  <label class="block text-slate-400 font-medium mb-1">Context Window $H$</label>
+                  <select id="contextWindowSelect" onchange="onContextWindowChange()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-200 text-xs">
+                    <option value="2">H = 2 tokens</option>
+                    <option value="3" selected>H = 3 tokens</option>
+                    <option value="4">H = 4 tokens (SynthID)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Temperature Slider -->
+              <div>
+                <div class="flex justify-between items-center mb-1">
+                  <span class="text-slate-400">Temperature / Softmax: <span id="tempValueLabel" class="text-amber-400 font-mono font-bold">0.7</span></span>
+                  <span class="text-[10px] text-slate-500">Flattens / sharpens distribution</span>
+                </div>
+                <input type="range" id="tempSlider" min="0.1" max="1.5" step="0.1" value="0.7" oninput="onTempChange()" class="w-full accent-amber-500">
+              </div>
+
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="grid grid-cols-3 gap-2 pt-2">
+              <button onclick="stepGenerateToken()" class="px-3 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-1 active:scale-95">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 5l7 7-7 7M5 5l7 7-7 7" /></svg>
+                <span>Step Token</span>
+              </button>
+              <button onclick="autoGenerateStream(15)" id="btnAutoGenerate" class="px-3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs border border-slate-700 transition flex items-center justify-center gap-1">
+                <span>+15 Stream</span>
+              </button>
+              <button onclick="clearGeneratedText()" class="px-3 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 font-semibold text-xs border border-slate-800 transition flex items-center justify-center">
+                <span>Clear</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Real-Time Token Generation Stream -->
+          <div class="glass-panel rounded-2xl p-4 border border-slate-800 flex-1 flex flex-col">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-slate-300 uppercase tracking-wider">Generated Text Stream</span>
+              <span class="text-[11px] text-slate-400 font-mono" id="tokenCountLabel">Tokens: 6</span>
+            </div>
+
+            <!-- Text area with token pills -->
+            <div id="tokenStreamContainer" class="flex-1 min-h-[120px] max-h-[160px] bg-slate-950/70 rounded-xl p-3.5 border border-slate-800/80 font-serif-claude text-base text-slate-200 leading-relaxed overflow-y-auto custom-scrollbar flex flex-wrap gap-1.5 items-center content-start">
+              <!-- Injected by JS -->
+            </div>
+
+            <!-- Current Step Hash Formula Badge -->
+            <div class="mt-3 p-2.5 rounded-xl bg-slate-900/90 border border-slate-800 text-[11px] font-mono text-slate-300 flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2 overflow-hidden text-ellipsis">
+                <span class="text-amber-400 font-bold shrink-0">Step Hash:</span>
+                <span id="formulaEvalText" class="truncate text-slate-300">seed = hash("cold", "and", key=42) % 2 == 0</span>
+              </div>
+              <span id="gScoreBadge" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] shrink-0 font-bold">g = 1 (Green)</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- SECTION 2: THE "MONOPOLY DIE VS BOOK OF PI" ANALOGY (TAB 2) -->
+    <div id="section-monopoly" class="hidden space-y-6">
+      <div class="glass-panel rounded-2xl p-6 border border-slate-800 space-y-6">
+
+        <div class="max-w-3xl space-y-3">
+          <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold">
+            <span>Anthropic's Mental Model</span>
+          </div>
+          <h3 class="text-2xl font-bold text-white">The Monopoly Die vs. The Digits of $\pi$</h3>
+          <p class="text-sm text-slate-300 leading-relaxed">
+            In their official communication explaining the watermark, Anthropic provides an intuitive Monopoly game analogy:
+          </p>
+          <blockquote class="p-4 rounded-xl bg-slate-900/90 border-l-4 border-amber-500 text-sm text-slate-300 italic leading-relaxed">
+            "Suppose that, instead of rolling the die to get randomness, we decided to use a book of the digits of $\pi$. We start from a secret digit, and from that point each player uses the next digit in the sequence as their 'roll'. The moves are still indistinguishable from random rolls, but anyone who knows the sequence can verify after the game that $\pi$ was used."
+          </blockquote>
+        </div>
+
+        <!-- Interactive Comparison Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <!-- Left: Standard Die (True Random) -->
+          <div class="p-5 rounded-2xl bg-slate-900/70 border border-slate-800 space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-rose-500/20 border border-rose-500/40 text-rose-400 flex items-center justify-center font-bold text-sm">🎲</div>
+                <h4 class="font-bold text-white text-sm">Standard AI (Unwatermarked)</h4>
+              </div>
+              <span class="text-xs text-rose-400 font-mono">True Random Roll</span>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Rolls independent random numbers from hardware entropy. There is zero mathematical relation connecting step $t$ to previous words.
+            </p>
+            <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs text-slate-300 space-y-2">
+              <div class="flex justify-between text-slate-400"><span>Sampled Roll Sequence:</span> <span id="diceRollsHistory" class="text-white font-bold">[3, 5, 2, 6, 1, 4]</span></div>
+              <div class="flex justify-between text-slate-400"><span>Auditor Verifiability:</span> <span class="text-rose-400 font-bold">Impossible (Zero Signal)</span></div>
+            </div>
+            <button onclick="simulateDiceRoll()" class="w-full py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition border border-slate-700">
+              Roll Random Dice 🎲
+            </button>
+          </div>
+
+          <!-- Right: Keyed Pi Sequence (Claude Watermark) -->
+          <div class="p-5 rounded-2xl bg-amber-950/30 border border-amber-500/30 space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center font-bold text-sm">π</div>
+                <h4 class="font-bold text-amber-200 text-sm">Claude Watermarked AI</h4>
+              </div>
+              <span class="text-xs text-amber-400 font-mono">Keyed Pseudorandom PRNG</span>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Generates rolls from a pseudorandom stream derived from $\text{PRNG}(\text{key} \oplus \text{context})$. To the reader, it looks identical to random prose, but an auditor with the key verifies it with $p < 10^{-6}$!
+            </p>
+            <div class="p-4 rounded-xl bg-slate-950 border border-amber-500/20 font-mono text-xs text-slate-300 space-y-2">
+              <div class="flex justify-between text-slate-400"><span>Digit of $\pi$ / Seed Stream:</span> <span id="piRollsHistory" class="text-amber-300 font-bold">[1, 4, 1, 5, 9, 2]</span></div>
+              <div class="flex justify-between text-slate-400"><span>Auditor Verifiability:</span> <span class="text-emerald-400 font-bold">100% Cryptographic Match</span></div>
+            </div>
+            <button onclick="simulatePiRoll()" class="w-full py-2.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-slate-950 text-xs font-bold transition shadow-lg shadow-amber-600/20">
+              Sample Next $\pi$ Digit / Token Step π
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECTION 3: STATISTICAL DETECTION & TAMPERING SANDBOX (TAB 3) -->
+    <div id="section-detector" class="hidden space-y-6">
+      <div class="glass-panel rounded-2xl p-6 border border-slate-800 space-y-6">
+
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
+              <span>Statistical Hypothesis Testing</span>
+            </div>
+            <h3 class="text-2xl font-bold text-white mt-1">Watermark Detection & Robustness Sandbox</h3>
+            <p class="text-xs text-slate-400">Edit or paraphrase the text to see how Claude's watermark confidence score ($z$-score) behaves in real time.</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="loadSampleText('claude')" class="px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-semibold transition">
+              Load Claude Sample
+            </button>
+            <button onclick="loadSampleText('human')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition border border-slate-700">
+              Load Human Sample
+            </button>
+            <button onclick="tamperRandomSynonyms()" class="px-3 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-xs font-semibold transition">
+              Paraphrase 25% Words
+            </button>
+          </div>
+        </div>
+
+        <!-- Main Detection Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+          <!-- Text Input Editor -->
+          <div class="lg:col-span-7 flex flex-col space-y-3">
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300">Document Text to Analyze</label>
+            <textarea id="detectorInputText" oninput="runDetectionAnalysis()" rows="8" class="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-4 text-sm text-slate-200 font-serif-claude focus:ring-amber-500 focus:border-amber-500 leading-relaxed custom-scrollbar" placeholder="Type or paste text here to test for Claude watermark..."></textarea>
+
+            <!-- Token-by-token classified pills container -->
+            <div>
+              <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                <span>Evaluated Token $g$-Scores ($g=1$ Green, $g=0$ Red):</span>
+                <span id="detectorEvaluatedTokensCount" class="font-mono text-amber-400">Tokens evaluated: 32</span>
+              </div>
+              <div id="detectorTokensVisualizer" class="p-3 bg-slate-950 rounded-xl border border-slate-800/80 flex flex-wrap gap-1.5 max-h-[140px] overflow-y-auto custom-scrollbar">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Detection Gauge & Metrics -->
+          <div class="lg:col-span-5 flex flex-col space-y-4">
+
+            <!-- Verdict Card -->
+            <div id="verdictCard" class="p-5 rounded-2xl bg-emerald-950/40 border border-emerald-500/40 space-y-3 transition-all duration-300">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Detection Verdict</span>
+                <span id="verdictConfidenceBadge" class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-500/30">Claude Watermark Detected</span>
+              </div>
+
+              <!-- Meter Bar -->
+              <div class="space-y-1.5">
+                <div class="flex justify-between text-xs font-mono">
+                  <span class="text-slate-400">Confidence:</span>
+                  <span id="confidencePercentageLabel" class="text-emerald-300 font-bold text-base">99.8%</span>
+                </div>
+                <div class="w-full bg-slate-900 rounded-full h-3 overflow-hidden p-0.5 border border-slate-800">
+                  <div id="detectorConfidenceBar" class="bg-gradient-to-r from-amber-500 via-emerald-400 to-emerald-300 h-full rounded-full transition-all duration-500" style="width: 99.8%"></div>
+                </div>
+              </div>
+
+              <!-- Statistical Metrics Grid -->
+              <div class="grid grid-cols-2 gap-2 pt-2 text-xs font-mono">
+                <div class="p-2 rounded bg-slate-950/60 border border-slate-800/60">
+                  <div class="text-slate-500 text-[10px]">Green Ratio ($|G|/T$)</div>
+                  <div id="metricGreenRatio" class="text-emerald-400 font-bold text-sm">81.2%</div>
+                  <div class="text-[10px] text-slate-500">Expected (Null): 50.0%</div>
+                </div>
+                <div class="p-2 rounded bg-slate-950/60 border border-slate-800/60">
+                  <div class="text-slate-500 text-[10px]">$z$-Score Statistic</div>
+                  <div id="metricZScore" class="text-amber-400 font-bold text-sm">+4.82</div>
+                  <div class="text-[10px] text-slate-500">Threshold: > 3.0</div>
+                </div>
+                <div class="p-2 rounded bg-slate-950/60 border border-slate-800/60">
+                  <div class="text-slate-500 text-[10px]">$p$-value (False Pos)</div>
+                  <div id="metricPValue" class="text-cyan-400 font-bold text-sm">< 10⁻⁴</div>
+                  <div class="text-[10px] text-slate-500">Unwatermarked < 0.01</div>
+                </div>
+                <div class="p-2 rounded bg-slate-950/60 border border-slate-800/60">
+                  <div class="text-slate-500 text-[10px]">Attribution</div>
+                  <div class="text-amber-300 font-bold text-sm">Anthropic Key</div>
+                  <div class="text-[10px] text-slate-500">Hash ID: 0x7F4A</div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Factual / Low-Entropy Notice -->
+            <div class="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-slate-400 flex items-start gap-2.5">
+              <svg class="w-5 h-5 text-amber-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p class="leading-relaxed">
+                <strong>When does watermarking abstain?</strong> Factual phrases (e.g. <em>"Isaac Newton's Principia Mathematica"</em>) and rigid syntax (code) have near-zero entropy. Anthropic does not nudge these choices, ensuring factual fidelity.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SECTION 4: DEEP DIVE THEORY & EU AI ACT (TAB 4) -->
+    <div id="section-math" class="hidden space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Deep Dive: Cryptographic Mechanism -->
+        <div class="glass-panel rounded-2xl p-6 border border-slate-800 space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+            <h3 class="text-lg font-bold text-white">The Cryptographic Sampling Theorem</h3>
+          </div>
+          <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
+            <p>
+              Traditional watermarking approaches either altered the text (synonym injection, zero-width spaces) or biased logits with a fixed additive delta ($\delta$). However, fixed logit biases distort text quality.
+            </p>
+            <p>
+              Anthropic uses the <strong>non-distortionary tournament / Gumbel PRNG framework</strong>:
+            </p>
+            <div class="p-3.5 rounded-xl bg-slate-950 font-mono text-[11px] text-amber-300 border border-slate-800 space-y-1.5 leading-relaxed">
+              <div>1. Context Window: $C_t = (x_{t-H}, \dots, x_{t-1})$</div>
+              <div>2. Pseudorandom Seed: $r_t = \text{HMAC-SHA256}(C_t, \text{Key } k)$</div>
+              <div>3. Watermark Score: $g_i \sim f_g(r_t, \text{token}_i) \in \{0, 1\}$</div>
+              <div>4. Sample: $x_t \sim p_{\text{LM}}(\cdot \mid x_{<t})$ weighted by $g_i$</div>
+            </div>
+            <p>
+              Because $f_g$ is derived from pseudorandom numbers, the marginal probability of token generation remains strictly equal to the true model distribution $p_{\text{LM}}$, guaranteeing <strong>zero distortion of output quality</strong>.
+            </p>
+          </div>
+        </div>
+
+        <!-- EU AI Act & Transparency Code of Practice -->
+        <div class="glass-panel rounded-2xl p-6 border border-slate-800 space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+            <h3 class="text-lg font-bold text-white">EU AI Act Compliance (Aug 2026)</h3>
+          </div>
+          <div class="space-y-3 text-xs text-slate-300 leading-relaxed">
+            <p>
+              Under the <strong>EU AI Act Transparency Code of Practice</strong> (signed in July 2026 by Anthropic, Google DeepMind, OpenAI, and ~190 signatories), AI providers serving the EU market must mark AI-generated content.
+            </p>
+            <div class="space-y-2.5">
+              <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start gap-2.5">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <div><strong>Global Rollout:</strong> Applied across Claude models globally to ensure unified model behavior without regional fragmentation.</div>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start gap-2.5">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <div><strong>C2PA Standard for Media:</strong> Images and files use standard cryptographic C2PA metadata credentials.</div>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex items-start gap-2.5">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <div><strong>No User Fingerprinting:</strong> Watermarks only identify that Claude was involved; they carry no user ID, conversation log, or prompt payload.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="mt-8 border-t border-slate-800/80 glass-panel py-4 px-6 text-center text-xs text-slate-500">
+    <p>Anthropic Claude Text Watermarking Interactive Explainer • Built with Three.js, Tailwind CSS & KaTeX</p>
+  </footer>
+
+  <!-- JAVASCRIPT LOGIC & THREE.JS VISUALIZER -->
+  <script>
+    // --- STATE MANAGEMENT ---
+    let state = {
+      samplingMode: 'watermarked', // 'watermarked' | 'unwatermarked'
+      secretKey: 42,
+      contextWindow: 3,
+      temperature: 0.7,
+      isAutoRotating: true,
+
+      // Active vocab distribution for current step
+      currentPrompt: "The weather today was cold and",
+      tokens: ["The", "weather", "today", "was", "cold", "and"],
+
+      // Candidate vocabulary pool for demonstration
+      vocabPool: [
+        { word: "overcast", baseProb: 0.32, isGreen: true },
+        { word: "grey", baseProb: 0.28, isGreen: false },
+        { word: "chilly", baseProb: 0.18, isGreen: true },
+        { word: "gloomy", baseProb: 0.11, isGreen: false },
+        { word: "brisk", baseProb: 0.06, isGreen: true },
+        { word: "damp", baseProb: 0.03, isGreen: false },
+        { word: "sunny", baseProb: 0.01, isGreen: false },
+        { word: "sugary", baseProb: 0.001, isGreen: false }
+      ],
+
+      // Predefined vocabulary continuations for simulation
+      continuationPacks: {
+        weather: [
+          { word: "overcast", g: 1 }, { word: "with", g: 1 }, { word: "intermittent", g: 1 },
+          { word: "gusts", g: 1 }, { word: "of", g: 0 }, { word: "wind", g: 1 },
+          { word: "sweeping", g: 1 }, { word: "through", g: 1 }, { word: "the", g: 1 },
+          { word: "valley", g: 1 }, { word: "while", g: 1 }, { word: "residents", g: 0 },
+          { word: "sought", g: 1 }, { word: "warm", g: 1 }, { word: "shelter", g: 1 }
+        ],
+        math: [
+          { word: "four", g: 0 }, { word: "which", g: 0 }, { word: "is", g: 0 },
+          { word: "an", g: 0 }, { word: "elementary", g: 1 }, { word: "axiom", g: 1 },
+          { word: "in", g: 0 }, { word: "arithmetic", g: 1 }, { word: "across", g: 1 },
+          { word: "all", g: 0 }, { word: "standard", g: 1 }, { word: "number", g: 1 }
+        ],
+        code: [
+          { word: "if", g: 1 }, { word: "not", g: 1 }, { word: "scores:", g: 1 },
+          { word: "return", g: 1 }, { word: "0.0", g: 1 }, { word: "\n    total", g: 1 },
+          { word: "=", g: 0 }, { word: "sum(scores)", g: 1 }, { word: "\n    return", g: 1 },
+          { word: "total", g: 1 }, { word: "/", g: 0 }, { word: "len(scores)", g: 1 }
+        ],
+        coffee: [
+          { word: "drifted", g: 1 }, { word: "across", g: 1 }, { word: "the", g: 1 },
+          { word: "quiet", g: 1 }, { word: "cobblestone", g: 1 }, { word: "patio", g: 1 },
+          { word: "inviting", g: 1 }, { word: "early", g: 1 }, { word: "travelers", g: 1 },
+          { word: "to", g: 0 }, { word: "pause", g: 1 }, { word: "and", g: 0 }
+        ]
+      }
+    };
+
+    // --- THREE.JS 3D SCENE SETUP ---
+    let scene, camera, renderer, controls;
+    let barGroup, nodeGroup;
+    let tokenMeshes = [];
+
+    function init3D() {
+      const container = document.getElementById('three-container');
+      if (!container) return;
+
+      const width = container.clientWidth || 600;
+      const height = container.clientHeight || 560;
+
+      scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x0b0f19, 0.035);
+
+      camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+      camera.position.set(0, 14, 24);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.maxPolarAngle = Math.PI / 2 + 0.1;
+      controls.minDistance = 8;
+      controls.maxDistance = 50;
+
+      // Lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      scene.add(ambientLight);
+
+      const dirLight = new THREE.DirectionalLight(0xffeedd, 1.2);
+      dirLight.position.set(12, 20, 15);
+      scene.add(dirLight);
+
+      const amberPoint = new THREE.PointLight(0xf59e0b, 2, 30);
+      amberPoint.position.set(0, 5, 0);
+      scene.add(amberPoint);
+
+      // Grid Floor
+      const grid = new THREE.GridHelper(30, 30, 0xd97706, 0x1e293b);
+      grid.position.y = -0.01;
+      scene.add(grid);
+
+      // Groups
+      barGroup = new THREE.Group();
+      scene.add(barGroup);
+
+      nodeGroup = new THREE.Group();
+      scene.add(nodeGroup);
+
+      build3DTokenBars();
+
+      window.addEventListener('resize', onWindowResize);
+      animate();
+    }
+
+    // Build or update 3D Token probability bars
+    function build3DTokenBars() {
+      if (!barGroup) return;
+
+      while(barGroup.children.length > 0){
+        barGroup.remove(barGroup.children[0]);
+      }
+      tokenMeshes = [];
+
+      const count = state.vocabPool.length;
+      const radius = 7.5;
+
+      state.vocabPool.forEach((item, i) => {
+        const angle = (i / count) * Math.PI * 2;
+        const x = Math.cos(angle) * radius;
+        const z = Math.sin(angle) * radius;
+
+        // Apply temperature effect on height
+        const scaledProb = Math.pow(item.baseProb, 1 / state.temperature);
+        const barHeight = Math.max(0.4, scaledProb * 18);
+
+        // Color based on Green/Red list in watermarked mode
+        let colorHex;
+        if (state.samplingMode === 'watermarked') {
+          colorHex = item.isGreen ? 0x10b981 : 0xf43f5e; // Green vs Red
+        } else {
+          colorHex = 0x38bdf8; // Uniform neutral blue
+        }
+
+        const geometry = new THREE.CylinderGeometry(0.55, 0.75, barHeight, 16);
+        const material = new THREE.MeshStandardMaterial({
+          color: colorHex,
+          roughness: 0.2,
+          metalness: 0.6,
+          emissive: colorHex,
+          emissiveIntensity: item.isGreen && state.samplingMode === 'watermarked' ? 0.35 : 0.1
+        });
+
+        const cylinder = new THREE.Mesh(geometry, material);
+        cylinder.position.set(x, barHeight / 2, z);
+        cylinder.castShadow = true;
+        barGroup.add(cylinder);
+
+        // Add 3D Ring Halo around base
+        const ringGeo = new THREE.RingGeometry(0.9, 1.2, 16);
+        const ringMat = new THREE.MeshBasicMaterial({
+          color: colorHex,
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.5
+        });
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.rotation.x = Math.PI / 2;
+        ring.position.set(x, 0.05, z);
+        barGroup.add(ring);
+
+        tokenMeshes.push({ mesh: cylinder, item, x, z, baseHeight: barHeight });
+      });
+
+      // Add Central Holographic PRNG Generator Pillar
+      const centerGeo = new THREE.OctahedronGeometry(1.6, 2);
+      const centerMat = new THREE.MeshStandardMaterial({
+        color: 0xf59e0b,
+        wireframe: true,
+        emissive: 0xf59e0b,
+        emissiveIntensity: 0.8
+      });
+      const centerSphere = new THREE.Mesh(centerGeo, centerMat);
+      centerSphere.position.y = 4.5;
+      centerSphere.name = "prngCore";
+      barGroup.add(centerSphere);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (controls) controls.update();
+
+      // Rotate PRNG center sphere
+      const prng = barGroup ? barGroup.getObjectByName("prngCore") : null;
+      if (prng) {
+        prng.rotation.y += 0.015;
+        prng.rotation.x += 0.008;
+      }
+
+      if (state.isAutoRotating && barGroup) {
+        barGroup.rotation.y += 0.003;
+      }
+
+      if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+      }
+    }
+
+    function onWindowResize() {
+      const container = document.getElementById('three-container');
+      if (!container || !renderer || !camera) return;
+      const width = container.clientWidth;
+      const height = container.clientHeight || 560;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    }
+
+    function reset3DCamera() {
+      if (!camera || !controls) return;
+      camera.position.set(0, 14, 24);
+      controls.target.set(0, 2, 0);
+      controls.update();
+    }
+
+    function toggle3DRotation() {
+      state.isAutoRotating = !state.isAutoRotating;
+      const btn = document.getElementById('btnAutoRotate');
+      btn.innerText = `Rotate: ${state.isAutoRotating ? 'ON' : 'OFF'}`;
+      btn.className = `px-2.5 py-1 rounded-lg bg-slate-900/90 hover:bg-slate-800 border border-slate-700 text-[11px] ${state.isAutoRotating ? 'text-amber-400' : 'text-slate-400'}`;
+    }
+
+    // --- CRYPTOGRAPHIC HASH FUNCTIONS ---
+    function simpleHash(contextTokens, key) {
+      const str = contextTokens.join("::") + "::" + key;
+      let hash = 0x811c9dc5;
+      for (let i = 0; i < str.length; i++) {
+        hash ^= str.charCodeAt(i);
+        hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+      }
+      return Math.abs(hash >>> 0);
+    }
+
+    function updateHashTelemetry() {
+      const H = state.contextWindow;
+      const ctx = state.tokens.slice(-H);
+      const seed = simpleHash(ctx, state.secretKey);
+      const hexSeed = "0x" + seed.toString(16).toUpperCase().padStart(8, '0');
+
+      document.getElementById('canvasContextTokens').innerText = JSON.stringify(ctx);
+      document.getElementById('canvasHashSeed').innerText = hexSeed;
+      document.getElementById('headerKeyLabel').innerText = "0x" + (state.secretKey * 0x1F2A).toString(16).toUpperCase();
+
+      // Recalculate Green/Red classification for demo vocabulary
+      state.vocabPool.forEach((item, idx) => {
+        const itemSeed = simpleHash([...ctx, item.word], state.secretKey);
+        item.isGreen = (itemSeed % 2 === 0);
+      });
+
+      // Update 3D visualization colors
+      build3DTokenBars();
+    }
+
+    // --- TOKEN STREAM RENDERING ---
+    function renderTokenStream() {
+      const container = document.getElementById('tokenStreamContainer');
+      container.innerHTML = '';
+
+      state.tokens.forEach((t, i) => {
+        const span = document.createElement('span');
+        span.className = `token-pill px-2 py-0.5 rounded-md text-sm border font-medium cursor-pointer transition ${
+          state.samplingMode === 'watermarked'
+            ? 'bg-amber-500/10 text-amber-200 border-amber-500/30 hover:bg-amber-500/20'
+            : 'bg-slate-800 text-slate-200 border-slate-700 hover:bg-slate-700'
+        }`;
+        span.innerText = t;
+        span.title = `Token #${i + 1}: "${t}"`;
+        container.appendChild(span);
+      });
+
+      document.getElementById('tokenCountLabel').innerText = `Tokens: ${state.tokens.length}`;
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function stepGenerateToken() {
+      const currentPreset = document.getElementById('promptSelect').value;
+      const pack = state.continuationPacks[currentPreset] || state.continuationPacks.weather;
+
+      const nextIdx = (state.tokens.length - 6) % pack.length;
+      const cand = pack[nextIdx >= 0 ? nextIdx : 0];
+
+      state.tokens.push(cand.word);
+      renderTokenStream();
+      updateHashTelemetry();
+
+      const H = state.contextWindow;
+      const ctx = state.tokens.slice(-H);
+      const isGreen = cand.g === 1;
+
+      document.getElementById('formulaEvalText').innerText = `seed = hash(${JSON.stringify(ctx.slice(0, 2))}, key=${state.secretKey}) % 2 == 0`;
+
+      const badge = document.getElementById('gScoreBadge');
+      if (state.samplingMode === 'watermarked') {
+        badge.innerText = isGreen ? "g = 1 (Green List)" : "g = 0 (Red List)";
+        badge.className = isGreen
+          ? "px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold"
+          : "px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[10px] font-bold";
+      } else {
+        badge.innerText = "Uniform Dice Sample";
+        badge.className = "px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30 text-[10px] font-bold";
+      }
+
+      // Subtle confetti on watermarked green token match
+      if (state.samplingMode === 'watermarked' && isGreen && Math.random() > 0.6) {
+        confetti({
+          particleCount: 8,
+          spread: 30,
+          origin: { y: 0.85, x: 0.75 },
+          colors: ['#10b981', '#f59e0b']
+        });
+      }
+
+      // Sync detector input
+      document.getElementById('detectorInputText').value = state.tokens.join(" ");
+      runDetectionAnalysis();
+    }
+
+    function autoGenerateStream(numTokens) {
+      let count = 0;
+      const interval = setInterval(() => {
+        stepGenerateToken();
+        count++;
+        if (count >= numTokens) clearInterval(interval);
+      }, 120);
+    }
+
+    function clearGeneratedText() {
+      loadPromptPreset();
+    }
+
+    function loadPromptPreset() {
+      const preset = document.getElementById('promptSelect').value;
+      let initialWords = [];
+      let entropyLabel = "High Entropy (Low-Stakes)";
+
+      if (preset === 'weather') {
+        initialWords = ["The", "weather", "today", "was", "cold", "and"];
+        entropyLabel = "High Entropy (Low-Stakes Synonyms)";
+      } else if (preset === 'math') {
+        initialWords = ["In", "mathematics,", "two", "plus", "two", "equals"];
+        entropyLabel = "Zero Entropy (Factual / Invariant)";
+      } else if (preset === 'code') {
+        initialWords = ["def", "calculate_average(scores):", "\n   ", "if", "not", "scores:"];
+        entropyLabel = "Low Entropy (Syntactic Code)";
+      } else if (preset === 'coffee') {
+        initialWords = ["The", "quaint", "aroma", "of", "fresh", "coffee"];
+        entropyLabel = "High Entropy (Creative Tone)";
+      }
+
+      state.tokens = [...initialWords];
+      document.getElementById('canvasEntropyType').innerText = entropyLabel;
+      renderTokenStream();
+      updateHashTelemetry();
+      document.getElementById('detectorInputText').value = state.tokens.join(" ");
+      runDetectionAnalysis();
+    }
+
+    function updateSamplingMode() {
+      const radios = document.getElementsByName('samplingMode');
+      for (const r of radios) {
+        if (r.checked) state.samplingMode = r.value;
+      }
+
+      const wmLabel = document.getElementById('label-mode-wm');
+      const unwmLabel = document.getElementById('label-mode-unwm');
+
+      if (state.samplingMode === 'watermarked') {
+        wmLabel.className = "cursor-pointer p-3.5 rounded-xl border border-amber-500/50 bg-amber-500/10 transition flex flex-col space-y-1.5";
+        unwmLabel.className = "cursor-pointer p-3.5 rounded-xl border border-slate-800 bg-slate-900/50 transition flex flex-col space-y-1.5";
+        document.getElementById('explanationStepText').innerHTML = "💡 <strong>Watermarked Mode Active:</strong> Sampling uses $r_t = \\text{hash}(\\text{context}, k)$ to partition vocabulary into Green ($g=1$) and Red ($g=0$) buckets.";
+      } else {
+        wmLabel.className = "cursor-pointer p-3.5 rounded-xl border border-slate-800 bg-slate-900/50 transition flex flex-col space-y-1.5";
+        unwmLabel.className = "cursor-pointer p-3.5 rounded-xl border border-sky-500/50 bg-sky-500/10 transition flex flex-col space-y-1.5";
+        document.getElementById('explanationStepText').innerHTML = "💡 <strong>Unwatermarked Mode Active:</strong> Sampling uses unseeded uniform random dice rolls. No green list bias applied.";
+      }
+
+      renderMathInElement(document.getElementById('explanationStepText'), {
+        delimiters: [{left: '$', right: '$', display: false}]
+      });
+
+      build3DTokenBars();
+      renderTokenStream();
+    }
+
+    function onKeyChange() {
+      state.secretKey = parseInt(document.getElementById('secretKeyInput').value) || 42;
+      updateHashTelemetry();
+      runDetectionAnalysis();
+    }
+
+    function onContextWindowChange() {
+      state.contextWindow = parseInt(document.getElementById('contextWindowSelect').value) || 3;
+      updateHashTelemetry();
+      runDetectionAnalysis();
+    }
+
+    function onTempChange() {
+      state.temperature = parseFloat(document.getElementById('tempSlider').value);
+      document.getElementById('tempValueLabel').innerText = state.temperature.toFixed(1);
+      build3DTokenBars();
+    }
+
+    // --- TAB SWITCHING ---
+    function switchTab(tabId) {
+      const tabs = ['simulation', 'monopoly', 'detector', 'math'];
+      tabs.forEach(t => {
+        const sec = document.getElementById(`section-${t}`);
+        const btnDesktop = document.getElementById(`tab-btn-${t}`);
+        const btnMob = document.getElementById(`tab-mob-${t}`);
+
+        if (t === tabId) {
+          sec.classList.remove('hidden');
+          if (btnDesktop) btnDesktop.className = "px-3.5 py-1.5 rounded-lg text-xs font-semibold transition bg-amber-500/20 text-amber-300 border border-amber-500/30";
+          if (btnMob) btnMob.className = "whitespace-nowrap px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold";
+        } else {
+          sec.classList.add('hidden');
+          if (btnDesktop) btnDesktop.className = "px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 transition";
+          if (btnMob) btnMob.className = "whitespace-nowrap px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200";
+        }
+      });
+
+      if (tabId === 'simulation') onWindowResize();
+      renderMathOnLoad();
+    }
+
+    // --- MONOPOLY PI VS DICE ANALOGY SIMULATION ---
+    let diceHistory = [3, 5, 2, 6, 1, 4];
+    let piHistory = [1, 4, 1, 5, 9, 2];
+    const piDigits = [1,4,1,5,9,2,6,5,3,5,8,9,7,9,3,2,3,8,4,6,2,6,4,3,3,8,3,2,7,9,5,0,2,8,8,4,1,9,7,1];
+    let piPtr = 6;
+
+    function simulateDiceRoll() {
+      const roll = Math.floor(Math.random() * 6) + 1;
+      diceHistory.push(roll);
+      if (diceHistory.length > 8) diceHistory.shift();
+      document.getElementById('diceRollsHistory').innerText = `[${diceHistory.join(', ')}]`;
+    }
+
+    function simulatePiRoll() {
+      const digit = piDigits[piPtr % piDigits.length];
+      piPtr++;
+      piHistory.push(digit);
+      if (piHistory.length > 8) piHistory.shift();
+      document.getElementById('piRollsHistory').innerText = `[${piHistory.join(', ')}]`;
+    }
+
+    // --- STATISTICAL WATERMARK DETECTOR LOGIC ---
+    function runDetectionAnalysis() {
+      const text = document.getElementById('detectorInputText').value.trim();
+      if (!text) return;
+
+      const words = text.split(/\s+/).filter(w => w.length > 0);
+      const H = state.contextWindow;
+      const visualizer = document.getElementById('detectorTokensVisualizer');
+      visualizer.innerHTML = '';
+
+      let greenCount = 0;
+      let totalEvaluated = 0;
+
+      for (let i = 0; i < words.length; i++) {
+        const word = words[i];
+        let isGreen = false;
+
+        if (i >= H) {
+          const context = words.slice(i - H, i);
+          const seed = simpleHash([...context, word], state.secretKey);
+          isGreen = (seed % 2 === 0);
+          totalEvaluated++;
+          if (isGreen) greenCount++;
+        }
+
+        const pill = document.createElement('span');
+        pill.className = `px-2 py-0.5 rounded text-xs font-mono font-medium ${
+          i < H
+            ? 'bg-slate-800 text-slate-500'
+            : isGreen
+              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+              : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+        }`;
+        pill.innerText = word;
+        pill.title = i < H ? "Context prefix (Unscored)" : isGreen ? "g=1 (Green List)" : "g=0 (Red List)";
+        visualizer.appendChild(pill);
+      }
+
+      document.getElementById('detectorEvaluatedTokensCount').innerText = `Tokens evaluated: ${totalEvaluated}`;
+
+      if (totalEvaluated < 4) {
+        document.getElementById('confidencePercentageLabel').innerText = "Sample too short (< 4 tokens)";
+        document.getElementById('metricGreenRatio').innerText = "--";
+        document.getElementById('metricZScore').innerText = "--";
+        document.getElementById('metricPValue').innerText = "--";
+        return;
+      }
+
+      const greenRatio = greenCount / totalEvaluated;
+      const expectedMean = 0.5;
+      const standardError = Math.sqrt(0.25 / totalEvaluated);
+      const zScore = (greenRatio - expectedMean) / standardError;
+
+      // Confidence computation via normal CDF approx
+      const confidence = Math.min(99.99, Math.max(0.01, (0.5 * (1 + Math.erf(zScore / Math.SQRT2))) * 100));
+
+      document.getElementById('metricGreenRatio').innerText = `${(greenRatio * 100).toFixed(1)}%`;
+      document.getElementById('metricZScore').innerText = `${zScore >= 0 ? '+' : ''}${zScore.toFixed(2)}`;
+
+      const pVal = 1 - 0.5 * (1 + Math.erf(zScore / Math.SQRT2));
+      document.getElementById('metricPValue').innerText = pVal < 0.0001 ? "< 10⁻⁴" : pVal.toFixed(4);
+
+      document.getElementById('confidencePercentageLabel').innerText = `${confidence.toFixed(1)}%`;
+      document.getElementById('detectorConfidenceBar').style.width = `${confidence}%`;
+
+      const card = document.getElementById('verdictCard');
+      const badge = document.getElementById('verdictConfidenceBadge');
+
+      if (zScore > 2.8) {
+        card.className = "p-5 rounded-2xl bg-emerald-950/40 border border-emerald-500/40 space-y-3";
+        badge.innerText = "Claude Watermark Detected";
+        badge.className = "px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-500/30";
+      } else if (zScore > 1.2) {
+        card.className = "p-5 rounded-2xl bg-amber-950/40 border border-amber-500/40 space-y-3";
+        badge.innerText = "Inconclusive / Lightly Edited";
+        badge.className = "px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-500/30";
+      } else {
+        card.className = "p-5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-3";
+        badge.innerText = "Unwatermarked / Human Text";
+        badge.className = "px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 text-xs font-bold border border-slate-700";
+      }
+    }
+
+    // Mathematical ERF helper for standard normal cdf
+    Math.erf = Math.erf || function(x) {
+      const a1 =  0.254829592, a2 = -0.284496736, a3 =  1.421413741;
+      const a4 = -1.453152027, a5 =  1.061405429, p  =  0.3275911;
+      const sign = x < 0 ? -1 : 1;
+      x = Math.abs(x);
+      const t = 1.0 / (1.0 + p * x);
+      const y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+      return sign * y;
+    };
+
+    function loadSampleText(type) {
+      if (type === 'claude') {
+        document.getElementById('detectorInputText').value =
+          "The quaint aroma of fresh roast coffee drifted across the quiet cobblestone patio inviting early travelers to pause and appreciate the morning sun while sipping artisanal espresso.";
+      } else {
+        document.getElementById('detectorInputText').value =
+          "Yesterday morning I was walking down the busy avenue and noticed a new bakery with delicious chocolate croissants that were warm, buttery, and freshly baked in the oven.";
+      }
+      runDetectionAnalysis();
+    }
+
+    function tamperRandomSynonyms() {
+      let text = document.getElementById('detectorInputText').value;
+      const replacements = {
+        "aroma": "scent",
+        "fresh": "hot",
+        "drifted": "spread",
+        "quiet": "peaceful",
+        "patio": "courtyard",
+        "travelers": "visitors",
+        "morning": "early",
+        "artisanal": "special"
+      };
+
+      for (const [k, v] of Object.entries(replacements)) {
+        if (text.includes(k) && Math.random() > 0.4) {
+          text = text.replace(new RegExp(`\\b${k}\\b`, 'g'), v);
+        }
+      }
+
+      document.getElementById('detectorInputText').value = text;
+      runDetectionAnalysis();
+    }
+
+    function resetAll() {
+      state.tokens = ["The", "weather", "today", "was", "cold", "and"];
+      state.secretKey = 42;
+      document.getElementById('secretKeyInput').value = 42;
+      document.getElementById('promptSelect').value = "weather";
+      loadPromptPreset();
+      reset3DCamera();
+    }
+
+    // --- KATEX MATH AUTO-RENDER ---
+    function renderMathOnLoad() {
+      if (typeof renderMathInElement === 'function') {
+        renderMathInElement(document.body, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+    }
+
+    // --- INITIALIZATION ON LOAD ---
+    window.addEventListener('DOMContentLoaded', () => {
+      init3D();
+      renderTokenStream();
+      updateHashTelemetry();
+      document.getElementById('detectorInputText').value = state.tokens.join(" ");
+      runDetectionAnalysis();
+      setTimeout(renderMathOnLoad, 150);
+    });
+  </script>
+</body>
+</html>
