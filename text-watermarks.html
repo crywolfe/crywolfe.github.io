@@ -263,7 +263,7 @@
             <!-- Live Hash & Telemetry HUD Overlay -->
             <div class="absolute top-4 left-4 pointer-events-none z-10 space-y-2 max-w-[85%] sm:max-w-none">
               <div class="bg-slate-950/85 backdrop-blur border border-slate-800/80 px-3 py-1.5 rounded-lg text-xs font-mono shadow-md">
-                <span class="text-slate-400">Context Window ($H=3$):</span>
+                <span class="text-slate-400">Context Window (<span id="canvasContextH">$H=3$</span>):</span>
                 <span id="canvasContextTokens" class="text-amber-300 font-bold ml-1">["weather", "was", "cold"]</span>
               </div>
               <div class="bg-slate-950/85 backdrop-blur border border-slate-800/80 px-3 py-1.5 rounded-lg text-xs font-mono shadow-md">
@@ -1006,7 +1006,7 @@
       return Math.abs(hash >>> 0);
     }
 
-    function updateHashTelemetry() {
+    function updateHashTelemetry(preserveBars = false) {
       const H = state.contextWindow;
       const ctx = state.tokens.slice(-H);
       const seed = simpleHash(ctx, state.secretKey);
@@ -1015,8 +1015,13 @@
       document.getElementById('canvasContextTokens').innerText = JSON.stringify(ctx);
       document.getElementById('canvasHashSeed').innerText = hexSeed;
       document.getElementById('headerKeyLabel').innerText = "0x" + (state.secretKey * 0x1F2A).toString(16).toUpperCase();
+      updateContextHLabel();
 
-      // Recalculate Green/Red classification for demo vocabulary
+      // Recalculate Green/Red classification for demo vocabulary.
+      // Skipped right after a token is pushed: the bars must keep showing the
+      // partition of the context that produced the last pick, so they stay
+      // consistent with the Step Hash badge until the next step begins.
+      if (preserveBars) return;
       state.vocabPool.forEach((item, idx) => {
         const itemSeed = simpleHash([...ctx, item.word], state.secretKey);
         item.isGreen = (itemSeed % 2 === 0);
@@ -1024,6 +1029,16 @@
 
       // Update 3D visualization colors
       build3DTokenBars();
+    }
+
+    // Canvas H label is dynamic: keep it in sync with the Context Window select
+    function updateContextHLabel() {
+      const el = document.getElementById('canvasContextH');
+      if (!el) return;
+      el.innerText = `$H=${state.contextWindow}$`;
+      if (typeof renderMathInElement === 'function') {
+        renderMathInElement(el, { delimiters: [{ left: '$', right: '$', display: false }] });
+      }
     }
 
     // --- TOKEN STREAM RENDERING ---
@@ -1101,7 +1116,7 @@
       state.tokens.push(picked.w);
       state.stepIndex++;
       renderTokenStream();
-      updateHashTelemetry();
+      updateHashTelemetry(true);
       pulsePRNGCore();
 
       document.getElementById('formulaEvalText').innerText =
