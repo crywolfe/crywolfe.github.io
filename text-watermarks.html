@@ -660,6 +660,7 @@
       temperature: 0.7,
       isAutoRotating: true,
       stepIndex: 0,
+      prefixLength: 6,
       
       tokens: ["The", "weather", "today", "was", "cold", "and"],
 
@@ -731,17 +732,17 @@
 
       // Generic loop once a preset script is exhausted
       tailPack: [
-        [ { w: "while", p: 0.40 }, { w: "as", p: 0.35 }, { w: "and", p: 0.25 } ],
-        [ { w: "residents", p: 0.50 }, { w: "locals", p: 0.30 }, { w: "visitors", p: 0.20 } ],
-        [ { w: "sought", p: 0.55 }, { w: "found", p: 0.45 } ],
-        [ { w: "warm", p: 0.50 }, { w: "quiet", p: 0.50 } ],
-        [ { w: "shelter", p: 0.60 }, { w: "refuge", p: 0.40 } ]
+        [ { w: "while", p: 0.35 }, { w: "as", p: 0.30 }, { w: "and", p: 0.20 }, { w: "then", p: 0.15 } ],
+        [ { w: "residents", p: 0.40 }, { w: "locals", p: 0.25 }, { w: "visitors", p: 0.20 }, { w: "folks", p: 0.15 } ],
+        [ { w: "sought", p: 0.35 }, { w: "found", p: 0.30 }, { w: "reached", p: 0.20 }, { w: "needed", p: 0.15 } ],
+        [ { w: "warm", p: 0.35 }, { w: "quiet", p: 0.25 }, { w: "cozy", p: 0.20 }, { w: "safe", p: 0.20 } ],
+        [ { w: "shelter", p: 0.35 }, { w: "refuge", p: 0.25 }, { w: "haven", p: 0.20 }, { w: "cover", p: 0.20 } ]
       ]
     };
 
     // --- THREE.JS 3D SCENE SETUP ---
     let scene, camera, renderer, controls;
-    let barGroup, nodeGroup;
+    let barGroup, nodeGroup, trailGroup;
     let tokenMeshes = [];
 
     function init3D() {
@@ -793,6 +794,10 @@
 
       nodeGroup = new THREE.Group();
       scene.add(nodeGroup);
+
+      // Token trail: one pillar per generated word on outer rings (watermark signature)
+      trailGroup = new THREE.Group();
+      scene.add(trailGroup);
 
       build3DTokenBars();
 
@@ -937,6 +942,54 @@
       barGroup.add(labelSprite);
     }
 
+    // Token trail: one pillar per generated word on outer rings, colored by the
+    // keyed-hash verdict — the visual "watermark signature" of the stream.
+    function rebuildTokenTrail() {
+      if (!trailGroup) return;
+      while (trailGroup.children.length > 0) {
+        const child = trailGroup.children[0];
+        trailGroup.remove(child);
+        if (child.geometry) child.geometry.dispose();
+        if (child.material) {
+          if (child.material.map) child.material.map.dispose();
+          child.material.dispose();
+        }
+      }
+
+      const H = state.contextWindow;
+      const perRing = 16;
+      const generated = state.tokens.length - state.prefixLength;
+
+      for (let k = 0; k < generated; k++) {
+        const i = state.prefixLength + k;
+        const word = state.tokens[i];
+        const ctx = state.tokens.slice(Math.max(0, i - H), i);
+        const green = simpleHash([...ctx, word], state.secretKey) % 2 === 0;
+        const colorHex = state.samplingMode === 'watermarked'
+          ? (green ? 0x10b981 : 0xf43f5e)
+          : 0x38bdf8;
+
+        const ring = Math.floor(k / perRing);
+        const angle = ((k % perRing) / perRing) * Math.PI * 2 + ring * 0.39;
+        const radius = 10.6 + ring * 1.7;
+        const isNewest = k === generated - 1;
+        const height = isNewest ? 1.8 : 1.1;
+
+        const geo = new THREE.CylinderGeometry(0.26, 0.34, height, 12);
+        const mat = new THREE.MeshStandardMaterial({
+          color: colorHex,
+          roughness: 0.3,
+          metalness: 0.5,
+          emissive: colorHex,
+          emissiveIntensity: isNewest ? 0.55 : 0.22
+        });
+        const pillar = new THREE.Mesh(geo, mat);
+        pillar.position.set(Math.cos(angle) * radius, height / 2, Math.sin(angle) * radius);
+        pillar.castShadow = true;
+        trailGroup.add(pillar);
+      }
+    }
+
     function animate() {
       requestAnimationFrame(animate);
 
@@ -958,6 +1011,7 @@
 
       if (state.isAutoRotating && barGroup) {
         barGroup.rotation.y += 0.003;
+        if (trailGroup) trailGroup.rotation.y += 0.003;
       }
 
       if (renderer && scene && camera) {
@@ -1016,6 +1070,7 @@
       document.getElementById('canvasHashSeed').innerText = hexSeed;
       document.getElementById('headerKeyLabel').innerText = "0x" + (state.secretKey * 0x1F2A).toString(16).toUpperCase();
       updateContextHLabel();
+      rebuildTokenTrail();
 
       // Recalculate Green/Red classification for demo vocabulary.
       // Skipped right after a token is pushed: the bars must keep showing the
@@ -1181,6 +1236,7 @@
 
       state.tokens = [...initialWords];
       state.stepIndex = 0;
+      state.prefixLength = initialWords.length;
       // Seed the 3D manifold with the first step's live candidate partition
       state.vocabPool = getCurrentStepCandidates().map(c => ({
         word: c.w,
@@ -1220,6 +1276,7 @@
       }
 
       build3DTokenBars();
+      rebuildTokenTrail();
       renderTokenStream();
     }
 
