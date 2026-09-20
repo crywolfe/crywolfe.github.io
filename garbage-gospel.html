@@ -1,0 +1,956 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Garbage In, Gospel Out</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600;9..144,800&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+  :root {
+    --ink: #0b0f17;
+    --ink-2: #131a27;
+    --ink-3: #1c2535;
+    --line: #2a3446;
+    --paper: #efe9db;
+    --paper-dim: #a9b0bf;
+    --paper-faint: #6f7889;
+    --amber: #f2b33d;
+    --amber-dim: rgba(242,179,61,.16);
+    --garbage: #e5533d;
+    --garbage-dim: rgba(229,83,61,.16);
+    --gospel: #4fc58a;
+    --gospel-dim: rgba(79,197,138,.16);
+    --blue: #6aa6ff;
+    --display: "Fraunces", Georgia, "Times New Roman", serif;
+    --body: "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  html, body { height: 100%; }
+  body {
+    margin: 0; background: var(--ink); color: var(--paper);
+    font-family: var(--body); font-size: 31.2px; line-height: 1.45;
+    overflow: hidden;
+  }
+  * { box-sizing: border-box; }
+  button { font: inherit; }
+  h1, h2, h3 { font-family: var(--display); font-weight: 600; margin: 0; text-wrap: balance; letter-spacing: -.01em; }
+  h1 { font-size: clamp(51.2px, 6.2vw, 105.2px); line-height: 1.02; }
+  h2 { font-size: clamp(41.2px, 3.6vw, 67.2px); line-height: 1.08; }
+  h3 { font-size: clamp(31.2px, 1.6vw, 37.2px); }
+  p { margin: 0; }
+  .eyebrow { font-family: var(--body); font-weight: 700; font-size: 26.2px; letter-spacing: .14em; text-transform: uppercase; color: var(--amber); }
+  .mono { font-family: var(--mono); }
+  .dim { color: var(--paper-dim); }
+  .faint { color: var(--paper-faint); }
+  .garbage { color: var(--garbage); }
+  .gospel { color: var(--gospel); }
+  .amber { color: var(--amber); }
+
+  /* stage */
+  #stage { position: fixed; inset: 0; }
+  .slide {
+    position: absolute; inset: 0; display: none;
+    padding: clamp(24px, 5vh, 56px) clamp(20px, 6vw, 96px) clamp(56px, 8vh, 80px);
+    flex-direction: column; gap: clamp(14px, 2.4vh, 28px);
+    overflow: auto;
+  }
+  .slide.active { display: flex; animation: slideIn .45s ease-out both; }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .slide-head { display: flex; flex-direction: column; gap: 10px; }
+  .slide-body { flex: 1; display: flex; flex-direction: column; gap: clamp(12px, 2vh, 22px); min-height: 0; }
+  .lede { font-size: clamp(31.2px, 1.55vw, 37.2px); color: var(--paper-dim); max-width: 62ch; }
+
+  /* staged reveal animation */
+  .active .fx { animation: rise .6s cubic-bezier(.2,.7,.2,1) both; }
+  .active .fx:nth-child(1) { animation-delay: .05s } .active .fx:nth-child(2) { animation-delay: .15s }
+  .active .fx:nth-child(3) { animation-delay: .25s } .active .fx:nth-child(4) { animation-delay: .35s }
+  .active .fx:nth-child(5) { animation-delay: .45s } .active .fx:nth-child(6) { animation-delay: .55s }
+  .active .fx:nth-child(7) { animation-delay: .65s }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+  /* chrome */
+  #chrome { position: fixed; left: 0; right: 0; bottom: 0; padding: 0 20px calc(12px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 26.2px; color: var(--paper-faint); pointer-events: none; }
+  #chrome > * { pointer-events: auto; }
+  #progress { position: fixed; left: 0; bottom: 0; height: 3px; background: var(--amber); width: 0; transition: width .4s ease; }
+  .nav { display: flex; gap: 6px; }
+  .nav button, .keybtn { background: var(--ink-2); border: 1px solid var(--line); color: var(--paper-dim); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+  .nav button:hover, .keybtn:hover { color: var(--paper); border-color: var(--paper-faint); }
+  .nav button:focus-visible, .keybtn:focus-visible, button:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+  #timer { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  #timer.on { color: var(--amber); }
+  #hint { display: flex; gap: 10px; flex-wrap: wrap; }
+  kbd { font-family: var(--mono); font-size: 24.2px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; padding: 1px 5px; color: var(--paper-dim); }
+
+  /* notes drawer */
+  #notes { position: fixed; top: 0; right: 0; bottom: 0; width: min(440px, 92vw); background: var(--ink-2); border-left: 1px solid var(--line); transform: translateX(100%); transition: transform .3s ease; padding: 24px 22px calc(70px + env(safe-area-inset-bottom, 0px)); overflow: auto; font-size: 28.2px; line-height: 1.5; z-index: 20; }
+  #notes.open { transform: none; }
+  #notes h4 { margin: 0 0 6px; font-family: var(--body); font-size: 25.2px; letter-spacing: .12em; text-transform: uppercase; color: var(--amber); }
+  #notes .time { font-family: var(--mono); color: var(--paper-dim); margin-bottom: 14px; }
+  #notes ul { padding-left: 18px; margin: 0 0 16px; }
+  #notes li { margin-bottom: 6px; }
+  #notes .demo-block { border: 1px dashed var(--amber); border-radius: 8px; padding: 10px 12px; margin-top: 8px; }
+  .notes-src { display: none; }
+
+  /* demo cue */
+  .demo-cue { display: inline-flex; align-items: center; gap: 10px; align-self: flex-start; background: var(--amber-dim); border: 1px solid var(--amber); color: var(--amber); border-radius: 999px; padding: 6px 14px 6px 10px; font-weight: 700; font-size: 27.2px; letter-spacing: .04em; text-transform: uppercase; }
+  .demo-cue svg { width: 18px; height: 18px; }
+  .demo-cue .pulse { width: 9px; height: 9px; border-radius: 50%; background: var(--amber); animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: scale(.8); opacity: .6 } 50% { transform: scale(1.2); opacity: 1 } }
+
+  /* generic grids */
+  .cols { display: grid; gap: clamp(12px, 1.6vw, 22px); }
+  .cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  @media (max-width: 820px) { .cols-2, .cols-3, .cols-4 { grid-template-columns: 1fr; } }
+  .panel { background: var(--ink-2); border: 1px solid var(--line); border-radius: 12px; padding: clamp(14px, 1.6vw, 22px); }
+  .panel h3 { margin-bottom: 8px; }
+  .panel p, .panel li { color: var(--paper-dim); font-size: clamp(28.2px, 1.2vw, 31.2px); }
+  .panel ul { margin: 0; padding-left: 18px; }
+  .panel li { margin-bottom: 4px; }
+  .tag { display: inline-block; font-size: 25.2px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; background: var(--ink-3); color: var(--paper-dim); }
+  .tag.red { background: var(--garbage-dim); color: var(--garbage); }
+  .tag.green { background: var(--gospel-dim); color: var(--gospel); }
+  .tag.amber { background: var(--amber-dim); color: var(--amber); }
+
+  /* --- slide 1: title --- */
+  .title-word { display: inline-block; position: relative; min-width: 7.2ch; }
+  .title-word span { display: inline-block; transition: color .5s; }
+  .flip { display: inline-block; animation: flipIn .5s ease both; }
+  @keyframes flipIn { from { transform: rotateX(90deg); opacity: 0 } to { transform: none; opacity: 1 } }
+  .title-rule { width: 96px; height: 4px; background: var(--amber); }
+  .bench { margin-top: auto; align-self: flex-end; font-family: var(--mono); font-size: 26.2px; color: var(--paper-faint); text-align: right; line-height: 1.4; }
+
+  /* --- slide 2: spot the fabrication --- */
+  .cite-card { position: relative; background: var(--paper); color: #1b1f28; border-radius: 6px; padding: 22px 24px 20px; font-family: var(--display); font-size: clamp(28.2px, 1.25vw, 32.2px); line-height: 1.5; box-shadow: 0 14px 40px rgba(0,0,0,.45); min-height: 200px; }
+  .cite-card .hdr { font-family: var(--body); font-size: 25.2px; letter-spacing: .12em; text-transform: uppercase; color: #6b7080; margin-bottom: 10px; }
+  .cite-card .cite { font-weight: 600; }
+  .stamp { position: absolute; right: 18px; top: 14px; font-family: var(--body); font-weight: 800; font-size: 35.2px; letter-spacing: .12em; text-transform: uppercase; border: 3px solid; border-radius: 6px; padding: 4px 12px; transform: rotate(-9deg) scale(1.6); opacity: 0; pointer-events: none; }
+  .revealed .stamp { animation: stamp .45s cubic-bezier(.2,1.6,.4,1) both; }
+  @keyframes stamp { to { transform: rotate(-9deg) scale(1); opacity: 1 } }
+  .stamp.red { color: #b3301f; border-color: #b3301f; background: rgba(229,83,61,.08); }
+  .stamp.green { color: #1f7a4f; border-color: #1f7a4f; background: rgba(79,197,138,.10); }
+  .verdict { margin-top: 12px; font-family: var(--body); font-size: 27.2px; color: #3a4050; opacity: 0; transition: opacity .4s .3s; }
+  .revealed .verdict { opacity: 1; }
+  .btn { background: var(--amber); color: #1b1300; border: 0; border-radius: 8px; padding: 10px 18px; font-weight: 700; cursor: pointer; align-self: flex-start; }
+  .btn.ghost { background: transparent; color: var(--amber); border: 1px solid var(--amber); }
+  .btn:hover { filter: brightness(1.08); }
+
+  /* --- slide 3: sanctions docket --- */
+  .docket { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; }
+  @media (max-width: 900px) { .docket { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  .docket .case { background: var(--ink-2); border: 1px solid var(--line); border-top: 3px solid var(--garbage); border-radius: 10px; padding: 16px 16px 14px; display: flex; flex-direction: column; gap: 6px; }
+  .docket .name { font-family: var(--display); font-size: clamp(30.2px, 1.4vw, 34.2px); }
+  .docket .court { font-family: var(--mono); font-size: 25.2px; color: var(--paper-faint); }
+  .docket .big { font-family: var(--display); font-weight: 800; font-size: clamp(43.2px, 3vw, 59.2px); color: var(--amber); font-variant-numeric: tabular-nums; line-height: 1; margin-top: 4px; }
+  .docket .what { font-size: 27.2px; color: var(--paper-dim); }
+  .thread { border-left: 3px solid var(--amber); padding: 6px 16px; font-family: var(--display); font-size: clamp(31.2px, 1.8vw, 39.2px); }
+
+  /* --- slide 4: why --- */
+  .predict { background: var(--ink-2); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; font-family: var(--mono); font-size: clamp(28.2px, 1.5vw, 35.2px); line-height: 1.7; }
+  .predict .slot { display: inline-block; min-width: 9ch; border-bottom: 2px solid var(--amber); color: var(--amber); }
+  .cands { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .cand { font-family: var(--mono); font-size: 26.2px; background: var(--ink-3); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; color: var(--paper-dim); display: flex; gap: 8px; align-items: center; }
+  .cand .bar { height: 6px; background: var(--amber); border-radius: 3px; width: 0; transition: width .8s ease; }
+  .cand b { color: var(--paper); font-weight: 600; }
+  .fail { border-top: 3px solid var(--garbage); }
+  .fail .tag { margin-bottom: 8px; }
+
+  /* --- slide 5: prompt builder --- */
+  .builder { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 20px; align-items: stretch; }
+  @media (max-width: 900px) { .builder { grid-template-columns: 1fr; } }
+  .toggles { display: flex; flex-direction: column; gap: 8px; }
+  .toggle { display: flex; gap: 12px; align-items: flex-start; background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; cursor: pointer; text-align: left; color: var(--paper); width: 100%; transition: border-color .2s, background .2s; }
+  .toggle:hover { border-color: var(--paper-faint); }
+  .toggle[aria-pressed="true"] { border-color: var(--amber); background: var(--amber-dim); }
+  .toggle .box { width: 20px; height: 20px; border: 2px solid var(--paper-faint); border-radius: 5px; flex: 0 0 auto; margin-top: 2px; display: grid; place-items: center; }
+  .toggle[aria-pressed="true"] .box { border-color: var(--amber); background: var(--amber); color: #1b1300; }
+  .toggle .k { font-weight: 700; }
+  .toggle small { display: block; color: var(--paper-dim); font-size: 27.2px; }
+  .prompt-out { background: #0a0d13; border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; font-family: var(--mono); font-size: clamp(26.2px, 1.05vw, 29.2px); line-height: 1.6; white-space: pre-wrap; color: var(--paper); min-height: 240px; display: flex; flex-direction: column; }
+  .prompt-out .line { animation: rise .4s ease both; }
+  .prompt-out .line.base { color: var(--paper-dim); }
+  .prompt-out .k { color: var(--amber); }
+  .meter { display: flex; align-items: center; gap: 12px; margin-top: auto; padding-top: 14px; font-family: var(--body); font-size: 26.2px; letter-spacing: .1em; text-transform: uppercase; color: var(--paper-faint); }
+  .meter .track { flex: 1; height: 8px; background: var(--ink-3); border-radius: 4px; overflow: hidden; }
+  .meter .fill { height: 100%; width: 8%; background: var(--garbage); transition: width .5s ease, background .5s ease; border-radius: 4px; }
+  .copy { font-size: 25.2px; align-self: flex-end; margin-top: 8px; }
+
+  /* --- slide 6: two-way street --- */
+  .chat { display: flex; flex-direction: column; gap: 10px; max-width: 900px; }
+  .bubble { max-width: 78%; padding: 12px 16px; border-radius: 14px; font-size: clamp(27.2px, 1.2vw, 31.2px); line-height: 1.45; opacity: 0; transform: translateY(8px); }
+  .active .bubble { animation: rise .5s ease both; }
+  .bubble.me { align-self: flex-end; background: var(--amber-dim); border: 1px solid rgba(242,179,61,.4); border-bottom-right-radius: 4px; }
+  .bubble.ai { align-self: flex-start; background: var(--ink-2); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+  .bubble .who { display: block; font-size: 24.2px; letter-spacing: .12em; text-transform: uppercase; color: var(--paper-faint); margin-bottom: 4px; }
+  .bubble ol { margin: 6px 0 0; padding-left: 20px; }
+  .bubble li { margin-bottom: 2px; }
+
+  /* --- slide 7: checklist --- */
+  .check { display: flex; gap: 12px; align-items: flex-start; background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; cursor: pointer; color: var(--paper); text-align: left; width: 100%; }
+  .check .box { width: 22px; height: 22px; border: 2px solid var(--paper-faint); border-radius: 50%; flex: 0 0 auto; display: grid; place-items: center; margin-top: 1px; }
+  .check[aria-pressed="true"] { border-color: var(--gospel); }
+  .check[aria-pressed="true"] .box { background: var(--gospel); border-color: var(--gospel); color: #04150c; }
+  .check b { display: block; }
+  .check small { color: var(--paper-dim); font-size: 27.2px; }
+  .score { font-family: var(--display); font-size: clamp(35.2px, 2.4vw, 47.2px); }
+
+  /* --- slide 8: pipeline --- */
+  .pipe { width: 100%; max-width: 1100px; height: auto; display: block; }
+  .pipe text { font-family: var(--body); fill: var(--paper); font-size: 28.2px; }
+  .pipe .lbl { font-size: 25.2px; letter-spacing: .1em; text-transform: uppercase; fill: var(--paper-faint); }
+  .pipe .mono { font-family: var(--mono); font-size: 25.2px; fill: var(--amber); }
+  .pipe .node { fill: var(--ink-2); stroke: var(--line); stroke-width: 1.5; }
+  .pipe .node.hot { stroke: var(--amber); }
+  .pipe .wire { fill: none; stroke: var(--line); stroke-width: 2; }
+  .pipe .dot { fill: var(--amber); }
+  .active .pipe .dot { animation: travel 4.5s linear infinite; }
+  @keyframes travel { 0% { offset-distance: 0% } 100% { offset-distance: 100% } }
+  .pipe .doc { fill: var(--paper); stroke: none; }
+  .citation-demo { background: var(--ink-2); border: 1px solid var(--line); border-left: 4px solid var(--gospel); border-radius: 10px; padding: 14px 16px; font-size: clamp(27.2px, 1.15vw, 30.2px); }
+  .citation-demo .n { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 6px; background: var(--gospel-dim); color: var(--gospel); font-weight: 700; margin-right: 8px; }
+  .citation-demo .meta { font-family: var(--mono); font-size: 26.2px; color: var(--paper-dim); margin-top: 6px; }
+
+  /* --- slide 9: rules --- */
+  .rules { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+  @media (max-width: 900px) { .rules { grid-template-columns: 1fr; } }
+  .rule { background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .rule .q { font-family: var(--mono); font-size: 26.2px; color: var(--paper-faint); }
+  .rule .a { font-family: var(--display); font-size: clamp(29.2px, 1.35vw, 33.2px); }
+  .rule .a.refuse { color: var(--amber); }
+
+  /* --- slide 10: checks --- */
+  .checks { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+  @media (max-width: 900px) { .checks { grid-template-columns: 1fr; } }
+  .chk { display: flex; gap: 12px; background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+  .chk .ic { width: 34px; height: 34px; flex: 0 0 auto; border-radius: 8px; background: var(--gospel-dim); color: var(--gospel); display: grid; place-items: center; font-family: var(--mono); font-weight: 600; font-size: 26.2px; }
+  .chk b { display: block; }
+  .chk small { color: var(--paper-dim); font-size: 27.2px; }
+
+  /* --- slide 11: ingest --- */
+  .scan { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 10px; align-items: stretch; }
+  @media (max-width: 900px) { .scan { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  .step { background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px; position: relative; }
+  .step .n { font-family: var(--mono); font-size: 25.2px; color: var(--amber); }
+  .step b { display: block; margin: 4px 0; }
+  .step small { color: var(--paper-dim); font-size: 26.2px; }
+
+  /* --- slide 12: limits --- */
+  .limit { border-top: 3px solid var(--blue); }
+
+  /* --- slide 13: monday --- */
+  .monday { display: grid; grid-template-columns: 1.1fr 1fr; gap: 20px; }
+  @media (max-width: 900px) { .monday { grid-template-columns: 1fr; } }
+  .todo { counter-reset: t; display: flex; flex-direction: column; gap: 8px; }
+  .todo div { counter-increment: t; display: flex; gap: 14px; background: var(--ink-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; }
+  .todo div::before { content: counter(t); font-family: var(--display); font-weight: 800; color: var(--amber); font-size: 35.2px; line-height: 1.1; min-width: 20px; }
+  .todo b { display: block; }
+  .todo small { color: var(--paper-dim); font-size: 27.2px; }
+  .tmpl { background: #0a0d13; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-family: var(--mono); font-size: 25.7px; line-height: 1.5; white-space: pre-wrap; color: var(--paper-dim); position: relative; }
+  .tmpl .t { color: var(--amber); font-family: var(--body); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: 24.2px; display: block; margin-bottom: 6px; }
+  .tmpl button { position: absolute; top: 8px; right: 8px; }
+  .tmpls { display: flex; flex-direction: column; gap: 10px; }
+
+  /* --- slide 14: close --- */
+  .close-line { font-family: var(--display); font-size: clamp(43.2px, 4.6vw, 83.2px); line-height: 1.08; }
+  .close-line .strike { text-decoration: line-through; text-decoration-color: var(--garbage); text-decoration-thickness: 4px; color: var(--paper-faint); }
+
+  /* --- closing contact slide --- */
+  .contact { display: grid; grid-template-columns: 1.2fr .8fr; gap: 32px; align-items: start; }
+  @media (max-width: 900px) { .contact { grid-template-columns: 1fr; } }
+  .brand { font-family: var(--display); font-weight: 800; font-size: clamp(47.2px, 4.2vw, 77.2px); line-height: 1.05; letter-spacing: -.02em; }
+  .brand .lam { color: var(--amber); }
+  .people { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+  .person { display: flex; align-items: center; gap: 16px; }
+  .person .li { display: block; font-family: var(--mono); font-size: clamp(26.2px, 1.1vw, 29.2px); color: var(--paper-faint); }
+  .qr-sm { flex: 0 0 auto; width: clamp(64px, 6.5vw, 88px); height: clamp(64px, 6.5vw, 88px); box-shadow: 0 6px 18px rgba(0,0,0,.35); }
+  .person b { display: block; font-family: var(--display); font-size: clamp(37.2px, 2.5vw, 51.2px); font-weight: 600; }
+  .person a { color: var(--paper-dim); font-family: var(--mono); font-size: clamp(30.2px, 1.5vw, 36.2px); text-decoration: none; }
+  .qrcol { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+  .qrwrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .qr { width: min(200px, 40vw, 24vh); height: auto; border-radius: 8px; box-shadow: 0 14px 40px rgba(0,0,0,.45); }
+  .qrwrap .url { font-family: var(--mono); color: var(--amber); font-size: clamp(27.2px, 1.3vw, 33.2px); }
+  .pubnote { border-top: 1px solid var(--line); padding-top: 14px; font-size: clamp(31.2px, 1.7vw, 39.2px); color: var(--paper-dim); }
+  .pubnote .mono { color: var(--paper); }
+
+  /* slide 1: +8pt */
+  .s1 h1 { font-size: clamp(72.5px, 8.5vw, 132px); }
+  .s1 .eyebrow, .s1 .bench { font-size: 36.9px; }
+  .s1 #presenters { font-size: 34px; }
+
+  /* slide 12: +8pt */
+  .s12 .close-line { font-size: clamp(56.6px, 5.7vw, 96.6px); font-weight: 800; }
+  .s12 .lede { font-size: clamp(41.9px, 2.4vw, 47.9px); }
+  .s12 h2 { font-size: clamp(51.9px, 4.4vw, 77.9px); }
+  .s12 .eyebrow, .s12 #presenters2 { font-size: 36.9px; }
+  /* slide 13: +4pt */
+  .s13 .brand { font-size: clamp(52.5px, 4.7vw, 82.5px); }
+  .s13 .person b { font-size: clamp(42.5px, 2.9vw, 56.5px); }
+  .s13 .person a { font-size: clamp(35.5px, 1.9vw, 41.5px); }
+  .s13 .person .li { font-size: clamp(31.5px, 1.5vw, 34.5px); }
+  .s13 .qrwrap .url { font-size: clamp(32.5px, 1.7vw, 38.5px); }
+  .s13 .pubnote { font-size: clamp(36.5px, 2.1vw, 44.5px); }
+  .s13 .eyebrow { font-size: 31.5px; }
+
+  /* stepped builds: .build elements reveal one at a time with the arrow key */
+  .build { visibility: hidden; opacity: 0; }
+  .build.shown { visibility: visible; opacity: 1; animation: rise .5s cubic-bezier(.2,.7,.2,1) both; }
+  .bubble.build { transform: none; }
+
+  .auto { opacity: 0; }
+  .active .auto { animation: rise .6s cubic-bezier(.2,.7,.2,1) both; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    .active .pipe .dot { animation: none; offset-distance: 60%; }
+  }
+</style>
+</head>
+<body>
+
+<div id="stage">
+
+<!-- 1 · Title -->
+<section class="slide s1" data-title="Title">
+  <div class="slide-head fx">
+    <p class="eyebrow">A session for litigation paralegals</p>
+  </div>
+  <div class="slide-body" style="justify-content:flex-start;gap:clamp(10px,2vh,22px)">
+    <h1 class="fx"><span class="title-word" id="w1">Garbage</span> In,<br><span class="title-word" id="w2">Gospel</span> Out</h1>
+    <div class="title-rule fx"></div>
+    <p class="lede fx" style="font-size:clamp(43.9px,2.6vw,53.9px);color:var(--paper)">Why your AI sounds so confident when it's wrong.<br><span class="dim">And how tools built to answer only from your case documents, with a citation on every claim, change the job.</span></p>
+    <p class="fx dim" id="presenters"></p>
+    <p class="bench fx">questions welcome at any time</p>
+  </div>
+  <div class="notes-src">
+    <b>0:00 to 0:04</b>
+    - Open with the room: "Raise your hand if an AI tool has ever given you something that looked perfect and wasn't." Keep hands up. That's the talk.
+    - Say the thesis once: fluent output is not evidence. Confidence is a writing style, not a signal.
+    - Tell them the format: about 50 minutes of material, demo interleaved on the second laptop, questions at any time.
+    - Edit the presenter line at the top of the script (CONFIG) before the talk.
+  </div>
+</section>
+
+<!-- 2 · Spot the fabrication -->
+<section class="slide" data-title="Spot the fabrication">
+  <div class="slide-head">
+    <p class="eyebrow fx">Same polish, either way</p>
+    <h2 class="fx">One of these citations does not exist.</h2>
+    <p class="lede fx">Both were produced by a chatbot in the same format, the same tone, the same confidence. Which one would you catch on a busy Thursday?</p>
+  </div>
+  <div class="slide-body">
+    <div class="cols cols-2" id="spot">
+      <div class="cite-card fx" data-real="false">
+        <div class="hdr">Answer A</div>
+        <p>Courts have consistently held that the Montreal Convention's limitations period is tolled during bankruptcy proceedings. See <span class="cite">Varghese v. China Southern Airlines Co., 925 F.3d 1339 (11th Cir. 2019)</span>, which addressed this precise question and found the two-year period tolled.</p>
+        <div class="stamp red">Fabricated</div>
+        <p class="verdict">No such case exists. This citation was among those filed in Mata v. Avianca. The volume number, page number, court and year all look like a real citation. That's the point.</p>
+      </div>
+      <div class="cite-card fx" data-real="true">
+        <div class="hdr">Answer B</div>
+        <p>Attorneys who file AI-generated citations without verifying them may face Rule 11 sanctions. See <span class="cite">Mata v. Avianca, Inc., 678 F. Supp. 3d 443 (S.D.N.Y. 2023)</span>, where the court imposed a monetary penalty and required notice to the judges falsely named as authors.</p>
+        <div class="stamp green">Verified</div>
+        <p class="verdict">Real. Judge Castel's order is the decision that put this problem on every bar's radar.</p>
+      </div>
+    </div>
+    <button class="btn fx" id="revealBtn">Reveal</button>
+  </div>
+  <div class="notes-src">
+    <b>0:04 to 0:08</b>
+    - Let them vote by hand for A or B before revealing. Most rooms split.
+    - After reveal: point at the fabricated one. Nothing about its form gives it away. The only check that works is looking the case up yourself.
+    - Ask: "Who here is the person who would have been asked to cite-check this?" That's the audience. They are the last line.
+  </div>
+</section>
+
+<!-- 3 · Sanctions docket -->
+<section class="slide" data-title="The sanctions docket">
+  <div class="slide-head">
+    <p class="eyebrow fx">What it costs</p>
+    <h2 class="fx">The sanctions docket keeps growing.</h2>
+  </div>
+  <div class="slide-body">
+    <div class="docket fx">
+      <div class="case">
+        <div class="name">Mata v. Avianca</div>
+        <div class="court">S.D.N.Y. · June 2023</div>
+        <div class="big" data-count="5000" data-prefix="$">$0</div>
+        <div class="what">Joint sanction. Six fabricated cases. Attorneys ordered to notify the real judges named as authors.</div>
+      </div>
+      <div class="case">
+        <div class="name">Park v. Kim</div>
+        <div class="court">2d Cir. · Jan 2024</div>
+        <div class="big" data-text="Referred">&nbsp;</div>
+        <div class="what">Attorney referred to the court's Grievance Panel for a non-existent citation in a reply brief.</div>
+      </div>
+      <div class="case">
+        <div class="name">Wadsworth v. Walmart</div>
+        <div class="court">D. Wyo. · Feb 2025</div>
+        <div class="big" data-count="5000" data-prefix="$">$0</div>
+        <div class="what">Fines against three attorneys; one lost pro hac vice admission. Eight of nine cited cases were fictitious.</div>
+      </div>
+      <div class="case">
+        <div class="name">Lacey v. State Farm</div>
+        <div class="court">C.D. Cal. · May 2025</div>
+        <div class="big" data-count="31100" data-prefix="$">$0</div>
+        <div class="what">Sanctions against two large firms. The special master found the AI use only after the cites failed to check out.</div>
+      </div>
+    </div>
+    <div class="thread fx">The common thread: every one of these was a fluent, well-formatted citation that nobody looked up on Westlaw or Lexis before filing. The case simply wasn't there.</div>
+    <p class="dim fx">Public trackers now list hundreds of court decisions involving fabricated AI citations, and the count rises weekly. Increasingly, judges' standing orders require a certification that AI-generated content was verified by a human.</p>
+  </div>
+  <div class="notes-src">
+    <b>0:08 to 0:12</b>
+    - Before the talk, re-verify each figure against the orders and check the current count on a public tracker such as the AI Hallucination Cases database. Numbers here are from the published orders; the count changes weekly.
+    - Lacey is the one that lands: big firms, experienced lawyers, still burned. It isn't a competence problem, it's a process problem.
+    - Bridge: "So why does the machine do this? It isn't lying. It's doing exactly what it was built to do."
+  </div>
+</section>
+
+<!-- 4 · Why -->
+<section class="slide" data-title="Why it happens">
+  <div class="slide-head">
+    <p class="eyebrow fx">The mechanism</p>
+    <h2 class="fx">It predicts the next plausible word. It never checks a source.</h2>
+  </div>
+  <div class="slide-body">
+    <div class="predict fx" id="predict">
+      The court in Varghese v. China Southern held that the limitations period was <span class="slot" id="slot">&nbsp;</span>
+      <div class="cands" id="cands"></div>
+    </div>
+    <div class="cols cols-4">
+      <div class="panel fail fx"><span class="tag red">Pattern 1</span><h3>Fabricated citations</h3><p>A case name, volume, page and year assembled from the shape of real citations.</p></div>
+      <div class="panel fail fx"><span class="tag red">Pattern 2</span><h3>Invented facts</h3><p>A deposition date, a dollar figure, a party's role, filled in because the sentence needed one.</p></div>
+      <div class="panel fail fx"><span class="tag red">Pattern 3</span><h3>Quiet omissions</h3><p>Ask for a summary of 40 documents. It quietly skips three. One of them was the email that changes the case.</p></div>
+      <div class="panel fail fx"><span class="tag red">Pattern 4</span><h3>Agreeable answers</h3><p>Ask "confirm that X," and it tends to confirm X. Your premise becomes its conclusion.</p></div>
+    </div>
+  </div>
+  <div class="notes-src">
+    <b>0:12 to 0:17</b>
+    - The slot animation shows candidates with rough likelihoods. The model picks a likely word, not a true one. "Tolled" is likely because it fits the sentence, not because any court said it.
+    - Pattern 4 is the one paralegals feel most: leading questions get agreeable answers. Ask neutrally.
+    - Bridge: "Garbage in. Most of the garbage is the prompt." Move to the framework.
+  </div>
+</section>
+
+<!-- 5 · Prompt builder -->
+<section class="slide" data-title="Garbage in: the prompt">
+  <div class="slide-head">
+    <p class="eyebrow fx">Garbage in</p>
+    <h2 class="fx">You're not asking wrong. You're asking vague.</h2>
+    <p class="lede fx">Build the prompt the way you'd brief a new paralegal. Click each element and watch the request change.</p>
+  </div>
+  <div class="slide-body builder fx">
+    <div class="toggles" id="toggles">
+      <button class="toggle" aria-pressed="false" data-key="role" data-line="You are assisting a litigation paralegal at a civil defense firm. Treat everything I give you as confidential."><span class="box"></span><span><span class="k">Role</span><small>Who it is working for, and the posture that implies.</small></span></button>
+      <button class="toggle" aria-pressed="false" data-key="task" data-line="Task: produce a chronology of events from the three deposition transcripts I paste below, one row per dated event."><span class="box"></span><span><span class="k">Task</span><small>One verb, one deliverable. Not "help me with."</small></span></button>
+      <button class="toggle" aria-pressed="false" data-key="source" data-line="Use only the transcripts I provide. Do not add facts, law, or background from anywhere else. If a date is unclear in the text, mark it 'unclear' rather than guessing."><span class="box"></span><span><span class="k">Source</span><small>What it may read from, and nothing else.</small></span></button>
+      <button class="toggle" aria-pressed="false" data-key="constraints" data-line="Constraints: quote the transcript verbatim for each event, with page:line. Flag any event supported by only one witness. Do not characterize credibility."><span class="box"></span><span><span class="k">Constraints</span><small>What it must show, and what it must not do.</small></span></button>
+      <button class="toggle" aria-pressed="false" data-key="format" data-line="Format: a table with columns Date | Event | Witness | Page:Line | Verbatim quote | Notes. Then a short list titled 'What I could not determine.'"><span class="box"></span><span><span class="k">Format</span><small>The shape the attorney actually wants on their desk.</small></span></button>
+      <button class="toggle" aria-pressed="false" data-key="askfirst" data-line="Before you begin, ask me up to five questions you need answered to do this well. Do not start until I answer."><span class="box"></span><span><span class="k">Ask first</span><small>Make it a two-way street. The next screen.</small></span></button>
+    </div>
+    <div class="prompt-out" id="promptOut">
+      <div class="line base" id="baseLine">Summarize these depositions.</div>
+      <div class="meter"><span>Risk of gospel</span><div class="track"><div class="fill" id="meterFill"></div></div><span id="meterLbl">High</span></div>
+      <button class="keybtn copy" id="copyPrompt">Copy prompt</button>
+    </div>
+  </div>
+  <div class="notes-src">
+    <b>0:17 to 0:24</b>
+    - Click the elements one at a time and read the prompt aloud as it grows. Let the room suggest what's still missing before you click Constraints.
+    - Analogy they own: this is exactly how they translate an attorney's hallway instruction into an assignment. Same skill, new recipient.
+    - "Source" is the whole talk in one line: tell it what it may read, and what to do when it doesn't know.
+    - Copy button works for the take-home; also on the Monday screen.
+  </div>
+</section>
+
+<!-- 6 · Two-way street -->
+<section class="slide" data-title="The two-way street">
+  <div class="slide-head">
+    <p class="eyebrow fx">The two-way street</p>
+    <h2 class="fx">Make it ask you before it answers.</h2>
+    <p class="lede fx">One sentence in the prompt turns a guesser into an interviewer.</p>
+  </div>
+  <div class="slide-body">
+    <div class="chat" style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);max-width:100%;gap:10px 24px">
+      <div class="bubble me auto" style="grid-column:1 / -1;max-width:70%;animation-delay:.3s"><span class="who">You</span>Draft a privilege log from the attached email export. <b>Before you begin, ask me up to three questions you need answered to do this well. Do not start until I answer.</b></div>
+      <div class="bubble ai auto" style="grid-column:1;grid-row:2;max-width:100%;animation-delay:1.6s"><span class="who">AI</span>Before I start:
+        <ol>
+          <li>Which attorneys and legal staff should I treat as "counsel" for privilege purposes? Please list names and roles.</li>
+          <li>Should I flag emails where a third party is copied, since that may waive privilege?</li>
+          <li>When I can't tell whether an email is legal advice or business advice, should I mark it "review" rather than decide?</li>
+        </ol>
+      </div>
+      <div class="bubble me auto" style="grid-column:2;grid-row:2;align-self:start;justify-self:end;max-width:100%;margin-top:6vh;animation-delay:3.2s"><span class="who">You</span>Good questions. Yes to 2 and 3. Counsel list attached.</div>
+    </div>
+    <div class="cols cols-3 auto" style="animation-delay:4.4s">
+      <div class="panel"><h3>Ask it to interrogate you</h3><p>"What are you assuming that I haven't told you?"</p></div>
+      <div class="panel"><h3>Ask what it didn't find</h3><p>"List what you looked for and could not find in this material."</p></div>
+      <div class="panel"><h3>Ask for confidence, per item</h3><p>"For each row, say how sure you are and what I'd have to check to be certain."</p></div>
+    </div>
+  </div>
+  <div class="notes-src">
+    <b>0:24 to 0:29</b>
+    - The exchange animates in on its own over about five seconds: your prompt, the AI's three questions, your reply, then the three follow-up prompts. Pause and let it play.
+    - Step 1: read the bold sentence aloud. That's the whole trick.
+    - Step 2: read question 3 aloud. That's the machine asking permission to say "I don't know." You want that.
+    - Every clarifying question it asks is a fact you would otherwise have had to notice was missing after the fact.
+    - Field question you'll get: "Doesn't this take longer?" Yes, two minutes. Compare to one sanctions hearing.
+  </div>
+</section>
+
+<!-- 7 · Verification habits -->
+<section class="slide" data-title="Verification habits">
+  <div class="slide-head">
+    <p class="eyebrow fx">Catching it yourself</p>
+    <h2 class="fx">Six habits that catch it.</h2>
+  </div>
+  <div class="slide-body">
+    <div class="cols cols-2" id="habits" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+      <button class="check fx" aria-pressed="false"><span class="box"></span><span><b>Look up every citation yourself.</b><small>Westlaw, Lexis, or the court's site. Read the page cited, not just the name.</small></span></button>
+      <button class="check fx" aria-pressed="false"><span class="box"></span><span><b>Search every quote verbatim.</b><small>If the words aren't in the source, it isn't a quote.</small></span></button>
+      <button class="check fx" aria-pressed="false"><span class="box"></span><span><b>Ask for the passage, not the conclusion.</b><small>"Show me the excerpt that supports this."</small></span></button>
+      <button class="check fx" aria-pressed="false"><span class="box"></span><span><b>Run a "what's missing" pass.</b><small>Ask what it could not find. Spot-check three yourself.</small></span></button>
+      <button class="check fx" aria-pressed="false"><span class="box"></span><span><b>Know what you are allowed to paste in.</b><small>Client material only goes into tools your firm approved. Disclose AI use where the judge requires it.</small></span></button>
+      <button class="check fx" aria-pressed="false"><span class="box"></span><span><b>Ask for every citation in a separate list.</b><small>One per line, with its source. Have it spell out every "Id." in full.</small></span></button>
+
+    </div>
+
+  </div>
+  <div class="notes-src">
+    <b>0:29 to 0:34</b>
+    - Interactive: ask the room to call out which they already do; click them. Whatever is left unclicked is the take-home.
+    - Habit 5 is the privilege one. Say it plainly: a public chatbot is a third party. Check the firm's policy and the protective order before pasting.
+    - Habit 6: a citation list is a checklist. It also stops a bad cite hiding in the middle of a paragraph.
+    - "Id." is where AI drafts go wrong quietly: it copies the form without tracking which source came before. Expanding every Id. to a full cite exposes the ones pointing at nothing.
+    - Bridge to demo: "Everything so far is you compensating for a tool that will read anything and cite nothing. Now the other side: what if the tool could only read the file?"
+  </div>
+</section>
+
+<!-- 8 · Bridge: EvidenceThread -->
+<section class="slide" data-title="What if it could only read the file?">
+  <div class="slide-head">
+    <p class="eyebrow fx">The other side</p>
+    <h2 class="fx">What if the AI could only read the file?</h2>
+    <p class="lede fx">Evidence-grounded tools (EvidenceThread is our demo) answer only from your case documents. Every claim carries a citation you can open: session, date, Bates number, page.</p>
+  </div>
+  <div class="slide-body">
+    <div class="demo-cue fx"><span class="pulse"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>Demo laptop · ask the file a question</div>
+    <svg class="pipe fx" style="max-width:880px" viewBox="0 0 1100 250" role="img" aria-label="Question goes to the case file, retrieval pulls excerpts, the answer cites them by number">
+      <defs><path id="wirePath" d="M150 125 H330 M470 125 H630 M770 125 H900"/></defs>
+      <path class="wire" d="M150 125 H330"/><path class="wire" d="M470 125 H630"/><path class="wire" d="M770 125 H900"/>
+      <rect class="node" x="10" y="85" width="140" height="80" rx="12"/>
+      <text x="80" y="118" text-anchor="middle" class="lbl">You ask</text>
+      <text x="80" y="142" text-anchor="middle">"Who did Mike call<tspan x="80" dy="18">about the shipment?"</tspan></text>
+      <rect class="node hot" x="330" y="45" width="140" height="160" rx="12"/>
+      <text x="400" y="72" text-anchor="middle" class="lbl">Your case file</text>
+      <g class="doc" transform="translate(352,86)"><rect width="34" height="44" rx="3"/><rect x="42" width="34" height="44" rx="3" opacity=".85"/><rect x="21" y="52" width="34" height="44" rx="3" opacity=".7"/></g>
+      <text x="400" y="196" text-anchor="middle" class="mono">linesheets · FD-302s · CDRs</text>
+      <rect class="node" x="630" y="85" width="140" height="80" rx="12"/>
+      <text x="700" y="118" text-anchor="middle" class="lbl">Retrieve</text>
+      <text x="700" y="142" text-anchor="middle">matching excerpts,<tspan x="700" dy="18">ranked and numbered</tspan></text>
+      <rect class="node hot" x="900" y="45" width="190" height="160" rx="12"/>
+      <text x="995" y="72" text-anchor="middle" class="lbl">Answer</text>
+      <text x="995" y="104" text-anchor="middle">Mike called Dee twice</text>
+      <text x="995" y="126" text-anchor="middle">on 03/14 <tspan class="mono" fill="var(--gospel)">[1]</tspan> and referred</text>
+      <text x="995" y="148" text-anchor="middle">to "the paperwork" <tspan class="mono" fill="var(--gospel)">[2]</tspan>,</text>
+      <text x="995" y="170" text-anchor="middle">which <tspan fill="var(--amber)">may indicate</tspan> …</text>
+      <text x="995" y="196" text-anchor="middle" class="mono">cited sources only</text>
+      <circle class="dot" r="6" style="offset-path: path('M150 125 H330 M470 125 H630 M770 125 H900');"/>
+    </svg>
+    <div class="cols cols-3">
+      <div class="citation-demo fx"><span class="n">1</span><b>Session 143</b> · 03/14/2025 · Outgoing · Synopsis<div class="meta">Bates: ET-000412 · page 87 · click to open the source page</div></div>
+      <div class="citation-demo fx"><span class="n">2</span><b>FD-302</b> · interview of D. Ramos · page 3<div class="meta">Form page · extracted fields shown · redactions flagged</div></div>
+      <div class="citation-demo fx" style="border-left-color:var(--amber)"><span class="n" style="background:var(--amber-dim);color:var(--amber)">?</span><b>When the file can't answer</b><div class="meta" style="font-family:var(--display);color:var(--amber);font-size:1.05em">"The available evidence does not address this question."</div></div>
+    </div>
+    <div class="panel fx" style="border-left:4px solid var(--amber)">
+      <span class="tag amber">It should say when it could not read something</span>
+      <p style="margin-top:6px">Ask any tool, every time: "Which pages could you not read, and why?" The honest answers:</p>
+      <div class="cols" style="grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:8px">
+        <div><b>Bad scan</b><small class="dim" style="display:block">A 3 becomes an 8.</small></div>
+        <div><b>Watermark</b><small class="dim" style="display:block">Stamped over the words it needed.</small></div>
+        <div><b>Handwriting</b><small class="dim" style="display:block">Notes and filled-in forms.</small></div>
+        <div><b>Locked PDF</b><small class="dim" style="display:block">Comes through as zero pages.</small></div>
+        <div><b>Redactions</b><small class="dim" style="display:block">A gap, not an answer.</small></div>
+      </div>
+      <p style="margin-top:8px">If an answer rests on one of these pages, note it: "source partially unreadable, verified against the original."</p>
+    </div>
+  </div>
+  <div class="notes-src">
+    <b>0:34 to 0:44 · Demo 1 and 2</b>
+    - Switch to the demo laptop. Pick a case already loaded.
+    - Ask a natural question about a participant or a date. Show the streamed answer with [1] [2].
+    - Click a citation card. Show session, date, direction, Bates, and open the PDF page. That page is the whole difference: the answer leads back to paper.
+    - Ask a structured question too ("list sessions on 3/14 by participant") so they see it can also just query the data.
+    - Then ask a question you know the file cannot answer ("What is Mike's home address?"). Show the refusal line. That sentence is the most valuable thing an AI can say. The chatbot on slide two would have answered it, fluently.
+    - Disclosure point: a well-built tool flags redacted pages and pages that needed OCR. But the habit is yours: ask what it could not read, and note it in the file. Unreadable is not the same as absent.
+    <div class="demo-block">Suggested questions:<br>"Who did [name] call about the shipment?"<br>"List all incoming calls on [date]."<br>"What was discussed in session [n]?"<br>"What is [name]'s home address?" (expect: not in evidence)</div>
+  </div>
+</section>
+
+<!-- 9 · It checks its own work -->
+<section class="slide" data-title="It checks its own work">
+  <div class="slide-head">
+    <p class="eyebrow fx">Demo</p>
+    <h2 class="fx">It checks its own work. You still check it too.</h2>
+    <p class="lede fx">The rules from slide 8 are promises. This is how the tool catches itself breaking them, before you see the answer.</p>
+  </div>
+  <div class="slide-body">
+    <div class="demo-cue fx"><span class="pulse"></span>Demo laptop · run an investigation, open the trace</div>
+    <div class="checks">
+      <div class="chk fx"><div class="ic">[N]</div><div><b>Does every claim point at a real source?</b><small>If the answer cites source [7] and there were only five, the answer gets flagged. If it cites nothing at all, that gets flagged too.</small></div></div>
+      <div class="chk fx"><div class="ic">✓</div><div><b>Does the source actually say that?</b><small>For a written brief, each sentence is compared against the page it cites. A sentence that sounds right but isn't on that page gets caught. That is the exact mistake from the sanctions cases.</small></div></div>
+      <div class="chk fx"><div class="ic">≠</div><div><b>Do the documents disagree with each other?</b><small>Two pages giving different dates for the same event get surfaced for a person to sort out, instead of the tool quietly picking one.</small></div></div>
+      <div class="chk fx"><div class="ic">#</div><div><b>Can someone else retrace it?</b><small>An investigation exports as a package: every step taken, every citation used, and a fingerprint of each source file. Someone can check the work a year later.</small></div></div>
+    </div>
+    <p class="dim fx">In supervised mode it stops and asks you before it plans, before it writes, and whenever the documents conflict. The person stays in charge.</p>
+  </div>
+  <div class="notes-src">
+    <b>0:44 to 0:50 · Demo 3</b>
+    - Slide 8 was what the tool promises. This one is how it polices those promises. Promises are cheap, checks are the proof.
+    - Run an investigation in supervised mode. Show it stop and ask before planning. Approve.
+    - Open the trace: each step, each citation with a stable number.
+    - Show the export package listing if time allows. That's "show your work" done by a machine.
+    - If time is short, skip the export and just show the trace.
+  </div>
+</section>
+
+<!-- 10 · Next steps -->
+<section class="slide" data-title="What to do next">
+  <div class="slide-head">
+    <p class="eyebrow fx">Actionable</p>
+    <h2 class="fx">What to do next...</h2>
+  </div>
+  <div class="slide-body monday">
+    <div class="todo fx">
+      <div><span><b>Rewrite one prompt you use every week</b><small>Role, task, source, constraints, format, ask-first.</small></span></div>
+      <div><span><b>Add "ask me first" to every drafting request</b><small>One sentence. Guesses become questions.</small></span></div>
+      <div><span><b>Start a cite-check log</b><small>Citation, where you verified it, date, initials.</small></span></div>
+    </div>
+    <div class="tmpls fx">
+      <div class="tmpl" data-full="You are assisting a litigation paralegal at [firm type]. Treat everything I give you as confidential.
+Task: [one verb, one deliverable].
+Use only the material I provide. Do not add facts or law from anywhere else. If something is unclear, mark it &quot;unclear&quot; rather than guessing.
+Constraints: quote sources verbatim with [page:line / Bates]. Flag anything supported by a single source. Do not characterize credibility.
+Format: [table / memo / list], then a section titled &quot;What I could not determine.&quot;
+Before you begin, ask me up to three questions you need answered to do this well. Do not start until I answer."><span class="t">Template · the prompt</span><button class="keybtn" data-copy>Copy</button>You are assisting a litigation paralegal. Treat everything as confidential.
+Task: [one verb, one deliverable].
+Use only the material I provide. Say "unclear" instead of guessing.
+Quote sources verbatim with [page:line / Bates].
+Format: [table / memo / list], then "What I could not determine."
+Ask me up to three questions before you begin. Do not start until I answer.</div>
+      <div class="tmpl" data-full="For every citation, quote, and factual claim in your last answer: (1) show me the exact passage, (2) rate your confidence high / medium / low, and (3) tell me what I would need to check to be certain.
+Then list every citation on its own line, with each &quot;Id.&quot; spelled out as the full citation it refers to.
+Finally, list everything you looked for and could not find."><span class="t">Template · the verification pass</span><button class="keybtn" data-copy>Copy</button>For every citation, quote, and fact: show the passage, rate your confidence, and say what I need to check. List every citation on its own line, including what each Id. refers to. Then list what you could not find.</div>
+    </div>
+
+  </div>
+  <div class="notes-src">
+    <b>0:55 to 0:57</b>
+    - Read the three items fast. The Copy buttons copy a fuller version of each template than what fits on screen; tell them the full text is on the deck link.
+    - If you offer a handout, this slide and the habits screen are the handout.
+  </div>
+</section>
+
+<!-- 11 · Close -->
+<section class="slide s12" data-title="Questions">
+  <div class="slide-head">
+    <p class="eyebrow fx">Close</p>
+  </div>
+  <div class="slide-body" style="justify-content:center;gap:28px">
+    <div class="close-line fx"><span class="strike">Garbage in, gospel out.</span></div>
+    <div class="close-line fx">Evidence in. <span class="gospel">Citations out.</span></div>
+    <p class="lede fx">Sounding sure isn't the same as being right. A citation you can open and read is.</p>
+    <h2 class="fx" style="margin-top:16px">Questions.</h2>
+    <p class="fx dim" id="presenters2"></p>
+  </div>
+  <div class="notes-src">
+    <b>0:57 to 1:00 · Q&A</b>
+    - Leave this slide up. Keep the demo laptop on the citation view; questions usually go back to "can it do X with my documents."
+    - If a question is about law-finding tools, point back to the habits screen: same habits, different tool.
+  </div>
+</section>
+
+<!-- 12 · Contact -->
+<section class="slide s13" data-title="Thank you">
+  <div class="slide-head">
+    <p class="eyebrow fx">Thank you</p>
+  </div>
+  <div class="slide-body" style="justify-content:flex-start">
+    <div class="contact">
+      <div>
+        <div class="brand fx"><span class="lam">Lambda</span> Engine</div>
+        <p class="eyebrow fx" style="margin-top:10px">Connect with us</p>
+        <div class="people fx">
+          <div class="person"><svg class="qr qr-sm" viewBox="0 0 33 33" shape-rendering="crispEdges" role="img" aria-label="LinkedIn QR code for Gerry Wolfe"><rect width="33" height="33" fill="#efe9db"/><path d="M2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM5 2h1v1h-1zM6 2h1v1h-1zM7 2h1v1h-1zM8 2h1v1h-1zM15 2h1v1h-1zM16 2h1v1h-1zM20 2h1v1h-1zM24 2h1v1h-1zM25 2h1v1h-1zM26 2h1v1h-1zM27 2h1v1h-1zM28 2h1v1h-1zM29 2h1v1h-1zM30 2h1v1h-1zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM14 3h1v1h-1zM15 3h1v1h-1zM16 3h1v1h-1zM19 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM30 3h1v1h-1zM2 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM17 4h1v1h-1zM18 4h1v1h-1zM21 4h1v1h-1zM24 4h1v1h-1zM26 4h1v1h-1zM27 4h1v1h-1zM28 4h1v1h-1zM30 4h1v1h-1zM2 5h1v1h-1zM4 5h1v1h-1zM5 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM10 5h1v1h-1zM11 5h1v1h-1zM12 5h1v1h-1zM13 5h1v1h-1zM15 5h1v1h-1zM17 5h1v1h-1zM18 5h1v1h-1zM19 5h1v1h-1zM22 5h1v1h-1zM24 5h1v1h-1zM26 5h1v1h-1zM27 5h1v1h-1zM28 5h1v1h-1zM30 5h1v1h-1zM2 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM11 6h1v1h-1zM12 6h1v1h-1zM13 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM21 6h1v1h-1zM22 6h1v1h-1zM24 6h1v1h-1zM26 6h1v1h-1zM27 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM12 7h1v1h-1zM14 7h1v1h-1zM16 7h1v1h-1zM18 7h1v1h-1zM24 7h1v1h-1zM30 7h1v1h-1zM2 8h1v1h-1zM3 8h1v1h-1zM4 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM25 8h1v1h-1zM26 8h1v1h-1zM27 8h1v1h-1zM28 8h1v1h-1zM29 8h1v1h-1zM30 8h1v1h-1zM10 9h1v1h-1zM12 9h1v1h-1zM14 9h1v1h-1zM16 9h1v1h-1zM17 9h1v1h-1zM18 9h1v1h-1zM21 9h1v1h-1zM22 9h1v1h-1zM2 10h1v1h-1zM8 10h1v1h-1zM10 10h1v1h-1zM11 10h1v1h-1zM13 10h1v1h-1zM14 10h1v1h-1zM19 10h1v1h-1zM20 10h1v1h-1zM21 10h1v1h-1zM23 10h1v1h-1zM24 10h1v1h-1zM27 10h1v1h-1zM28 10h1v1h-1zM29 10h1v1h-1zM2 11h1v1h-1zM5 11h1v1h-1zM6 11h1v1h-1zM7 11h1v1h-1zM9 11h1v1h-1zM10 11h1v1h-1zM11 11h1v1h-1zM15 11h1v1h-1zM16 11h1v1h-1zM17 11h1v1h-1zM19 11h1v1h-1zM20 11h1v1h-1zM21 11h1v1h-1zM22 11h1v1h-1zM25 11h1v1h-1zM26 11h1v1h-1zM28 11h1v1h-1zM29 11h1v1h-1zM2 12h1v1h-1zM3 12h1v1h-1zM6 12h1v1h-1zM8 12h1v1h-1zM9 12h1v1h-1zM10 12h1v1h-1zM15 12h1v1h-1zM16 12h1v1h-1zM17 12h1v1h-1zM18 12h1v1h-1zM19 12h1v1h-1zM24 12h1v1h-1zM2 13h1v1h-1zM5 13h1v1h-1zM6 13h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM11 13h1v1h-1zM13 13h1v1h-1zM15 13h1v1h-1zM17 13h1v1h-1zM18 13h1v1h-1zM21 13h1v1h-1zM22 13h1v1h-1zM25 13h1v1h-1zM27 13h1v1h-1zM4 14h1v1h-1zM8 14h1v1h-1zM10 14h1v1h-1zM11 14h1v1h-1zM15 14h1v1h-1zM17 14h1v1h-1zM22 14h1v1h-1zM24 14h1v1h-1zM25 14h1v1h-1zM30 14h1v1h-1zM3 15h1v1h-1zM5 15h1v1h-1zM7 15h1v1h-1zM9 15h1v1h-1zM10 15h1v1h-1zM13 15h1v1h-1zM17 15h1v1h-1zM18 15h1v1h-1zM19 15h1v1h-1zM20 15h1v1h-1zM21 15h1v1h-1zM22 15h1v1h-1zM24 15h1v1h-1zM26 15h1v1h-1zM29 15h1v1h-1zM30 15h1v1h-1zM2 16h1v1h-1zM3 16h1v1h-1zM5 16h1v1h-1zM6 16h1v1h-1zM8 16h1v1h-1zM9 16h1v1h-1zM10 16h1v1h-1zM11 16h1v1h-1zM17 16h1v1h-1zM18 16h1v1h-1zM20 16h1v1h-1zM22 16h1v1h-1zM23 16h1v1h-1zM24 16h1v1h-1zM25 16h1v1h-1zM27 16h1v1h-1zM28 16h1v1h-1zM3 17h1v1h-1zM6 17h1v1h-1zM9 17h1v1h-1zM10 17h1v1h-1zM11 17h1v1h-1zM12 17h1v1h-1zM13 17h1v1h-1zM14 17h1v1h-1zM18 17h1v1h-1zM22 17h1v1h-1zM23 17h1v1h-1zM24 17h1v1h-1zM25 17h1v1h-1zM26 17h1v1h-1zM28 17h1v1h-1zM30 17h1v1h-1zM5 18h1v1h-1zM8 18h1v1h-1zM9 18h1v1h-1zM10 18h1v1h-1zM12 18h1v1h-1zM14 18h1v1h-1zM18 18h1v1h-1zM19 18h1v1h-1zM21 18h1v1h-1zM25 18h1v1h-1zM27 18h1v1h-1zM28 18h1v1h-1zM2 19h1v1h-1zM3 19h1v1h-1zM4 19h1v1h-1zM5 19h1v1h-1zM6 19h1v1h-1zM7 19h1v1h-1zM11 19h1v1h-1zM12 19h1v1h-1zM13 19h1v1h-1zM14 19h1v1h-1zM15 19h1v1h-1zM16 19h1v1h-1zM17 19h1v1h-1zM18 19h1v1h-1zM19 19h1v1h-1zM20 19h1v1h-1zM21 19h1v1h-1zM22 19h1v1h-1zM24 19h1v1h-1zM25 19h1v1h-1zM26 19h1v1h-1zM28 19h1v1h-1zM29 19h1v1h-1zM30 19h1v1h-1zM2 20h1v1h-1zM3 20h1v1h-1zM6 20h1v1h-1zM7 20h1v1h-1zM8 20h1v1h-1zM9 20h1v1h-1zM10 20h1v1h-1zM11 20h1v1h-1zM13 20h1v1h-1zM14 20h1v1h-1zM17 20h1v1h-1zM18 20h1v1h-1zM21 20h1v1h-1zM22 20h1v1h-1zM27 20h1v1h-1zM30 20h1v1h-1zM2 21h1v1h-1zM5 21h1v1h-1zM9 21h1v1h-1zM10 21h1v1h-1zM11 21h1v1h-1zM14 21h1v1h-1zM15 21h1v1h-1zM17 21h1v1h-1zM20 21h1v1h-1zM22 21h1v1h-1zM24 21h1v1h-1zM25 21h1v1h-1zM26 21h1v1h-1zM2 22h1v1h-1zM4 22h1v1h-1zM5 22h1v1h-1zM6 22h1v1h-1zM7 22h1v1h-1zM8 22h1v1h-1zM9 22h1v1h-1zM10 22h1v1h-1zM12 22h1v1h-1zM14 22h1v1h-1zM16 22h1v1h-1zM17 22h1v1h-1zM18 22h1v1h-1zM19 22h1v1h-1zM20 22h1v1h-1zM22 22h1v1h-1zM23 22h1v1h-1zM24 22h1v1h-1zM25 22h1v1h-1zM26 22h1v1h-1zM28 22h1v1h-1zM29 22h1v1h-1zM30 22h1v1h-1zM10 23h1v1h-1zM11 23h1v1h-1zM13 23h1v1h-1zM16 23h1v1h-1zM17 23h1v1h-1zM19 23h1v1h-1zM20 23h1v1h-1zM22 23h1v1h-1zM26 23h1v1h-1zM27 23h1v1h-1zM2 24h1v1h-1zM3 24h1v1h-1zM4 24h1v1h-1zM5 24h1v1h-1zM6 24h1v1h-1zM7 24h1v1h-1zM8 24h1v1h-1zM11 24h1v1h-1zM13 24h1v1h-1zM17 24h1v1h-1zM19 24h1v1h-1zM21 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h1v1h-1zM27 24h1v1h-1zM28 24h1v1h-1zM2 25h1v1h-1zM8 25h1v1h-1zM11 25h1v1h-1zM12 25h1v1h-1zM14 25h1v1h-1zM16 25h1v1h-1zM17 25h1v1h-1zM21 25h1v1h-1zM22 25h1v1h-1zM26 25h1v1h-1zM30 25h1v1h-1zM2 26h1v1h-1zM4 26h1v1h-1zM5 26h1v1h-1zM6 26h1v1h-1zM8 26h1v1h-1zM11 26h1v1h-1zM13 26h1v1h-1zM14 26h1v1h-1zM15 26h1v1h-1zM16 26h1v1h-1zM17 26h1v1h-1zM21 26h1v1h-1zM22 26h1v1h-1zM23 26h1v1h-1zM24 26h1v1h-1zM25 26h1v1h-1zM26 26h1v1h-1zM27 26h1v1h-1zM30 26h1v1h-1zM2 27h1v1h-1zM4 27h1v1h-1zM5 27h1v1h-1zM6 27h1v1h-1zM8 27h1v1h-1zM12 27h1v1h-1zM13 27h1v1h-1zM16 27h1v1h-1zM17 27h1v1h-1zM18 27h1v1h-1zM20 27h1v1h-1zM21 27h1v1h-1zM23 27h1v1h-1zM25 27h1v1h-1zM27 27h1v1h-1zM28 27h1v1h-1zM30 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM5 28h1v1h-1zM6 28h1v1h-1zM8 28h1v1h-1zM11 28h1v1h-1zM17 28h1v1h-1zM18 28h1v1h-1zM19 28h1v1h-1zM21 28h1v1h-1zM23 28h1v1h-1zM24 28h1v1h-1zM25 28h1v1h-1zM26 28h1v1h-1zM27 28h1v1h-1zM28 28h1v1h-1zM29 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM12 29h1v1h-1zM13 29h1v1h-1zM15 29h1v1h-1zM25 29h1v1h-1zM27 29h1v1h-1zM28 29h1v1h-1zM30 29h1v1h-1zM2 30h1v1h-1zM3 30h1v1h-1zM4 30h1v1h-1zM5 30h1v1h-1zM6 30h1v1h-1zM7 30h1v1h-1zM8 30h1v1h-1zM10 30h1v1h-1zM12 30h1v1h-1zM14 30h1v1h-1zM15 30h1v1h-1zM16 30h1v1h-1zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM24 30h1v1h-1zM25 30h1v1h-1zM26 30h1v1h-1zM27 30h1v1h-1zM28 30h1v1h-1z" fill="#0b0f17"/></svg><div><b>Gerry Wolfe, JD</b><a id="emailGerry" href="#"></a><span class="li">linkedin.com/in/gerrywolfe</span></div></div>
+          <div class="person"><svg class="qr qr-sm" viewBox="0 0 37 37" shape-rendering="crispEdges" role="img" aria-label="LinkedIn QR code for Christi McGowan"><rect width="37" height="37" fill="#efe9db"/><path d="M2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM5 2h1v1h-1zM6 2h1v1h-1zM7 2h1v1h-1zM8 2h1v1h-1zM13 2h1v1h-1zM14 2h1v1h-1zM18 2h1v1h-1zM19 2h1v1h-1zM20 2h1v1h-1zM21 2h1v1h-1zM22 2h1v1h-1zM23 2h1v1h-1zM25 2h1v1h-1zM28 2h1v1h-1zM29 2h1v1h-1zM30 2h1v1h-1zM31 2h1v1h-1zM32 2h1v1h-1zM33 2h1v1h-1zM34 2h1v1h-1zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM12 3h1v1h-1zM14 3h1v1h-1zM17 3h1v1h-1zM18 3h1v1h-1zM19 3h1v1h-1zM23 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM34 3h1v1h-1zM2 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM10 4h1v1h-1zM13 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM21 4h1v1h-1zM22 4h1v1h-1zM23 4h1v1h-1zM24 4h1v1h-1zM28 4h1v1h-1zM30 4h1v1h-1zM31 4h1v1h-1zM32 4h1v1h-1zM34 4h1v1h-1zM2 5h1v1h-1zM4 5h1v1h-1zM5 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM14 5h1v1h-1zM17 5h1v1h-1zM20 5h1v1h-1zM21 5h1v1h-1zM24 5h1v1h-1zM25 5h1v1h-1zM28 5h1v1h-1zM30 5h1v1h-1zM31 5h1v1h-1zM32 5h1v1h-1zM34 5h1v1h-1zM2 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM14 6h1v1h-1zM15 6h1v1h-1zM16 6h1v1h-1zM17 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM21 6h1v1h-1zM25 6h1v1h-1zM26 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM31 6h1v1h-1zM32 6h1v1h-1zM34 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM11 7h1v1h-1zM19 7h1v1h-1zM20 7h1v1h-1zM22 7h1v1h-1zM23 7h1v1h-1zM28 7h1v1h-1zM34 7h1v1h-1zM2 8h1v1h-1zM3 8h1v1h-1zM4 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM29 8h1v1h-1zM30 8h1v1h-1zM31 8h1v1h-1zM32 8h1v1h-1zM33 8h1v1h-1zM34 8h1v1h-1zM10 9h1v1h-1zM18 9h1v1h-1zM23 9h1v1h-1zM24 9h1v1h-1zM2 10h1v1h-1zM4 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM7 10h1v1h-1zM8 10h1v1h-1zM11 10h1v1h-1zM12 10h1v1h-1zM15 10h1v1h-1zM16 10h1v1h-1zM19 10h1v1h-1zM24 10h1v1h-1zM25 10h1v1h-1zM26 10h1v1h-1zM28 10h1v1h-1zM29 10h1v1h-1zM30 10h1v1h-1zM31 10h1v1h-1zM32 10h1v1h-1zM2 11h1v1h-1zM3 11h1v1h-1zM4 11h1v1h-1zM6 11h1v1h-1zM7 11h1v1h-1zM9 11h1v1h-1zM11 11h1v1h-1zM12 11h1v1h-1zM14 11h1v1h-1zM15 11h1v1h-1zM16 11h1v1h-1zM18 11h1v1h-1zM19 11h1v1h-1zM20 11h1v1h-1zM21 11h1v1h-1zM23 11h1v1h-1zM25 11h1v1h-1zM28 11h1v1h-1zM29 11h1v1h-1zM31 11h1v1h-1zM32 11h1v1h-1zM33 11h1v1h-1zM34 11h1v1h-1zM2 12h1v1h-1zM3 12h1v1h-1zM4 12h1v1h-1zM5 12h1v1h-1zM7 12h1v1h-1zM8 12h1v1h-1zM9 12h1v1h-1zM10 12h1v1h-1zM11 12h1v1h-1zM12 12h1v1h-1zM14 12h1v1h-1zM15 12h1v1h-1zM16 12h1v1h-1zM17 12h1v1h-1zM18 12h1v1h-1zM19 12h1v1h-1zM23 12h1v1h-1zM26 12h1v1h-1zM27 12h1v1h-1zM30 12h1v1h-1zM32 12h1v1h-1zM33 12h1v1h-1zM2 13h1v1h-1zM5 13h1v1h-1zM13 13h1v1h-1zM14 13h1v1h-1zM15 13h1v1h-1zM18 13h1v1h-1zM19 13h1v1h-1zM20 13h1v1h-1zM21 13h1v1h-1zM22 13h1v1h-1zM23 13h1v1h-1zM24 13h1v1h-1zM25 13h1v1h-1zM27 13h1v1h-1zM28 13h1v1h-1zM30 13h1v1h-1zM31 13h1v1h-1zM32 13h1v1h-1zM33 13h1v1h-1zM34 13h1v1h-1zM7 14h1v1h-1zM8 14h1v1h-1zM9 14h1v1h-1zM10 14h1v1h-1zM11 14h1v1h-1zM13 14h1v1h-1zM14 14h1v1h-1zM16 14h1v1h-1zM18 14h1v1h-1zM21 14h1v1h-1zM22 14h1v1h-1zM25 14h1v1h-1zM26 14h1v1h-1zM27 14h1v1h-1zM29 14h1v1h-1zM30 14h1v1h-1zM31 14h1v1h-1zM2 15h1v1h-1zM3 15h1v1h-1zM5 15h1v1h-1zM6 15h1v1h-1zM7 15h1v1h-1zM9 15h1v1h-1zM10 15h1v1h-1zM11 15h1v1h-1zM12 15h1v1h-1zM13 15h1v1h-1zM14 15h1v1h-1zM15 15h1v1h-1zM17 15h1v1h-1zM19 15h1v1h-1zM20 15h1v1h-1zM21 15h1v1h-1zM24 15h1v1h-1zM25 15h1v1h-1zM26 15h1v1h-1zM28 15h1v1h-1zM31 15h1v1h-1zM32 15h1v1h-1zM33 15h1v1h-1zM34 15h1v1h-1zM2 16h1v1h-1zM5 16h1v1h-1zM7 16h1v1h-1zM8 16h1v1h-1zM9 16h1v1h-1zM10 16h1v1h-1zM13 16h1v1h-1zM15 16h1v1h-1zM17 16h1v1h-1zM18 16h1v1h-1zM19 16h1v1h-1zM22 16h1v1h-1zM24 16h1v1h-1zM26 16h1v1h-1zM27 16h1v1h-1zM28 16h1v1h-1zM30 16h1v1h-1zM32 16h1v1h-1zM33 16h1v1h-1zM3 17h1v1h-1zM5 17h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM10 17h1v1h-1zM13 17h1v1h-1zM15 17h1v1h-1zM16 17h1v1h-1zM17 17h1v1h-1zM22 17h1v1h-1zM23 17h1v1h-1zM25 17h1v1h-1zM27 17h1v1h-1zM28 17h1v1h-1zM29 17h1v1h-1zM31 17h1v1h-1zM32 17h1v1h-1zM2 18h1v1h-1zM3 18h1v1h-1zM4 18h1v1h-1zM5 18h1v1h-1zM7 18h1v1h-1zM8 18h1v1h-1zM9 18h1v1h-1zM10 18h1v1h-1zM11 18h1v1h-1zM12 18h1v1h-1zM17 18h1v1h-1zM19 18h1v1h-1zM24 18h1v1h-1zM25 18h1v1h-1zM26 18h1v1h-1zM27 18h1v1h-1zM29 18h1v1h-1zM30 18h1v1h-1zM34 18h1v1h-1zM2 19h1v1h-1zM3 19h1v1h-1zM4 19h1v1h-1zM6 19h1v1h-1zM10 19h1v1h-1zM12 19h1v1h-1zM15 19h1v1h-1zM20 19h1v1h-1zM21 19h1v1h-1zM22 19h1v1h-1zM23 19h1v1h-1zM25 19h1v1h-1zM26 19h1v1h-1zM27 19h1v1h-1zM28 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM32 19h1v1h-1zM33 19h1v1h-1zM34 19h1v1h-1zM2 20h1v1h-1zM6 20h1v1h-1zM8 20h1v1h-1zM10 20h1v1h-1zM11 20h1v1h-1zM14 20h1v1h-1zM15 20h1v1h-1zM17 20h1v1h-1zM20 20h1v1h-1zM22 20h1v1h-1zM27 20h1v1h-1zM28 20h1v1h-1zM29 20h1v1h-1zM30 20h1v1h-1zM32 20h1v1h-1zM33 20h1v1h-1zM5 21h1v1h-1zM7 21h1v1h-1zM11 21h1v1h-1zM13 21h1v1h-1zM16 21h1v1h-1zM18 21h1v1h-1zM23 21h1v1h-1zM25 21h1v1h-1zM27 21h1v1h-1zM28 21h1v1h-1zM29 21h1v1h-1zM30 21h1v1h-1zM31 21h1v1h-1zM32 21h1v1h-1zM33 21h1v1h-1zM3 22h1v1h-1zM4 22h1v1h-1zM5 22h1v1h-1zM6 22h1v1h-1zM7 22h1v1h-1zM8 22h1v1h-1zM9 22h1v1h-1zM14 22h1v1h-1zM15 22h1v1h-1zM16 22h1v1h-1zM20 22h1v1h-1zM21 22h1v1h-1zM22 22h1v1h-1zM24 22h1v1h-1zM26 22h1v1h-1zM27 22h1v1h-1zM29 22h1v1h-1zM30 22h1v1h-1zM31 22h1v1h-1zM34 22h1v1h-1zM2 23h1v1h-1zM3 23h1v1h-1zM4 23h1v1h-1zM6 23h1v1h-1zM10 23h1v1h-1zM11 23h1v1h-1zM12 23h1v1h-1zM15 23h1v1h-1zM17 23h1v1h-1zM18 23h1v1h-1zM19 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM27 23h1v1h-1zM28 23h1v1h-1zM34 23h1v1h-1zM2 24h1v1h-1zM4 24h1v1h-1zM5 24h1v1h-1zM7 24h1v1h-1zM8 24h1v1h-1zM10 24h1v1h-1zM12 24h1v1h-1zM13 24h1v1h-1zM14 24h1v1h-1zM15 24h1v1h-1zM27 24h1v1h-1zM31 24h1v1h-1zM32 24h1v1h-1zM33 24h1v1h-1zM2 25h1v1h-1zM4 25h1v1h-1zM7 25h1v1h-1zM11 25h1v1h-1zM12 25h1v1h-1zM13 25h1v1h-1zM15 25h1v1h-1zM16 25h1v1h-1zM18 25h1v1h-1zM23 25h1v1h-1zM24 25h1v1h-1zM26 25h1v1h-1zM27 25h1v1h-1zM28 25h1v1h-1zM30 25h1v1h-1zM32 25h1v1h-1zM33 25h1v1h-1zM2 26h1v1h-1zM6 26h1v1h-1zM7 26h1v1h-1zM8 26h1v1h-1zM9 26h1v1h-1zM10 26h1v1h-1zM11 26h1v1h-1zM14 26h1v1h-1zM16 26h1v1h-1zM19 26h1v1h-1zM20 26h1v1h-1zM21 26h1v1h-1zM24 26h1v1h-1zM26 26h1v1h-1zM27 26h1v1h-1zM28 26h1v1h-1zM29 26h1v1h-1zM30 26h1v1h-1zM33 26h1v1h-1zM10 27h1v1h-1zM12 27h1v1h-1zM14 27h1v1h-1zM16 27h1v1h-1zM18 27h1v1h-1zM19 27h1v1h-1zM20 27h1v1h-1zM21 27h1v1h-1zM22 27h1v1h-1zM23 27h1v1h-1zM25 27h1v1h-1zM26 27h1v1h-1zM30 27h1v1h-1zM32 27h1v1h-1zM34 27h1v1h-1zM2 28h1v1h-1zM3 28h1v1h-1zM4 28h1v1h-1zM5 28h1v1h-1zM6 28h1v1h-1zM7 28h1v1h-1zM8 28h1v1h-1zM12 28h1v1h-1zM13 28h1v1h-1zM14 28h1v1h-1zM17 28h1v1h-1zM18 28h1v1h-1zM19 28h1v1h-1zM25 28h1v1h-1zM26 28h1v1h-1zM28 28h1v1h-1zM30 28h1v1h-1zM32 28h1v1h-1zM33 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM10 29h1v1h-1zM11 29h1v1h-1zM13 29h1v1h-1zM17 29h1v1h-1zM19 29h1v1h-1zM20 29h1v1h-1zM22 29h1v1h-1zM23 29h1v1h-1zM25 29h1v1h-1zM26 29h1v1h-1zM30 29h1v1h-1zM31 29h1v1h-1zM32 29h1v1h-1zM34 29h1v1h-1zM2 30h1v1h-1zM4 30h1v1h-1zM5 30h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM10 30h1v1h-1zM11 30h1v1h-1zM12 30h1v1h-1zM13 30h1v1h-1zM14 30h1v1h-1zM18 30h1v1h-1zM22 30h1v1h-1zM26 30h1v1h-1zM27 30h1v1h-1zM28 30h1v1h-1zM29 30h1v1h-1zM30 30h1v1h-1zM31 30h1v1h-1zM2 31h1v1h-1zM4 31h1v1h-1zM5 31h1v1h-1zM6 31h1v1h-1zM8 31h1v1h-1zM10 31h1v1h-1zM11 31h1v1h-1zM12 31h1v1h-1zM13 31h1v1h-1zM14 31h1v1h-1zM15 31h1v1h-1zM16 31h1v1h-1zM17 31h1v1h-1zM19 31h1v1h-1zM20 31h1v1h-1zM21 31h1v1h-1zM23 31h1v1h-1zM24 31h1v1h-1zM25 31h1v1h-1zM27 31h1v1h-1zM30 31h1v1h-1zM31 31h1v1h-1zM33 31h1v1h-1zM34 31h1v1h-1zM2 32h1v1h-1zM4 32h1v1h-1zM5 32h1v1h-1zM6 32h1v1h-1zM8 32h1v1h-1zM10 32h1v1h-1zM12 32h1v1h-1zM15 32h1v1h-1zM16 32h1v1h-1zM17 32h1v1h-1zM18 32h1v1h-1zM19 32h1v1h-1zM22 32h1v1h-1zM23 32h1v1h-1zM24 32h1v1h-1zM25 32h1v1h-1zM26 32h1v1h-1zM27 32h1v1h-1zM28 32h1v1h-1zM29 32h1v1h-1zM31 32h1v1h-1zM32 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM13 33h1v1h-1zM15 33h1v1h-1zM16 33h1v1h-1zM17 33h1v1h-1zM21 33h1v1h-1zM23 33h1v1h-1zM24 33h1v1h-1zM27 33h1v1h-1zM30 33h1v1h-1zM31 33h1v1h-1zM32 33h1v1h-1zM2 34h1v1h-1zM3 34h1v1h-1zM4 34h1v1h-1zM5 34h1v1h-1zM6 34h1v1h-1zM7 34h1v1h-1zM8 34h1v1h-1zM10 34h1v1h-1zM11 34h1v1h-1zM12 34h1v1h-1zM13 34h1v1h-1zM14 34h1v1h-1zM15 34h1v1h-1zM16 34h1v1h-1zM17 34h1v1h-1zM19 34h1v1h-1zM24 34h1v1h-1zM25 34h1v1h-1zM26 34h1v1h-1zM27 34h1v1h-1zM28 34h1v1h-1zM29 34h1v1h-1zM33 34h1v1h-1z" fill="#0b0f17"/></svg><div><b>Christi McGowan</b><a id="emailChristi" href="#"></a><span class="li">linkedin.com/in/christi-mcgowan-1a2b3851</span></div></div>
+        </div>
+      </div>
+      <div class="qrcol fx">
+        <div class="qrwrap">
+          <svg class="qr" viewBox="0 0 33 33" shape-rendering="crispEdges" role="img" aria-label="QR code for lambda.gerrywolfe.com"><rect width="33" height="33" fill="#efe9db"/><path d="M2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM5 2h1v1h-1zM6 2h1v1h-1zM7 2h1v1h-1zM8 2h1v1h-1zM10 2h1v1h-1zM15 2h1v1h-1zM16 2h1v1h-1zM18 2h1v1h-1zM19 2h1v1h-1zM20 2h1v1h-1zM24 2h1v1h-1zM25 2h1v1h-1zM26 2h1v1h-1zM27 2h1v1h-1zM28 2h1v1h-1zM29 2h1v1h-1zM30 2h1v1h-1zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM12 3h1v1h-1zM15 3h1v1h-1zM16 3h1v1h-1zM17 3h1v1h-1zM21 3h1v1h-1zM24 3h1v1h-1zM30 3h1v1h-1zM2 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM11 4h1v1h-1zM12 4h1v1h-1zM13 4h1v1h-1zM16 4h1v1h-1zM19 4h1v1h-1zM21 4h1v1h-1zM22 4h1v1h-1zM24 4h1v1h-1zM26 4h1v1h-1zM27 4h1v1h-1zM28 4h1v1h-1zM30 4h1v1h-1zM2 5h1v1h-1zM4 5h1v1h-1zM5 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM13 5h1v1h-1zM14 5h1v1h-1zM20 5h1v1h-1zM21 5h1v1h-1zM24 5h1v1h-1zM26 5h1v1h-1zM27 5h1v1h-1zM28 5h1v1h-1zM30 5h1v1h-1zM2 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM11 6h1v1h-1zM12 6h1v1h-1zM13 6h1v1h-1zM20 6h1v1h-1zM24 6h1v1h-1zM26 6h1v1h-1zM27 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM11 7h1v1h-1zM12 7h1v1h-1zM13 7h1v1h-1zM18 7h1v1h-1zM19 7h1v1h-1zM21 7h1v1h-1zM24 7h1v1h-1zM30 7h1v1h-1zM2 8h1v1h-1zM3 8h1v1h-1zM4 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM25 8h1v1h-1zM26 8h1v1h-1zM27 8h1v1h-1zM28 8h1v1h-1zM29 8h1v1h-1zM30 8h1v1h-1zM10 9h1v1h-1zM11 9h1v1h-1zM12 9h1v1h-1zM14 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM18 9h1v1h-1zM19 9h1v1h-1zM21 9h1v1h-1zM22 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM13 10h1v1h-1zM14 10h1v1h-1zM15 10h1v1h-1zM19 10h1v1h-1zM21 10h1v1h-1zM23 10h1v1h-1zM24 10h1v1h-1zM25 10h1v1h-1zM26 10h1v1h-1zM27 10h1v1h-1zM30 10h1v1h-1zM4 11h1v1h-1zM6 11h1v1h-1zM7 11h1v1h-1zM9 11h1v1h-1zM11 11h1v1h-1zM12 11h1v1h-1zM13 11h1v1h-1zM15 11h1v1h-1zM16 11h1v1h-1zM18 11h1v1h-1zM20 11h1v1h-1zM24 11h1v1h-1zM25 11h1v1h-1zM26 11h1v1h-1zM27 11h1v1h-1zM28 11h1v1h-1zM29 11h1v1h-1zM30 11h1v1h-1zM2 12h1v1h-1zM3 12h1v1h-1zM5 12h1v1h-1zM8 12h1v1h-1zM9 12h1v1h-1zM10 12h1v1h-1zM11 12h1v1h-1zM13 12h1v1h-1zM18 12h1v1h-1zM19 12h1v1h-1zM20 12h1v1h-1zM22 12h1v1h-1zM24 12h1v1h-1zM25 12h1v1h-1zM26 12h1v1h-1zM30 12h1v1h-1zM2 13h1v1h-1zM5 13h1v1h-1zM7 13h1v1h-1zM11 13h1v1h-1zM12 13h1v1h-1zM14 13h1v1h-1zM16 13h1v1h-1zM19 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM24 13h1v1h-1zM25 13h1v1h-1zM27 13h1v1h-1zM29 13h1v1h-1zM30 13h1v1h-1zM2 14h1v1h-1zM5 14h1v1h-1zM6 14h1v1h-1zM7 14h1v1h-1zM8 14h1v1h-1zM9 14h1v1h-1zM11 14h1v1h-1zM12 14h1v1h-1zM13 14h1v1h-1zM15 14h1v1h-1zM16 14h1v1h-1zM17 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM20 14h1v1h-1zM23 14h1v1h-1zM29 14h1v1h-1zM2 15h1v1h-1zM4 15h1v1h-1zM10 15h1v1h-1zM11 15h1v1h-1zM13 15h1v1h-1zM14 15h1v1h-1zM19 15h1v1h-1zM20 15h1v1h-1zM24 15h1v1h-1zM25 15h1v1h-1zM26 15h1v1h-1zM27 15h1v1h-1zM28 15h1v1h-1zM29 15h1v1h-1zM30 15h1v1h-1zM4 16h1v1h-1zM7 16h1v1h-1zM8 16h1v1h-1zM10 16h1v1h-1zM11 16h1v1h-1zM15 16h1v1h-1zM16 16h1v1h-1zM17 16h1v1h-1zM20 16h1v1h-1zM23 16h1v1h-1zM24 16h1v1h-1zM27 16h1v1h-1zM28 16h1v1h-1zM30 16h1v1h-1zM3 17h1v1h-1zM4 17h1v1h-1zM5 17h1v1h-1zM6 17h1v1h-1zM10 17h1v1h-1zM12 17h1v1h-1zM15 17h1v1h-1zM17 17h1v1h-1zM18 17h1v1h-1zM19 17h1v1h-1zM21 17h1v1h-1zM24 17h1v1h-1zM26 17h1v1h-1zM29 17h1v1h-1zM30 17h1v1h-1zM6 18h1v1h-1zM7 18h1v1h-1zM8 18h1v1h-1zM9 18h1v1h-1zM10 18h1v1h-1zM13 18h1v1h-1zM15 18h1v1h-1zM19 18h1v1h-1zM21 18h1v1h-1zM29 18h1v1h-1zM2 19h1v1h-1zM3 19h1v1h-1zM4 19h1v1h-1zM5 19h1v1h-1zM6 19h1v1h-1zM9 19h1v1h-1zM13 19h1v1h-1zM14 19h1v1h-1zM15 19h1v1h-1zM16 19h1v1h-1zM18 19h1v1h-1zM20 19h1v1h-1zM24 19h1v1h-1zM25 19h1v1h-1zM26 19h1v1h-1zM27 19h1v1h-1zM29 19h1v1h-1zM30 19h1v1h-1zM4 20h1v1h-1zM7 20h1v1h-1zM8 20h1v1h-1zM9 20h1v1h-1zM10 20h1v1h-1zM18 20h1v1h-1zM28 20h1v1h-1zM30 20h1v1h-1zM6 21h1v1h-1zM9 21h1v1h-1zM13 21h1v1h-1zM16 21h1v1h-1zM19 21h1v1h-1zM20 21h1v1h-1zM21 21h1v1h-1zM23 21h1v1h-1zM25 21h1v1h-1zM29 21h1v1h-1zM30 21h1v1h-1zM2 22h1v1h-1zM3 22h1v1h-1zM4 22h1v1h-1zM5 22h1v1h-1zM8 22h1v1h-1zM9 22h1v1h-1zM14 22h1v1h-1zM15 22h1v1h-1zM16 22h1v1h-1zM17 22h1v1h-1zM18 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM22 22h1v1h-1zM23 22h1v1h-1zM24 22h1v1h-1zM25 22h1v1h-1zM26 22h1v1h-1zM27 22h1v1h-1zM30 22h1v1h-1zM10 23h1v1h-1zM11 23h1v1h-1zM13 23h1v1h-1zM14 23h1v1h-1zM19 23h1v1h-1zM20 23h1v1h-1zM22 23h1v1h-1zM26 23h1v1h-1zM30 23h1v1h-1zM2 24h1v1h-1zM3 24h1v1h-1zM4 24h1v1h-1zM5 24h1v1h-1zM6 24h1v1h-1zM7 24h1v1h-1zM8 24h1v1h-1zM10 24h1v1h-1zM11 24h1v1h-1zM12 24h1v1h-1zM13 24h1v1h-1zM15 24h1v1h-1zM16 24h1v1h-1zM17 24h1v1h-1zM20 24h1v1h-1zM21 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h1v1h-1zM27 24h1v1h-1zM28 24h1v1h-1zM30 24h1v1h-1zM2 25h1v1h-1zM8 25h1v1h-1zM11 25h1v1h-1zM12 25h1v1h-1zM15 25h1v1h-1zM17 25h1v1h-1zM18 25h1v1h-1zM19 25h1v1h-1zM20 25h1v1h-1zM21 25h1v1h-1zM22 25h1v1h-1zM26 25h1v1h-1zM30 25h1v1h-1zM2 26h1v1h-1zM4 26h1v1h-1zM5 26h1v1h-1zM6 26h1v1h-1zM8 26h1v1h-1zM10 26h1v1h-1zM15 26h1v1h-1zM19 26h1v1h-1zM21 26h1v1h-1zM22 26h1v1h-1zM23 26h1v1h-1zM24 26h1v1h-1zM25 26h1v1h-1zM26 26h1v1h-1zM27 26h1v1h-1zM29 26h1v1h-1zM30 26h1v1h-1zM2 27h1v1h-1zM4 27h1v1h-1zM5 27h1v1h-1zM6 27h1v1h-1zM8 27h1v1h-1zM11 27h1v1h-1zM12 27h1v1h-1zM13 27h1v1h-1zM16 27h1v1h-1zM18 27h1v1h-1zM19 27h1v1h-1zM20 27h1v1h-1zM22 27h1v1h-1zM23 27h1v1h-1zM29 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM5 28h1v1h-1zM6 28h1v1h-1zM8 28h1v1h-1zM11 28h1v1h-1zM12 28h1v1h-1zM13 28h1v1h-1zM14 28h1v1h-1zM18 28h1v1h-1zM19 28h1v1h-1zM20 28h1v1h-1zM21 28h1v1h-1zM23 28h1v1h-1zM27 28h1v1h-1zM28 28h1v1h-1zM29 28h1v1h-1zM30 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM11 29h1v1h-1zM16 29h1v1h-1zM19 29h1v1h-1zM20 29h1v1h-1zM22 29h1v1h-1zM24 29h1v1h-1zM25 29h1v1h-1zM27 29h1v1h-1zM29 29h1v1h-1zM30 29h1v1h-1zM2 30h1v1h-1zM3 30h1v1h-1zM4 30h1v1h-1zM5 30h1v1h-1zM6 30h1v1h-1zM7 30h1v1h-1zM8 30h1v1h-1zM10 30h1v1h-1zM11 30h1v1h-1zM13 30h1v1h-1zM14 30h1v1h-1zM15 30h1v1h-1zM17 30h1v1h-1zM20 30h1v1h-1zM22 30h1v1h-1zM23 30h1v1h-1zM24 30h1v1h-1zM25 30h1v1h-1zM27 30h1v1h-1zM29 30h1v1h-1z" fill="#0b0f17"/></svg>
+          <span class="url">lambda.gerrywolfe.com</span>
+        </div>
+        <div class="qrwrap">
+          <svg class="qr" viewBox="0 0 33 33" shape-rendering="crispEdges" role="img" aria-label="QR code for gerrywolfe.substack.com"><rect width="33" height="33" fill="#efe9db"/><path d="M2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM5 2h1v1h-1zM6 2h1v1h-1zM7 2h1v1h-1zM8 2h1v1h-1zM12 2h1v1h-1zM14 2h1v1h-1zM17 2h1v1h-1zM18 2h1v1h-1zM21 2h1v1h-1zM22 2h1v1h-1zM24 2h1v1h-1zM25 2h1v1h-1zM26 2h1v1h-1zM27 2h1v1h-1zM28 2h1v1h-1zM29 2h1v1h-1zM30 2h1v1h-1zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM14 3h1v1h-1zM19 3h1v1h-1zM20 3h1v1h-1zM24 3h1v1h-1zM30 3h1v1h-1zM2 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM6 4h1v1h-1zM8 4h1v1h-1zM10 4h1v1h-1zM11 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM21 4h1v1h-1zM24 4h1v1h-1zM26 4h1v1h-1zM27 4h1v1h-1zM28 4h1v1h-1zM30 4h1v1h-1zM2 5h1v1h-1zM4 5h1v1h-1zM5 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM10 5h1v1h-1zM18 5h1v1h-1zM19 5h1v1h-1zM24 5h1v1h-1zM26 5h1v1h-1zM27 5h1v1h-1zM28 5h1v1h-1zM30 5h1v1h-1zM2 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM11 6h1v1h-1zM12 6h1v1h-1zM13 6h1v1h-1zM14 6h1v1h-1zM15 6h1v1h-1zM16 6h1v1h-1zM17 6h1v1h-1zM21 6h1v1h-1zM22 6h1v1h-1zM24 6h1v1h-1zM26 6h1v1h-1zM27 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM13 7h1v1h-1zM15 7h1v1h-1zM16 7h1v1h-1zM17 7h1v1h-1zM18 7h1v1h-1zM22 7h1v1h-1zM24 7h1v1h-1zM30 7h1v1h-1zM2 8h1v1h-1zM3 8h1v1h-1zM4 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM8 8h1v1h-1zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM25 8h1v1h-1zM26 8h1v1h-1zM27 8h1v1h-1zM28 8h1v1h-1zM29 8h1v1h-1zM30 8h1v1h-1zM10 9h1v1h-1zM11 9h1v1h-1zM14 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM20 9h1v1h-1zM22 9h1v1h-1zM2 10h1v1h-1zM4 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM7 10h1v1h-1zM8 10h1v1h-1zM13 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM17 10h1v1h-1zM19 10h1v1h-1zM22 10h1v1h-1zM24 10h1v1h-1zM25 10h1v1h-1zM26 10h1v1h-1zM27 10h1v1h-1zM28 10h1v1h-1zM2 11h1v1h-1zM4 11h1v1h-1zM6 11h1v1h-1zM9 11h1v1h-1zM10 11h1v1h-1zM12 11h1v1h-1zM13 11h1v1h-1zM17 11h1v1h-1zM18 11h1v1h-1zM20 11h1v1h-1zM21 11h1v1h-1zM22 11h1v1h-1zM24 11h1v1h-1zM25 11h1v1h-1zM26 11h1v1h-1zM30 11h1v1h-1zM2 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM7 12h1v1h-1zM8 12h1v1h-1zM9 12h1v1h-1zM14 12h1v1h-1zM20 12h1v1h-1zM22 12h1v1h-1zM23 12h1v1h-1zM24 12h1v1h-1zM2 13h1v1h-1zM3 13h1v1h-1zM4 13h1v1h-1zM5 13h1v1h-1zM10 13h1v1h-1zM11 13h1v1h-1zM12 13h1v1h-1zM14 13h1v1h-1zM16 13h1v1h-1zM18 13h1v1h-1zM21 13h1v1h-1zM26 13h1v1h-1zM27 13h1v1h-1zM29 13h1v1h-1zM6 14h1v1h-1zM7 14h1v1h-1zM8 14h1v1h-1zM9 14h1v1h-1zM10 14h1v1h-1zM12 14h1v1h-1zM13 14h1v1h-1zM14 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM22 14h1v1h-1zM25 14h1v1h-1zM27 14h1v1h-1zM28 14h1v1h-1zM10 15h1v1h-1zM11 15h1v1h-1zM12 15h1v1h-1zM15 15h1v1h-1zM16 15h1v1h-1zM17 15h1v1h-1zM20 15h1v1h-1zM21 15h1v1h-1zM22 15h1v1h-1zM24 15h1v1h-1zM25 15h1v1h-1zM26 15h1v1h-1zM30 15h1v1h-1zM3 16h1v1h-1zM5 16h1v1h-1zM6 16h1v1h-1zM8 16h1v1h-1zM11 16h1v1h-1zM12 16h1v1h-1zM15 16h1v1h-1zM16 16h1v1h-1zM17 16h1v1h-1zM18 16h1v1h-1zM19 16h1v1h-1zM20 16h1v1h-1zM27 16h1v1h-1zM28 16h1v1h-1zM2 17h1v1h-1zM6 17h1v1h-1zM10 17h1v1h-1zM14 17h1v1h-1zM15 17h1v1h-1zM17 17h1v1h-1zM21 17h1v1h-1zM22 17h1v1h-1zM24 17h1v1h-1zM26 17h1v1h-1zM29 17h1v1h-1zM3 18h1v1h-1zM4 18h1v1h-1zM5 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM9 18h1v1h-1zM12 18h1v1h-1zM13 18h1v1h-1zM16 18h1v1h-1zM17 18h1v1h-1zM19 18h1v1h-1zM21 18h1v1h-1zM25 18h1v1h-1zM27 18h1v1h-1zM28 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM5 19h1v1h-1zM10 19h1v1h-1zM11 19h1v1h-1zM12 19h1v1h-1zM17 19h1v1h-1zM18 19h1v1h-1zM19 19h1v1h-1zM20 19h1v1h-1zM21 19h1v1h-1zM23 19h1v1h-1zM24 19h1v1h-1zM25 19h1v1h-1zM26 19h1v1h-1zM28 19h1v1h-1zM30 19h1v1h-1zM2 20h1v1h-1zM8 20h1v1h-1zM11 20h1v1h-1zM14 20h1v1h-1zM19 20h1v1h-1zM20 20h1v1h-1zM22 20h1v1h-1zM24 20h1v1h-1zM25 20h1v1h-1zM26 20h1v1h-1zM28 20h1v1h-1zM2 21h1v1h-1zM5 21h1v1h-1zM6 21h1v1h-1zM9 21h1v1h-1zM13 21h1v1h-1zM16 21h1v1h-1zM18 21h1v1h-1zM22 21h1v1h-1zM24 21h1v1h-1zM25 21h1v1h-1zM26 21h1v1h-1zM29 21h1v1h-1zM2 22h1v1h-1zM5 22h1v1h-1zM6 22h1v1h-1zM7 22h1v1h-1zM8 22h1v1h-1zM10 22h1v1h-1zM11 22h1v1h-1zM12 22h1v1h-1zM13 22h1v1h-1zM14 22h1v1h-1zM19 22h1v1h-1zM20 22h1v1h-1zM22 22h1v1h-1zM23 22h1v1h-1zM24 22h1v1h-1zM25 22h1v1h-1zM26 22h1v1h-1zM28 22h1v1h-1zM29 22h1v1h-1zM30 22h1v1h-1zM10 23h1v1h-1zM12 23h1v1h-1zM14 23h1v1h-1zM15 23h1v1h-1zM16 23h1v1h-1zM17 23h1v1h-1zM19 23h1v1h-1zM20 23h1v1h-1zM22 23h1v1h-1zM26 23h1v1h-1zM27 23h1v1h-1zM28 23h1v1h-1zM29 23h1v1h-1zM30 23h1v1h-1zM2 24h1v1h-1zM3 24h1v1h-1zM4 24h1v1h-1zM5 24h1v1h-1zM6 24h1v1h-1zM7 24h1v1h-1zM8 24h1v1h-1zM11 24h1v1h-1zM12 24h1v1h-1zM14 24h1v1h-1zM15 24h1v1h-1zM16 24h1v1h-1zM17 24h1v1h-1zM18 24h1v1h-1zM19 24h1v1h-1zM21 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h1v1h-1zM27 24h1v1h-1zM28 24h1v1h-1zM2 25h1v1h-1zM8 25h1v1h-1zM10 25h1v1h-1zM12 25h1v1h-1zM14 25h1v1h-1zM15 25h1v1h-1zM17 25h1v1h-1zM18 25h1v1h-1zM20 25h1v1h-1zM21 25h1v1h-1zM22 25h1v1h-1zM26 25h1v1h-1zM30 25h1v1h-1zM2 26h1v1h-1zM4 26h1v1h-1zM5 26h1v1h-1zM6 26h1v1h-1zM8 26h1v1h-1zM10 26h1v1h-1zM11 26h1v1h-1zM13 26h1v1h-1zM16 26h1v1h-1zM19 26h1v1h-1zM22 26h1v1h-1zM23 26h1v1h-1zM24 26h1v1h-1zM25 26h1v1h-1zM26 26h1v1h-1zM28 26h1v1h-1zM30 26h1v1h-1zM2 27h1v1h-1zM4 27h1v1h-1zM5 27h1v1h-1zM6 27h1v1h-1zM8 27h1v1h-1zM10 27h1v1h-1zM11 27h1v1h-1zM14 27h1v1h-1zM15 27h1v1h-1zM18 27h1v1h-1zM20 27h1v1h-1zM22 27h1v1h-1zM27 27h1v1h-1zM28 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM5 28h1v1h-1zM6 28h1v1h-1zM8 28h1v1h-1zM10 28h1v1h-1zM12 28h1v1h-1zM13 28h1v1h-1zM15 28h1v1h-1zM17 28h1v1h-1zM18 28h1v1h-1zM19 28h1v1h-1zM20 28h1v1h-1zM21 28h1v1h-1zM23 28h1v1h-1zM24 28h1v1h-1zM25 28h1v1h-1zM26 28h1v1h-1zM27 28h1v1h-1zM28 28h1v1h-1zM29 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM11 29h1v1h-1zM16 29h1v1h-1zM18 29h1v1h-1zM22 29h1v1h-1zM24 29h1v1h-1zM25 29h1v1h-1zM27 29h1v1h-1zM29 29h1v1h-1zM2 30h1v1h-1zM3 30h1v1h-1zM4 30h1v1h-1zM5 30h1v1h-1zM6 30h1v1h-1zM7 30h1v1h-1zM8 30h1v1h-1zM10 30h1v1h-1zM11 30h1v1h-1zM13 30h1v1h-1zM15 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM23 30h1v1h-1zM25 30h1v1h-1zM26 30h1v1h-1zM28 30h1v1h-1z" fill="#0b0f17"/></svg>
+          <span class="url">gerrywolfe.substack.com</span>
+        </div>
+      </div>
+    </div>
+    <p class="pubnote fx">These slides, with the prompt templates and the checklist, will be posted at <span class="mono">gerrywolfe.com/garbage-gospel</span></p>
+  </div>
+  <div class="notes-src">
+    <b>After Q&amp;A</b>
+    - Leave this up while people pack up. Say the URL out loud once; the QR is for the phones.
+    - Set the two email addresses in CONFIG at the top of the script.
+  </div>
+</section>
+
+</div>
+
+<div id="progress"></div>
+<div id="chrome">
+  <div class="nav">
+    <button id="prevBtn" aria-label="Previous slide">&larr;</button>
+    <button id="nextBtn" aria-label="Next slide">&rarr;</button>
+    <span id="counter" style="align-self:center;margin-left:6px;font-family:var(--mono)"></span>
+  </div>
+  <div id="hint"><span><kbd>P</kbd> notes</span><span><kbd>T</kbd> timer</span><span><kbd>F</kbd> fullscreen</span><span><kbd>&larr;</kbd><kbd>&rarr;</kbd> slides</span></div>
+  <div id="timer">00:00</div>
+</div>
+<aside id="notes" aria-label="Presenter notes"><h4 id="notesTitle">Notes</h4><div class="time" id="notesTime"></div><div id="notesBody"></div></aside>
+
+<script>
+(function () {
+  var CONFIG = {
+    presenters: "Gerry Wolfe, JD & Christi McGowan · Lambda Engine",
+    event: "",
+    emailGerry: "gerry@gerrywolfe.com",
+    emailChristi: "christi@gerrywolfe.com"
+  };
+  ['Gerry','Christi'].forEach(function (k) {
+    var a = document.getElementById('email' + k), v = CONFIG['email' + k];
+    if (v) { a.textContent = v; a.href = 'mailto:' + v; } else { a.textContent = 'email to be added'; a.removeAttribute('href'); }
+  });
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var cur = -1;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.getElementById('presenters').textContent = [CONFIG.presenters, CONFIG.event].filter(Boolean).join(' · ');
+  document.getElementById('presenters2').textContent = CONFIG.presenters;
+
+  function renderNotes(i) {
+    var src = slides[i].querySelector('.notes-src');
+    var title = document.getElementById('notesTitle');
+    var time = document.getElementById('notesTime');
+    var body = document.getElementById('notesBody');
+    title.textContent = (i + 1) + ' · ' + slides[i].getAttribute('data-title');
+    time.textContent = ''; body.innerHTML = '';
+    if (!src) return;
+    var demo = src.querySelector('.demo-block');
+    var text = src.cloneNode(true);
+    var d = text.querySelector('.demo-block'); if (d) d.remove();
+    var b = text.querySelector('b'); if (b) { time.textContent = b.textContent; b.remove(); }
+    var lines = text.textContent.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+    var ul = document.createElement('ul');
+    lines.forEach(function (l) { var li = document.createElement('li'); li.textContent = l.replace(/^-\s*/, ''); ul.appendChild(li); });
+    body.appendChild(ul);
+    if (demo) body.appendChild(demo.cloneNode(true));
+  }
+
+  function builds() { return Array.prototype.slice.call(slides[cur].querySelectorAll('.build')); }
+  function next() {
+    var b = builds().filter(function (e) { return !e.classList.contains('shown'); });
+    if (b.length) { b[0].classList.add('shown'); return; }
+    go(cur + 1);
+  }
+  function prev() {
+    var b = builds().filter(function (e) { return e.classList.contains('shown'); });
+    if (b.length) { b[b.length - 1].classList.remove('shown'); return; }
+    go(cur - 1);
+  }
+  function go(n) {
+    if (n < 0 || n >= slides.length || n === cur) return;
+    if (cur >= 0) slides[cur].classList.remove('active');
+    cur = n;
+    slides[cur].classList.add('active');
+    slides[cur].scrollTop = 0;
+    builds().forEach(function (e) { e.classList.remove('shown'); });
+    document.getElementById('counter').textContent = (cur + 1) + ' / ' + slides.length;
+    document.getElementById('progress').style.width = ((cur + 1) / slides.length * 100) + '%';
+    try { history.replaceState(null, '', '#' + (cur + 1)); } catch (e) {}
+    renderNotes(cur);
+    var hook = enter[cur]; if (hook) hook();
+  }
+  var enter = {};
+
+  // --- slide 1: word flip
+  enter[0] = function () {
+    var w1 = document.getElementById('w1'), w2 = document.getElementById('w2');
+    w1.innerHTML = '<span>Garbage</span>'; w2.innerHTML = '<span>Gospel</span>';
+    w1.firstChild.style.color = 'var(--garbage)'; w2.firstChild.style.color = 'var(--gospel)';
+    if (reduced) return;
+    setTimeout(function () { w1.innerHTML = '<span class="flip" style="color:var(--garbage)">Garbage</span>'; }, 700);
+    setTimeout(function () { w2.innerHTML = '<span class="flip" style="color:var(--gospel)">Gospel</span>'; }, 1300);
+  };
+
+  // --- slide 2: reveal
+  var revealBtn = document.getElementById('revealBtn');
+  revealBtn.addEventListener('click', function () {
+    var spot = document.getElementById('spot');
+    var on = spot.classList.toggle('revealed');
+    revealBtn.textContent = on ? 'Hide' : 'Reveal';
+  });
+
+  // --- slide 3: counters
+  enter[2] = function () {
+    document.querySelectorAll('.docket .big').forEach(function (el) {
+      if (el.dataset.text) { el.textContent = el.dataset.text; return; }
+      var target = +el.dataset.count, prefix = el.dataset.prefix || '';
+      if (reduced) { el.textContent = prefix + target.toLocaleString(); return; }
+      var start = null;
+      function step(ts) {
+        if (!start) start = ts;
+        var p = Math.min(1, (ts - start) / 1400);
+        var v = Math.round(target * (1 - Math.pow(1 - p, 3)));
+        el.textContent = prefix + v.toLocaleString();
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  };
+
+  // --- slide 4: next-token animation
+  var predictTimer = null;
+  enter[3] = function () {
+    var cands = [['tolled', 41], ['extended', 22], ['waived', 14], ['stayed', 11], ['satisfied', 7]];
+    var box = document.getElementById('cands'), slot = document.getElementById('slot');
+    box.innerHTML = ''; slot.innerHTML = '&nbsp;';
+    cands.forEach(function (c) {
+      var d = document.createElement('div'); d.className = 'cand';
+      d.innerHTML = '<b>' + c[0] + '</b><span class="bar"></span><span>' + c[1] + '%</span>';
+      box.appendChild(d);
+    });
+    clearTimeout(predictTimer);
+    var bars = box.querySelectorAll('.bar');
+    predictTimer = setTimeout(function () {
+      cands.forEach(function (c, i) { bars[i].style.width = (c[1] * 2.2) + 'px'; });
+      predictTimer = setTimeout(function () {
+        var t = 'tolled.', k = 0; slot.textContent = '';
+        (function type() { if (k < t.length) { slot.textContent += t[k++]; predictTimer = setTimeout(type, 90); } })();
+      }, reduced ? 0 : 1100);
+    }, reduced ? 0 : 400);
+  };
+
+  // --- slide 5: prompt builder
+  var toggles = document.querySelectorAll('#toggles .toggle');
+  var order = ['role', 'task', 'source', 'constraints', 'format', 'askfirst'];
+  function rebuildPrompt() {
+    var out = document.getElementById('promptOut');
+    out.querySelectorAll('.line:not(.base)').forEach(function (n) { n.remove(); });
+    var base = document.getElementById('baseLine');
+    var active = {};
+    toggles.forEach(function (t) { if (t.getAttribute('aria-pressed') === 'true') active[t.dataset.key] = t.dataset.line; });
+    var count = Object.keys(active).length;
+    base.style.display = count ? 'none' : '';
+    var anchor = out.querySelector('.meter');
+    order.forEach(function (k) {
+      if (!active[k]) return;
+      var d = document.createElement('div'); d.className = 'line';
+      var label = k === 'askfirst' ? 'Ask first' : k.charAt(0).toUpperCase() + k.slice(1);
+      var text = active[k];
+      var bold = document.createElement('span'); bold.className = 'k'; bold.textContent = label + ' · ';
+      d.appendChild(bold); d.appendChild(document.createTextNode(text));
+      out.insertBefore(d, anchor);
+    });
+    var fill = document.getElementById('meterFill'), lbl = document.getElementById('meterLbl');
+    var pct = [8, 22, 40, 60, 78, 90, 100][count];
+    fill.style.width = pct + '%';
+    fill.style.background = count <= 1 ? 'var(--garbage)' : count <= 4 ? 'var(--amber)' : 'var(--gospel)';
+    lbl.textContent = count <= 1 ? 'High' : count <= 4 ? 'Lower' : 'Low';
+    var risk = document.querySelector('#promptOut .meter span');
+    risk.textContent = 'Risk of gospel';
+  }
+  toggles.forEach(function (t) {
+    t.addEventListener('click', function () {
+      t.setAttribute('aria-pressed', t.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+      t.querySelector('.box').textContent = t.getAttribute('aria-pressed') === 'true' ? '✓' : '';
+      rebuildPrompt();
+    });
+  });
+  function copyText(text, btn) {
+    var done = function () { var o = btn.textContent; btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = o; }, 1400); };
+    if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(done, done); }
+    else { done(); }
+  }
+  document.getElementById('copyPrompt').addEventListener('click', function (e) {
+    var lines = [];
+    toggles.forEach(function (t) { if (t.getAttribute('aria-pressed') === 'true') lines.push(t.dataset.line); });
+    copyText(lines.length ? lines.join('\n') : document.getElementById('baseLine').textContent, e.currentTarget);
+  });
+  document.querySelectorAll('[data-copy]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var full = b.parentNode.getAttribute('data-full');
+      if (full) { copyText(full, b); return; }
+      var box = b.parentNode.cloneNode(true);
+      box.querySelector('button').remove(); box.querySelector('.t').remove();
+      copyText(box.textContent.trim(), b);
+    });
+  });
+
+  // --- slide 7: habits
+  var habits = document.querySelectorAll('#habits .check');
+  habits.forEach(function (h) {
+    h.addEventListener('click', function () {
+      var on = h.getAttribute('aria-pressed') !== 'true';
+      h.setAttribute('aria-pressed', on ? 'true' : 'false');
+      h.querySelector('.box').textContent = on ? '✓' : '';
+      var n = document.querySelectorAll('#habits .check[aria-pressed="true"]').length;
+      var sc = document.getElementById('habitScore'); if (sc) sc.textContent = n + ' of 6 already habits';
+    });
+  });
+
+  // --- chrome: nav, keys, notes, timer, fullscreen
+  document.getElementById('prevBtn').addEventListener('click', prev);
+  document.getElementById('nextBtn').addEventListener('click', next);
+  var notes = document.getElementById('notes');
+  var timerOn = false, timerStart = 0, timerAcc = 0, timerEl = document.getElementById('timer');
+  function fmt(ms) { var s = Math.floor(ms / 1000); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
+  setInterval(function () { if (timerOn) timerEl.textContent = fmt(timerAcc + (Date.now() - timerStart)); }, 500);
+  function toggleTimer() {
+    if (timerOn) { timerAcc += Date.now() - timerStart; timerOn = false; timerEl.classList.remove('on'); }
+    else { timerStart = Date.now(); timerOn = true; timerEl.classList.add('on'); }
+  }
+  timerEl.addEventListener('click', toggleTimer);
+  timerEl.style.cursor = 'pointer';
+  document.addEventListener('keydown', function (e) {
+    if (e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    switch (e.key) {
+      case 'ArrowRight': case 'PageDown': case ' ': e.preventDefault(); next(); break;
+      case 'ArrowLeft': case 'PageUp': e.preventDefault(); prev(); break;
+      case 'Home': go(0); break;
+      case 'End': go(slides.length - 1); break;
+      case 'p': case 'P': notes.classList.toggle('open'); break;
+      case 't': case 'T': toggleTimer(); break;
+      case 'r': case 'R': timerAcc = 0; timerStart = Date.now(); timerEl.textContent = '00:00'; break;
+      case 'f': case 'F':
+        if (document.fullscreenElement) { document.exitFullscreen && document.exitFullscreen(); }
+        else if (document.documentElement.requestFullscreen) { document.documentElement.requestFullscreen(); }
+        break;
+    }
+  });
+  // touch swipe
+  var tx = null;
+  document.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', function (e) {
+    if (tx === null) return; var dx = e.changedTouches[0].clientX - tx; tx = null;
+    if (Math.abs(dx) > 60) { if (dx < 0) next(); else prev(); }
+  });
+  window.addEventListener('hashchange', function () { var n = parseInt(location.hash.slice(1), 10); if (n) go(n - 1); });
+
+  var startAt = parseInt((location.hash || '').slice(1), 10);
+  go(startAt ? startAt - 1 : 0);
+})();
+</script>
+</body>
+</html>
