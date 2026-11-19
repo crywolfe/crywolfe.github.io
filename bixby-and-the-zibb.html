@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bixby and the Zibb</title>
+<meta name="description" content="An animated rhyme about a coder who stops typing and starts building the helpers his coding agent needs. By Gerry Wolfe with Claude's help.">
+<link rel="canonical" href="https://gerrywolfe.com/bixby-and-the-zibb">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Bixby and the Zibb">
+<meta property="og:description" content="An animated rhyme about a coder who stops typing and starts building the helpers his coding agent needs.">
+<meta property="og:url" content="https://gerrywolfe.com/bixby-and-the-zibb">
+<meta property="og:image" content="https://gerrywolfe.com/images/bixby-and-the-zibb.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://gerrywolfe.com/images/bixby-and-the-zibb.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:wght@400;700&family=Grandstander:wght@500;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout: one picture book on a dark desk. Each page is a row of comic panes over a block of verse.
+     Everything moves in stepped ticks, like paper puppets shot in stop motion. Single theme by choice. */
+  --desk:#143840;
+  --paper:#fffdf4;
+  --ink:#1c2340;
+  --tang:#ff7a2f;
+  --teal:#12b3a2;
+  --sun:#ffc62e;
+  --pink:#f0609e;
+  --grape:#7f66e6;
+  --display:"Grandstander","Chalkboard SE","Comic Sans MS",cursive;
+  --body:"Averia Serif Libre","Iowan Old Style",Georgia,serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  background:var(--desk) radial-gradient(rgba(255,253,244,.08) 1.5px,transparent 1.7px) 0 0/22px 22px;
+  color:var(--ink);font-family:var(--body);
+}
+.stage{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:22px 20px 16px}
+
+/* ---------- the book ---------- */
+.book{
+  position:relative;display:grid;
+  width:min(1120px,100%,max(600px,calc((100dvh - 262px)*2.6)));
+  perspective:2600px;padding-left:22px;background:var(--tang);
+  border:4px solid var(--ink);border-radius:16px 22px 22px 16px;box-shadow:9px 9px 0 var(--ink);
+}
+.book::before{content:"";position:absolute;left:8px;top:16px;bottom:16px;border-left:3px dashed var(--ink);opacity:.55}
+.page{
+  grid-area:1/1;min-width:0;position:relative;
+  display:flex;flex-direction:column;justify-content:center;gap:clamp(12px,1.7vw,22px);
+  padding:clamp(14px,2.2vw,26px);padding-bottom:clamp(20px,2.6vw,34px);
+  background:var(--paper);border-left:4px solid var(--ink);border-radius:0 16px 16px 0;
+  visibility:hidden;transform-origin:left center;backface-visibility:hidden;
+}
+.page.on{visibility:visible}
+.page:not(.on) *{animation-play-state:paused!important}
+.page::after{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--ink);opacity:0;pointer-events:none}
+.page.turn-out{z-index:3;animation:turnOut .8s steps(8) forwards}
+.page.turn-in{z-index:3;animation:turnIn .8s steps(8) both}
+.page.turn-out::after{animation:shade .8s steps(8) forwards}
+.page.turn-in::after{animation:shade .8s steps(8) reverse both}
+@keyframes turnOut{to{transform:rotateY(-97deg)}}
+@keyframes turnIn{from{transform:rotateY(-97deg)}to{transform:rotateY(0)}}
+@keyframes shade{to{opacity:.3}}
+.folio{position:absolute;right:14px;bottom:8px;font:800 13px/1 var(--display);letter-spacing:.06em;opacity:.55}
+
+/* ---------- panes ---------- */
+.panes{display:grid;gap:clamp(8px,1.3vw,14px)}
+.n2{grid-template-columns:1fr 1fr}
+.n3{grid-template-columns:repeat(3,1fr)}
+.cover{grid-template-columns:1.05fr 1fr;align-items:center;gap:clamp(14px,3vw,36px)}
+.pane{
+  margin:0;aspect-ratio:var(--ar);background:var(--sky);border:4px solid var(--ink);overflow:hidden;
+  border-radius:14px 22px 16px 24px/20px 14px 24px 16px;rotate:-.5deg;
+  animation:paneIn .5s steps(4) both;animation-delay:calc(var(--p)*.22s);
+}
+.pane:nth-child(even){rotate:.6deg;border-radius:22px 14px 24px 16px/14px 22px 16px 24px}
+.pane svg{display:block;width:100%;height:100%;overflow:visible}
+@keyframes paneIn{0%{opacity:0;transform:scale(.9) translateY(10px)}88%,100%{opacity:1;transform:none}}
+.art{fill:none;stroke:var(--ink);stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round}
+.art text{fill:var(--ink);stroke:none;font-family:var(--display);font-weight:800}
+.art .tag{font-size:13px;letter-spacing:.18em}
+.art text.wt{fill:var(--paper)}
+
+/* ---------- verse ---------- */
+.verse{display:flex;justify-content:center;flex-wrap:wrap;gap:6px clamp(20px,4vw,60px);font:400 clamp(16px,1.5vw,19.5px)/1.5 var(--body)}
+.verse.solo{font-size:clamp(17px,1.8vw,23px)}
+.stanza{margin:0}
+.ln{display:block;padding-left:1.4em;text-indent:-1.4em;animation:lineIn .5s steps(4) both;animation-delay:calc(var(--i)*.26s + .5s)}
+.stanza .ln:first-child::first-letter{font:900 1.55em/1 var(--display);color:var(--tang)}
+@keyframes lineIn{0%{opacity:0;transform:translateY(9px) rotate(-1deg)}88%,100%{opacity:1;transform:none}}
+.hl{font-weight:700;background:linear-gradient(transparent 58%,var(--c) 58% 94%,transparent 94%)}
+.hl.tang{--c:#ffb98f}.hl.teal{--c:#8be0d6}.hl.sun{--c:#ffe08a}.hl.pink{--c:#f9b3d1}.hl.grape{--c:#c7bbf7}
+
+/* ---------- cover ---------- */
+.title{display:flex;flex-direction:column;align-items:flex-start;gap:clamp(10px,1.6vw,18px);padding-left:clamp(0px,1.5vw,18px)}
+h1{margin:0;font:900 clamp(44px,7.2vw,96px)/.95 var(--display);letter-spacing:-.01em;text-wrap:balance}
+h1 b{font-weight:inherit;white-space:nowrap}
+h1 span{display:inline-block}
+h1 span:nth-child(odd){transform:rotate(-3deg)}
+h1 span:nth-child(even){transform:rotate(2.5deg) translateY(-2px)}
+h1 .z{color:var(--tang);text-shadow:3px 3px 0 var(--ink)}
+@keyframes jit{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg) translateY(-3px)}}
+.sub{margin:0;font:400 clamp(17px,1.9vw,24px)/1.35 var(--body);max-width:22em}
+.inside{display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center}
+.orn{width:clamp(90px,10vw,130px);height:auto;overflow:hidden}
+.ded{margin:0;max-width:20em;font:800 clamp(22px,2.6vw,34px)/1.2 var(--display);text-wrap:balance}
+.cover.back{grid-template-columns:1fr 1.05fr}
+.backhead{margin:0;font:900 clamp(24px,3vw,38px)/1.08 var(--display);text-wrap:balance}
+.blurb{margin:0;font:400 clamp(15px,1.45vw,18.5px)/1.45 var(--body);max-width:30em}
+.pull{margin:0;padding-left:14px;border-left:5px solid var(--tang);font:700 clamp(15px,1.5vw,19px)/1.4 var(--body)}
+.by{margin:0;font:800 clamp(15px,1.5vw,19px)/1.45 var(--display)}
+.by span{display:block;font-weight:500;opacity:.8}
+.go{
+  font:800 clamp(16px,1.5vw,19px)/1 var(--display);color:var(--ink);background:var(--sun);cursor:pointer;
+  border:4px solid var(--ink);border-radius:999px;padding:.75em 1.25em;box-shadow:4px 4px 0 var(--ink);
+}
+.go:hover,.nav:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--ink)}
+.go:active,.nav:active:not(:disabled){transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.again{align-self:center;background:var(--paper);font-size:15px;padding:.6em 1em}
+
+/* ---------- controls ---------- */
+.bar{display:flex;align-items:center;gap:16px;position:sticky;bottom:10px;z-index:5}
+.nav{width:54px;height:54px;border-radius:50%;border:4px solid var(--ink);background:var(--paper);box-shadow:4px 4px 0 var(--ink);cursor:pointer;display:grid;place-items:center;padding:0;flex:none}
+.nav svg{width:24px;height:24px;fill:none;stroke:var(--ink);stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round}
+.nav:disabled{opacity:.4;cursor:default}
+.dots{display:flex;align-items:center;gap:8px;margin:0;padding:8px 12px;list-style:none;background:rgba(20,56,64,.85);border-radius:999px}
+.dots button{display:block;width:14px;height:14px;padding:0;border-radius:8px;border:3px solid var(--paper);background:transparent;cursor:pointer;transition:width .15s steps(3)}
+.dots button[aria-current="true"]{width:30px;background:var(--sun)}
+.hint{margin:0;font:500 13px/1 var(--display);color:var(--paper);opacity:.6;letter-spacing:.04em}
+@media (hover:none){.hint{display:none}}
+:focus-visible{outline:4px solid var(--pink);outline-offset:3px}
+
+/* ---------- puppet motion: every loop runs in steps ---------- */
+.art .oB{transform-box:fill-box;transform-origin:50% 100%}
+.art .oT{transform-box:fill-box;transform-origin:50% 0}
+.art .oC{transform-box:fill-box;transform-origin:50% 50%}
+.art .oL{transform-box:fill-box;transform-origin:0 50%}
+.art .oR{transform-box:fill-box;transform-origin:100% 50%}
+.art .oBL{transform-box:fill-box;transform-origin:0 100%}
+.art .oBR{transform-box:fill-box;transform-origin:100% 100%}
+.art .oTL{transform-box:fill-box;transform-origin:0 0}
+.art .oTR{transform-box:fill-box;transform-origin:100% 0}
+
+.boil{filter:url(#b0);animation:boil .9s steps(1) infinite}
+@keyframes boil{0%{filter:url(#b0)}33%{filter:url(#b1)}66%{filter:url(#b2)}100%{filter:url(#b0)}}
+
+.bob{animation:bob 1.2s steps(2) infinite var(--d,0s)}
+.bobfast{animation:bob .5s steps(2) infinite var(--d,0s)}
+@keyframes bob{0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-6px) scaleY(1.03)}}
+.sway{animation:sway 1.6s steps(2) infinite var(--d,0s)}
+@keyframes sway{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+.lean{animation:lean 2.4s steps(2) infinite var(--d,0s)}
+@keyframes lean{0%,100%{transform:rotate(-2.5deg)}50%{transform:rotate(2.5deg)}}
+.wave{animation:wave .7s steps(2) infinite var(--d,0s)}
+@keyframes wave{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(22deg)}}
+.swing{animation:swing .8s steps(2) infinite}
+@keyframes swing{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(50deg)}}
+.tap{animation:tap .32s steps(1) infinite var(--d,0s)}
+@keyframes tap{0%{transform:translateY(0)}50%{transform:translateY(5px)}}
+.flap{animation:flap .26s steps(1) infinite}
+@keyframes flap{0%{transform:rotate(-18deg)}50%{transform:rotate(24deg)}}
+.blink{animation:blink 3.6s steps(1) infinite var(--d,0s)}
+@keyframes blink{0%,90%,100%{transform:scaleY(1)}94%{transform:scaleY(.1)}}
+.spin{animation:spin 3s steps(12) infinite var(--d,0s)}
+.spin.rev{animation-direction:reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.twinkle{animation:twinkle 1.3s steps(2) infinite var(--d,0s)}
+@keyframes twinkle{0%,100%{transform:scale(.45) rotate(0)}50%{transform:scale(1.1) rotate(45deg)}}
+.rise{animation:rise 2.4s steps(7) infinite backwards var(--d,0s)}
+@keyframes rise{0%{transform:translate(0,0);opacity:0}12%{opacity:1}75%{opacity:1}100%{transform:translate(10px,-64px) rotate(24deg);opacity:0}}
+.grow{animation:grow 2.2s steps(5) infinite backwards var(--d,0s)}
+@keyframes grow{0%{transform:scaleX(0)}55%,100%{transform:scaleX(1)}}
+.walk .stepA,.run .stepA{animation:step .44s steps(1) infinite}
+.walk .stepB,.run .stepB{animation:step .44s steps(1) infinite -.22s}
+.run .stepA,.run .stepB{animation-duration:.26s}
+.run .stepB{animation-delay:-.13s}
+@keyframes step{0%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.walkin{animation:walkin 1.8s steps(9) both .25s}
+.walkin .stepA{animation:step .45s steps(1) 4 .25s}
+.walkin .stepB{animation:step .45s steps(1) 4 .02s}
+@keyframes walkin{0%{transform:translateX(-190px)}92%,100%{transform:translateX(0)}}
+.roll{animation:spin .9s steps(6) 2 .25s}
+.whirl{animation:spin .9s steps(8) infinite}
+.convey.quick{animation-duration:1.4s}
+.flicker{animation:flicker 1.3s steps(1) infinite var(--d,0s)}
+@keyframes flicker{0%{fill:#ffc62e}40%{fill:#1c2340}55%{fill:#ffc62e}70%{fill:#1c2340}85%{fill:#ffc62e}}
+.pace{animation:pace var(--pd,4.6s) steps(7) infinite}
+@keyframes pace{0%{transform:translateX(0) scaleX(1)}44%{transform:translateX(var(--px,40px)) scaleX(1)}50%{transform:translateX(var(--px,40px)) scaleX(-1)}94%{transform:translateX(0) scaleX(-1)}100%{transform:translateX(0) scaleX(1)}}
+@keyframes hopin{0%{transform:translate(-190px,0)}25%{transform:translate(-142px,-16px)}50%{transform:translate(-95px,0)}75%{transform:translate(-47px,-16px)}100%{transform:translate(0,0)}}
+.drift{animation:drift 9s steps(14) infinite alternate}
+@keyframes drift{from{transform:translateX(-36px)}to{transform:translateX(44px)}}
+.dropin{animation:dropin 7s steps(4) infinite backwards var(--d,0s)}
+@keyframes dropin{0%{transform:translateY(-340px)}7%,100%{transform:translateY(0)}}
+.convey{animation:convey 2.4s steps(9) infinite backwards var(--d,0s)}
+@keyframes convey{0%{transform:translateX(0);opacity:0}10%{opacity:1}82%{opacity:1}100%{transform:translateX(96px);opacity:0}}
+.fall{animation:fall 4.2s steps(16) infinite var(--d,0s)}
+@keyframes fall{from{transform:translateY(-60px) rotate(0)}to{transform:translateY(340px) rotate(220deg)}}
+.stumble{animation:stumble 2.8s steps(3) infinite}
+@keyframes stumble{0%,100%{transform:rotate(0)}35%,60%{transform:rotate(26deg)}}
+.droop{animation:droop 2.6s steps(3) infinite}
+@keyframes droop{0%,100%{transform:rotate(0)}50%{transform:rotate(11deg)}}
+.poploop{animation:poploop 3.2s steps(3) infinite backwards var(--d,0s)}
+@keyframes poploop{0%,30%{transform:scale(0)}42%{transform:scale(1.2)}50%,100%{transform:scale(1)}}
+.popin{animation:pop .45s steps(4) both var(--d,0s)}
+@keyframes pop{0%{transform:scale(0)}60%{transform:scale(1.18)}88%,100%{transform:scale(1)}}
+.daynight{animation:daynight 3.2s steps(1) infinite}
+@keyframes daynight{0%{fill:#ffe8a3}50%{fill:#1c2340}}
+.orb{animation:orb 3.2s steps(1) infinite}
+@keyframes orb{0%{fill:#ff7a2f}50%{fill:#fffdf4}}
+.bub{animation:pop .45s steps(4) both var(--d,0s)}
+@keyframes nudge{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
+
+.nod{animation:droop .9s steps(2) 3 2.6s}
+.knock{animation:wave .5s steps(2) 5 2.1s}
+.hail{animation:wave .7s steps(2) 5 4.6s}
+.thru{animation:thru 1.3s steps(6) forwards 4.7s}
+@keyframes thru{0%{transform:translateX(0);opacity:1}80%{transform:translateX(104px);opacity:1}90%,100%{transform:translateX(104px);opacity:0}}
+.thru .stepA{animation:step .45s steps(1) 4 .25s,step .45s steps(1) 3 4.7s}
+.thru .stepB{animation:step .45s steps(1) 4 .02s,step .45s steps(1) 3 4.47s}
+.doorway{animation:doorway 2.2s steps(1) both 4.4s}
+@keyframes doorway{0%{fill:#12b3a2}8%,84%{fill:#1c2340}90%,100%{fill:#12b3a2}}
+.bub.leave{animation:pop .45s steps(4) both var(--d,0s),vanish .3s steps(3) forwards 5.4s}
+@keyframes vanish{0%{opacity:1}80%,100%{opacity:0}}
+.arrive{animation:arrive 1.5s steps(7) both 6s}
+@keyframes arrive{0%{transform:translateX(-180px)}92%,100%{transform:translateX(0)}}
+.arrive .stepA{animation:step .45s steps(1) 3 6s}
+.arrive .stepB{animation:step .45s steps(1) 3 6.22s}
+.sit{animation:sit .35s steps(3) forwards 7.6s}
+@keyframes sit{80%,100%{transform:translateY(-30px)}}
+
+@media (max-width:720px){
+  .stage{justify-content:flex-start;padding:14px 16px}
+  .book{padding-left:12px;box-shadow:6px 6px 0 var(--ink)}
+  .book::before{left:3px}
+  .n2,.n3,.cover{grid-template-columns:1fr}
+  .page{justify-content:flex-start}
+  .title{padding:8px 0}
+  .bar{gap:10px}
+  .dots{gap:4px;padding:8px 10px}
+  .dots button{width:10px;height:10px;border-width:2.5px}
+  .dots button[aria-current="true"]{width:18px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="b0" filterUnits="userSpaceOnUse" x="-60" y="-60" width="660" height="420"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="1" seed="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/></filter>
+    <filter id="b1" filterUnits="userSpaceOnUse" x="-60" y="-60" width="660" height="420"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="1" seed="11" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/></filter>
+    <filter id="b2" filterUnits="userSpaceOnUse" x="-60" y="-60" width="660" height="420"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="1" seed="23" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/></filter>
+  </defs>
+</svg>
+
+<main class="stage">
+  <div class="book" id="book"></div>
+  <nav class="bar" aria-label="Pages">
+    <button class="nav" id="prev" type="button" aria-label="Previous page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4l-8 8l8 8"/></svg></button>
+    <ol class="dots" id="dots"></ol>
+    <button class="nav" id="next" type="button" aria-label="Next page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4l8 8l-8 8"/></svg></button>
+  </nav>
+  <p class="hint">Left and right arrow keys turn the page</p>
+</main>
+
+<script>
+(function(){
+"use strict";
+const INK='#1c2340',PAPER='#fffdf4',GY=265;
+const C={blue:'#3f7fe0',tang:'#ff7a2f',teal:'#12b3a2',sun:'#ffc62e',pink:'#f0609e',grape:'#7f66e6'};
+const SKY={mint:'#c9eee4',butter:'#ffe8a3',blush:'#ffd2de',lilac:'#dcd6fb',peach:'#ffd8bd'};
+const T=(x,y,s=1,f=0)=>`transform="translate(${x} ${y}) scale(${f?-s:s} ${s})"`;
+
+/* ---------- small parts ---------- */
+const star=(x,y,r,c,d=0)=>`<path ${d==null?'':`class="twinkle oC" style="--d:${d}s"`} d="M${x},${y-r}l${r*.28},${r*.72}l${r*.72},${r*.28}l${-r*.72},${r*.28}l${-r*.28},${r*.72}l${-r*.28},${-r*.72}l${-r*.72},${-r*.28}l${r*.72},${-r*.28}Z" fill="${c}"/>`;
+function gear(x,y,r,c,d=0,rev=0){
+  let p='';const n=8;
+  for(let i=0;i<n*2;i++){const a=i*Math.PI/n,a2=a+Math.PI/n*.55,R=i%2?r*.74:r;
+    p+=`${i?'L':'M'}${(Math.cos(a)*R).toFixed(1)},${(Math.sin(a)*R).toFixed(1)}L${(Math.cos(a2)*R).toFixed(1)},${(Math.sin(a2)*R).toFixed(1)}`;}
+  return `<g transform="translate(${x} ${y})"><g class="spin oC${rev?' rev':''}" style="--d:${d}s"><path d="${p}Z" fill="${c}"/><circle r="${(r*.28).toFixed(1)}" fill="${PAPER}"/></g></g>`;
+}
+const keycap=(x,y,ch,c,d)=>`<g class="rise oC" style="--d:${d}s"><rect x="${x-10}" y="${y-10}" width="20" height="20" rx="5" fill="${c}"/><text x="${x}" y="${y+5}" font-size="13" text-anchor="middle">${ch}</text></g>`;
+const tag=(x,y,t)=>`<text class="tag" x="${x}" y="${y}" text-anchor="middle">${t}</text>`;
+function bub(x,y,lines,o={}){
+  const {t='bl',d=0,fs=16}=o,lh=fs*1.22;
+  const W=Math.round(Math.max(...lines.map(l=>l.length))*fs*.56+28),H=Math.round(lines.length*lh+22);
+  const left=t==='bl',tx=x+W*(left?.28:.72),dir=left?-1:1;
+  const tail=`<path d="M${tx-9},${y+H-3}L${tx+dir*12},${y+H+15}L${tx+9},${y+H-3}" fill="${PAPER}"/>`;
+  const txt=lines.map((l,i)=>`<tspan x="${x+W/2}" y="${(y+11+lh*(i+.78)).toFixed(1)}">${l}</tspan>`).join('');
+  return `<g class="bub ${o.cls||''} ${left?'oBL':'oBR'}" style="--d:${d}s"><rect x="${x}" y="${y}" width="${W}" height="${H}" rx="${Math.min(20,H/2.4).toFixed(1)}" fill="${PAPER}"/>${tail}<text font-size="${fs}" text-anchor="middle">${txt}</text></g>`;
+}
+
+/* ---------- the Zibbery: one body plan, five colors ---------- */
+const ZK={
+  zibb:{c:C.tang,b:'M0-112C30-112 44-62 40-36C36-12-36-12-40-36C-44-62-30-112 0-112Z',ey:-78,top:-112,ay:-52,ax:38},
+  zobb:{c:C.teal,b:'M-34-104Q0-116 34-104Q46-60 38-22Q0-10-38-22Q-46-60-34-104Z',ey:-74,top:-109,ay:-56,ax:40},
+  zubb:{c:C.sun,b:'M0-140C24-140 30-80 28-34C26-12-26-12-28-34C-30-80-24-140 0-140Z',ey:-106,top:-140,ay:-66,ax:27},
+  zeeb:{c:C.pink,b:'M0-84C30-84 36-50 32-30C28-12-28-12-32-30C-36-50-30-84 0-84Z',ey:-56,top:-84,ay:-40,ax:32},
+  zabb:{c:C.grape,b:'M-44-92Q0-110 44-92Q54-50 44-20Q0-8-44-20Q-54-50-44-92Z',ey:-64,top:-100,ay:-52,ax:47}
+};
+const PROP={
+  magnifier:`<path d="M0,2L4,-8"/><circle cx="8" cy="-21" r="14" fill="${PAPER}" fill-opacity=".75"/>`,
+  pencil:`<path d="M-3,8L5,-30l8,2L5,10Z" fill="${C.tang}"/><path d="M5,-30l5,-9l3,11"/>`,
+  paddle:`<path d="M0,6V-24"/><path d="M-9.2,-68.2H9.2L22.2,-55.2V-36.8L9.2,-23.8H-9.2L-22.2,-36.8V-55.2Z" fill="#e2362f"/><path d="M-7.5,-64H7.5L18,-53.5V-38.5L7.5,-28H-7.5L-18,-38.5V-53.5Z" stroke="${PAPER}" stroke-width="2"/><text class="wt" x="0" y="-41.5" font-size="12.5" text-anchor="middle" letter-spacing=".03em">STOP</text>`,
+  card:`<rect x="-17" y="-24" width="34" height="24" rx="4" fill="${PAPER}"/><text x="0" y="-6" font-size="15" text-anchor="middle">{ }</text>`,
+  hammer:`<path d="M0,6V-28"/><rect x="-15" y="-42" width="32" height="16" rx="4" fill="${C.teal}"/>`,
+  wrench:`<path d="M0,6V-24" stroke-width="7"/><path d="M-9,-38a10,10 0 1,0 18,0l-4,9h-10Z" fill="${C.sun}"/>`
+};
+function zib(kind,x,y,o={}){
+  const k=ZK[kind],{s=.85,f=0,l='down',r='down',lp='',rp='',la='',ra='',look=2,lookY=0,mouth='smile',carry='',cls='',d=0}=o;
+  const arm=(m,pose,prop,anim)=>{
+    const ax=k.ax*m,ay=k.ay;let dd,hx,hy,org;
+    if(pose==='up'){dd=`M${ax},${ay}q${20*m},-6 ${24*m},-34`;hx=ax+24*m;hy=ay-34;org=m>0?'oBL':'oBR';}
+    else if(pose==='out'){dd=`M${ax},${ay}q${18*m},3 ${30*m},-8`;hx=ax+30*m;hy=ay-8;org=m>0?'oBL':'oBR';}
+    else if(pose==='carry'){dd=`M${ax},${ay}q${26*m},-24 ${6*m},-62`;hx=ax+6*m;hy=ay-62;org=m>0?'oBL':'oBR';}
+    else{dd=`M${ax},${ay}q${16*m},10 ${18*m},30`;hx=ax+18*m;hy=ay+30;org=m>0?'oTL':'oTR';}
+    return `<g class="${anim} ${org}"><path d="${dd}"/>${prop?`<g transform="translate(${hx} ${hy})">${prop}</g>`:''}</g>`;
+  };
+  const ey=k.ey;
+  const eyes=`<g class="blink oC" style="--d:${((x%7)*.4).toFixed(1)}s"><circle cx="-12" cy="${ey}" r="10" fill="${PAPER}"/><circle cx="12" cy="${ey}" r="10" fill="${PAPER}"/><circle cx="${-12+look}" cy="${ey+lookY}" r="4" fill="${INK}" stroke="none"/><circle cx="${12+look}" cy="${ey+lookY}" r="4" fill="${INK}" stroke="none"/></g>`;
+  const m=mouth==='o'?`<circle cx="0" cy="${ey+21}" r="4.5" fill="${INK}"/>`:mouth==='flat'?`<path d="M-7,${ey+19}h14"/>`:`<path d="M-8,${ey+17}q8,8 16,0"/>`;
+  let extra='';
+  if(kind==='zobb')extra=`<g ${f?'transform="scale(-1 1)"':''}><path d="M-12-42l8 9l15-18" stroke="${PAPER}" stroke-width="6"/></g>`;
+  if(kind==='zubb')extra=`<circle cx="-12" cy="${ey}" r="14.5"/><circle cx="12" cy="${ey}" r="14.5"/>`;
+  if(kind==='zabb')extra=`<path d="M-47-44Q0-34 47-44" stroke="${PAPER}" stroke-width="5"/><path d="M-23,${ey-15}l14,5M23,${ey-15}l-14,5"/>`;
+  let topper=`<g><path d="M0,${k.top}q-6,-16 6,-22"/><circle cx="7" cy="${k.top-26}" r="5.5" fill="${PAPER}"/></g>`;
+  let wings='';
+  if(kind==='zeeb'){
+    topper=`<g><rect x="-19" y="${k.top-9}" width="38" height="8" rx="2" fill="${PAPER}"/><rect x="-16" y="${k.top-17}" width="34" height="8" rx="2" fill="${C.sun}"/><rect x="-20" y="${k.top-25}" width="38" height="8" rx="2" fill="${PAPER}"/></g>`;
+    wings=`<path class="flap oR" d="M-30-56l-26-10l8 22Z" fill="${PAPER}"/><path class="flap oL" d="M30-56l26-10l-8 22Z" fill="${PAPER}"/>`;
+  }
+  if(carry)topper=carry;
+  return `<g ${T(x,y,s,f)}><g class="${cls} oB" style="--d:${d}s"><path class="stepA" d="M-14-20V0h-14"/><path class="stepB" d="M14-20V0h14"/>${wings}${arm(-1,l,lp,la)}${arm(1,r,rp,ra)}<path d="${k.b}" fill="${k.c}"/>${extra}${eyes}${m}${topper}</g></g>`;
+}
+
+/* ---------- the two humans ---------- */
+function person(kind,x,y,o={}){
+  const {s=.78,f=0,pose='stand',tired=0,prop='',cls='',d=0,kb=0,hail=0}=o,W=kind==='wren',B=kind!=='mabel',X=kind==='bixby';
+  const legs=X?`<rect x="-17" y="-86" width="34" height="13" rx="3" fill="${INK}"/><path class="stepA" d="M-9-76V0h-15" stroke-width="9"/><path class="stepB" d="M9-76V0h15" stroke-width="9"/>`:B?`<path class="stepA" d="M-10-52V0h-15" stroke-width="7"/><path class="stepB" d="M10-52V0h15" stroke-width="7"/>`:`<path class="stepA" d="M-9-40V0h-13" stroke-width="7"/><path class="stepB" d="M9-40V0h13" stroke-width="7"/>`;
+  const body=X?`<path d="M-24-128Q0-136 24-128L18-80Q0-75-18-80Z" fill="${C.blue}"/>`:B?`<path d="M-21-126Q0-134 21-126L25-48Q0-40-25-48Z" fill="${C.teal}"/>`
+    :`<path d="M-17-126Q0-133 17-126L36-38Q0-28-36-38Z" fill="${C.sun}"/><circle cx="-8" cy="-70" r="4.5" fill="${C.pink}" stroke="none"/><circle cx="10" cy="-94" r="4.5" fill="${C.pink}" stroke="none"/><circle cx="14" cy="-52" r="4.5" fill="${C.pink}" stroke="none"/>`;
+  const scarf=X?`<path d="M0-123l-12-7v14Z" fill="${C.tang}"/><path d="M0-123l12-7v14Z" fill="${C.tang}"/>`:`<path d="M-15-127q15 9 30 0" stroke="${PAPER}" stroke-width="6"/>`;
+  const armL=`<path d="M-19-116q-14 18-12 44"/>`+(B?'':`<path d="M-24-84q-12-6-12 8V0"/>`);
+  let arms,front='';
+  if(pose==='type')arms=(kb?`<rect x="32" y="-100" width="42" height="9" rx="3" fill="${C.sun}"/>`:'')+`<g class="tap"><path d="M17-114q22 2 36 14"/></g><g class="tap" style="--d:.16s"><path d="M17-106q18 6 28 9"/></g>`;
+  else if(pose==='wave')arms=armL+`<g class="${hail?'hail':'wave'} oBL"><path d="M19-116q24-6 28-40"/></g>`;
+  else if(pose==='point')arms=armL+`<path d="M19-114l48-10"/>`;
+  else if(pose==='tool'){arms=armL;front=`<g class="swing oBL"><path d="M19-116q22-8 24-40"/><g transform="translate(43 -156)">${prop}</g></g>`;}
+  else arms=armL+`<path d="M19-116q14 18 12 44"/>`;
+  const hair=W?`<circle cx="-22" cy="-176" r="9" fill="${C.tang}"/><path d="M-25-150c-8-40 58-40 50 0c-4-14-12-20-24-20c-12 0-22 6-26 20Z" fill="${C.tang}"/>`:B?`<path d="M-23-158c-8-30 4-44 16-34c2-14 16-16 20-4c14-4 18 14 8 26c-12-14-30-10-44 12Z" fill="${INK}"/>`
+    :`<circle cx="0" cy="-186" r="13" fill="${PAPER}"/><path d="M-24-154c-4-30 48-30 48 0c-10-13-38-13-48 0Z" fill="${PAPER}"/>`;
+  const eyes=tired?`<path d="M-13-153h11M4-153h11"/><path d="M-12-146q5 4 9 0M5-146q5 4 9 0" stroke-width="2.5"/>`
+    :`<circle cx="-7" cy="-153" r="3.4" fill="${INK}" stroke="none"/><circle cx="9" cy="-153" r="3.4" fill="${INK}" stroke="none"/>`;
+  const mouth=tired?`<path d="M-4-133q6-5 12 0" stroke-width="3.5"/>`:`<path d="M-5-137q7 7 14 0" stroke-width="3.5"/>`;
+  const head=`<g class="${tired?'droop oB':o.nod?'nod oB':''}"><circle cx="0" cy="-152" r="24" fill="${PAPER}"/><circle cx="-14" cy="-143" r="5" fill="${C.pink}" fill-opacity=".55" stroke="none"/>${hair}${eyes}<path d="M3-151q9 5 1 10" stroke-width="3.5"/>${mouth}</g>`;
+  return `<g ${T(x,y,s,f)}><g class="${cls} oB" style="--d:${d}s">${legs}${body}${scarf}${arms}${head}${front}</g></g>`;
+}
+function desk(x,s=.78){
+  const lines=[C.tang,C.teal,PAPER,C.pink].map((c,i)=>`<path class="grow oL" style="--d:${i*.35}s" d="M19,${-143+i*9}h${[30,40,22,34][i]}" stroke="${c}" stroke-width="4"/>`).join('');
+  return `<g ${T(x,GY,s)}><path d="M-34-84V0M64-84V0" stroke-width="6"/><rect x="-42" y="-92" width="114" height="9" rx="3" fill="${PAPER}"/><path d="M40-108v16" stroke-width="6"/><rect x="12" y="-152" width="56" height="44" rx="6" fill="${INK}"/>${lines}<rect x="-36" y="-101" width="42" height="9" rx="3" fill="${C.sun}"/></g>`;
+}
+const typist=(x,o={})=>desk(x+67*.78)+person('bixby',x,GY,{...o,pose:'type'});
+
+/* ---------- pane wrapper ---------- */
+const FLAT=`<path d="M-700,${GY}H1100V800H-700Z" fill="${PAPER}"/>`;
+let paneNo=0;
+function pane(W,sky,alt,art,bubs='',ground=FLAT){
+  return `<figure class="pane" style="--sky:${SKY[sky]};--ar:${W}/300;--p:${paneNo++}"><svg class="art" viewBox="0 0 ${W} 300" role="img" aria-label="${alt}">${ground}<g class="boil">${art}</g>${bubs}</svg></figure>`;
+}
+
+/* ---------- scenes ---------- */
+const S={
+cover:()=>pane(400,'butter','Bixby and the Zibb wave from a hill. The Zibb says: Turn the Page, as Bob Seger sings.',
+  gear(72,72,24,C.teal)+gear(104,104,14,C.pink,0,1)+star(350,150,13,C.pink,null)+star(36,190,10,C.grape,null)+
+  person('bixby',135,GY,{pose:'wave'})+zib('zibb',270,GY,{r:'up',ra:'wave',look:-2}),
+  bub(190,36,['“Turn the Page,”','as Bob Seger sings.'],{d:1.1})),
+
+town:()=>{
+  const house=(x,y,w,h,c,d)=>`<g><path d="M${x},${y}L${x+5},${y-h}H${x+w+3}L${x+w-2},${y}Z" fill="${c}"/><path d="M${x-4},${y-h}L${x+w/2+7},${y-h-w*.62}L${x+w+11},${y-h}Z" fill="${PAPER}"/><rect x="${x+w*.3}" y="${y-h+12}" width="${w*.36}" height="${w*.36}" rx="3" fill="${SKY.butter}"/><path d="M${x+w*.38},${y}v-20h${w*.26}v20" fill="${INK}"/></g>`;
+  const hill=`<path d="M-700,${GY}H-20Q200,170 420,${GY}H1100V800H-700Z" fill="${PAPER}"/>`;
+  return pane(400,'mint','The crooked houses of Clackety Clopp on a hill, under a spinning sun.',
+    `<g transform="translate(338 58)"><g class="spin oC"><circle r="20" fill="${C.sun}"/><path d="M0-34V-27M0,27V34M-34,0H-27M27,0H34M-24-24l5,5M19,19l5,5M24-24l-5,5M-19,19l-5,5"/></g></g>`+
+    `<g class="drift"><path d="M70,66q0-16 18-14q8-16 26-6q18-4 18 14q10 8-2 16h-56q-14-2-4-10Z" fill="${PAPER}"/></g>`+
+    [0,1,2].map(i=>`<circle class="rise oC" style="--d:${i*.8}s" cx="${252+i*2}" cy="96" r="${7+i}" fill="${PAPER}"/>`).join('')+
+    `<path d="M246,134v-30h12v30" fill="${C.pink}"/>`+
+    house(150,224,46,62,C.tang,0)+house(212,223,50,86,C.grape,.5)+house(280,234,48,58,C.teal,1)+
+    `<g><path d="M356,243V205"/><circle cx="356" cy="190" r="19" fill="${C.pink}"/></g>`+
+    `<path d="M73,226V282"/><g transform="rotate(-4 73 211)"><rect x="10" y="196" width="126" height="30" rx="6" fill="${C.sun}"/><text x="73" y="216" font-size="12.5" text-anchor="middle" letter-spacing=".06em">CLACKETY CLOPP</text></g>`,
+    '',hill);
+},
+
+typing:()=>pane(400,'lilac','Bixby types at his desk while the window flips between day and night. He says: Clack! Clack! Clack!',
+  `<rect class="daynight" x="290" y="52" width="84" height="76" rx="8" fill="${SKY.butter}"/><circle class="orb" cx="332" cy="90" r="15" fill="${C.tang}"/><path d="M290,128h84"/>`+
+  typist(120)+keycap(150,176,'f',C.sun,0)+keycap(165,170,'(',C.pink,.8)+keycap(178,178,';',C.teal,1.6),
+  bub(24,14,['Clack! Clack!','Clack!'],{t:'br',d:1})),
+
+door:()=>pane(270,'peach','Outside Bixby’s front door. The Zibb walks up, knocks and says: I can help you write code! Then the door opens and the Zibb walks inside.',
+  `<path d="M118,${GY}V64H400V${GY}Z" fill="${SKY.butter}"/><path d="M104,66H400" stroke-width="7"/>`+
+  `<rect x="166" y="76" width="82" height="24" rx="6" fill="${PAPER}"/><text x="207" y="93" font-size="13" text-anchor="middle" letter-spacing=".1em">BIXBY</text>`+
+  `<rect class="doorway" x="170" y="110" width="66" height="${GY-110}" rx="5" fill="${C.teal}"/><circle cx="182" cy="196" r="4.5" fill="${C.sun}"/>`+
+  `<rect x="160" y="${GY-5}" width="86" height="9" rx="4" fill="${C.pink}"/>`+
+  `<g class="thru"><g class="walkin">${zib('zibb',92,GY,{r:'up',ra:'knock'})}</g></g>`,
+  bub(6,36,['I can help','you write code!'],{d:2.3,fs:15,cls:'leave'})),
+
+welcome:()=>pane(270,'lilac','Inside, Bixby waves and says: Splendid! Sit here by my chair. The Zibb walks in from the door and hops onto the stool beside him.',
+  `<path d="M216,215V${GY}M254,215V${GY}M254,215V160"/><rect x="244" y="156" width="20" height="36" rx="5" fill="${C.tang}"/><rect x="208" y="207" width="54" height="11" rx="4" fill="${C.sun}"/>`+
+  `<path d="M70,${GY-30}V${GY}M106,${GY-30}V${GY}"/><rect x="62" y="${GY-40}" width="52" height="10" rx="4" fill="${C.sun}"/>`+
+  person('bixby',168,GY,{f:1,pose:'wave',hail:1})+
+  `<g class="sit"><g class="arrive">${zib('zibb',88,GY,{look:3})}</g></g>`,
+  bub(70,12,['Splendid! Sit','here by my chair.'],{t:'br',d:4.8,fs:15})),
+
+scoops:()=>{
+  const top=ZK.zibb.top;
+  const bowl=`<path d="M-42,${top-44}h84q-4,38-42,38q-38,0-42-38Z" fill="${PAPER}"/>`+['{','(','[','}'].map((g,i)=>`<text x="${-27+i*18}" y="${top-50}" font-size="24" text-anchor="middle">${g}</text>`).join('');
+  return pane(270,'mint','Bixby types at his desk while the Zibb walks back and forth with a scoop piled with brackets and braces. It says: Loops! Braces! Fresh brackets!',
+    typist(42)+`<g class="pace walk oC" style="--px:66px;--pd:5.2s">${zib('zibb',196,GY,{l:'carry',r:'carry',carry:bowl,look:-2})}</g>`,
+    bub(98,8,['Loops! Braces!','Fresh brackets!'],{t:'br',d:1.6,fs:15}));
+},
+
+tired:()=>pane(400,'blush','A droopy Bixby keeps typing while the Zibb hands him one more line.',
+  typist(95,{tired:1})+['z','z','z'].map((z,i)=>`<text class="rise oC" style="--d:${i*.8}s" x="${128+i*7}" y="${112-i*4}" font-size="${15+i*3}">${z}</text>`).join('')+
+  zib('zibb',312,GY,{l:'out',lp:PROP.card,look:-3}),
+  bub(16,10,['Twice as quick...','and twice as tired.'],{d:1.2})+bub(246,84,['Line 9,041!'],{d:2.4,fs:15})),
+
+backlog:()=>{
+  const cols=[PAPER,C.sun,C.pink,PAPER,C.teal,PAPER,C.tang,PAPER,C.grape];
+  const cards=cols.map((c,i)=>`<g class="dropin" style="--d:${(i*.5).toFixed(1)}s"><g transform="rotate(${[-2,3,-3,2,-1,3,-2,1,-3][i]} 172 ${GY-11-22*i})"><rect x="${127+[0,5,-4,3,-5,4,-2,5,-3][i]}" y="${GY-22*(i+1)}" width="90" height="20" rx="4" fill="${c}"/><path d="M${140},${GY-22*i-12}h${[40,28,48,34,44,26,46,32,40][i]}" stroke-width="3"/></g></g>`).join('');
+  return pane(400,'butter','A tower of backlog tickets keeps stacking higher. The Zibb looks up and says: It grew again.',
+    `<path d="M70,200V${GY}"/><rect x="22" y="170" width="98" height="30" rx="6" fill="${PAPER}"/><text x="71" y="190" font-size="14" text-anchor="middle" letter-spacing=".1em">BACKLOG</text>`+cards+
+    zib('zibb',314,GY,{look:-3,lookY:-4,mouth:'o'}),
+    bub(244,88,['It grew again.'],{d:3,fs:15}));
+},
+
+mabel:()=>pane(400,'mint','Mabel McFlurr arrives with a cane, pulling a wagon of spinning gears. She says: Mabel McFlurr. I build things.',
+  `<g class="walkin">${person('mabel',120,GY,{})}<path d="M144,209L234,226"/>`+
+  gear(262,188,19,C.teal)+gear(297,183,14,C.sun,0,1)+gear(318,197,10,C.pink)+
+  `<rect x="232" y="207" width="100" height="34" rx="6" fill="${C.tang}"/>`+
+  [254,310].map(cx=>`<g transform="translate(${cx} 251)"><g class="roll oC"><circle r="13" fill="${PAPER}"/><path d="M-13,0h26M0,-13v26"/></g></g>`).join('')+`</g>`,
+  bub(40,12,['Mabel McFlurr.','I build things.'],{d:1.5})),
+
+backward:()=>pane(400,'lilac','Mabel points at Bixby, who is typing while the Zibb stands idle. She says: You have got it all backward!',
+  typist(70)+`<text class="rise oC" x="236" y="140" font-size="24" text-anchor="middle">?</text>`+
+  `<g class="pace walk oC" style="--px:26px;--pd:3.6s">${zib('zibb',228,GY,{mouth:'flat'})}</g>`+person('mabel',342,GY,{f:1,pose:'point'}),
+  bub(196,8,['You’ve got it','all backward!'],{t:'br',d:1})+bub(10,52,['Backward?'],{t:'br',d:2.3,fs:15})),
+
+testers:()=>pane(400,'peach','The Zobb inspects a code card with a magnifier and says: I test it! The tall Zubb ticks a checklist and says: I review the rest.',
+  `<rect x="150" y="150" width="46" height="56" rx="5" fill="${PAPER}"/><path d="M158,164h30M158,176h22M158,188h28" stroke-width="3"/><g class="poploop oC"><circle cx="196" cy="206" r="13" fill="${C.teal}"/><path d="M190,206l5,5l8,-9" stroke="${PAPER}" stroke-width="4"/></g>`+
+  `<rect x="222" y="150" width="40" height="86" rx="5" fill="${PAPER}"/>`+[0,1,2,3].map(i=>`<path class="poploop oC" style="--d:${i*.5}s" d="M230,${166+i*18}l5,5l8,-10" stroke="${C.tang}" stroke-width="4"/>`).join('')+
+  zib('zobb',95,GY,{r:'up',rp:PROP.magnifier,ra:'wave'})+zib('zubb',318,GY,{l:'up',lp:PROP.pencil,look:-2})+
+  tag(95,291,'ZOBB')+tag(318,291,'ZUBB'),
+  bub(18,62,['I test it!'],{d:1})+bub(262,16,['I review','the rest.'],{d:2})),
+
+fetchers:()=>pane(400,'mint','The little Zeeb flaps along with a stack of papers and says: I fetch the facts! The stout Zabb raises a red stop sign and says: Stop! Tests first.',
+  `<rect x="372" y="170" width="14" height="${GY-170}" rx="4" fill="${PAPER}"/><path d="M372,190l14,-8M372,214l14,-8M372,238l14,-8" stroke="${C.tang}"/>`+
+  `<g class="pace oC" style="--px:44px;--pd:3.2s">${zib('zeeb',74,GY,{look:3})}</g>`+zib('zabb',280,GY,{r:'up',rp:PROP.paddle,ra:'lean',look:-2,mouth:'flat'})+
+  tag(95,291,'ZEEB')+tag(280,291,'ZABB'),
+  bub(30,70,['I fetch','the facts!'],{d:1})+bub(196,44,['Stop!','Tests first.'],{d:2})),
+
+build:()=>pane(270,'butter','Bixby swings a hammer over a workbench where a small Zobb is taking shape. He says: No more typing!',
+  `<path d="M150,214V${GY}M240,214V${GY}"/><rect x="138" y="205" width="114" height="10" rx="3" fill="${PAPER}"/>`+
+  zib('zobb',196,205,{s:.5})+star(150,186,9,C.tang,0)+star(240,170,8,C.pink,.4)+
+  person('bixby',78,GY,{pose:'tool',prop:PROP.hammer}),
+  bub(124,10,['No more','typing!'],{d:1.2})),
+
+shelf:()=>pane(270,'blush','Four new helpers pop onto the shelves one by one: Zobb, Zubb, Zeeb and Zabb.',
+  `<rect x="28" y="132" width="214" height="9" rx="3" fill="${PAPER}"/>`+
+  `<g class="popin oB" style="--d:.5s">${zib('zobb',88,132,{s:.55})}</g><g class="popin oB" style="--d:1.1s">${zib('zubb',188,132,{s:.55,d:.3})}</g>`+
+  `<g class="popin oB" style="--d:1.7s">${zib('zeeb',88,GY,{s:.62,d:.2})}</g><g class="popin oB" style="--d:2.3s">${zib('zabb',188,GY,{s:.6,d:.5})}</g>`+
+  tag(88,161,'ZOBB')+tag(188,161,'ZUBB')+tag(88,291,'ZEEB')+tag(188,291,'ZABB')),
+
+ship:()=>pane(270,'mint','The Zibb taps a keyboard while finished parcels roll off a conveyor past a sign that reads 40 features. It says: Shipped!',
+  `<path d="M216,172V244"/><rect x="174" y="112" width="84" height="60" rx="8" fill="${PAPER}"/><text x="216" y="146" font-size="30" text-anchor="middle">40</text><text x="216" y="163" font-size="10" text-anchor="middle" letter-spacing=".12em">FEATURES</text>`+star(258,112,10,C.sun,null)+
+  `<path d="M150,222V${GY}"/><rect x="128" y="213" width="44" height="9" rx="3" fill="${C.sun}"/>`+
+  `<rect x="176" y="244" width="124" height="9" rx="4" fill="${INK}"/>`+
+  [C.tang,C.teal,C.pink].map((c,i)=>`<g class="convey" style="--d:${(i*.8).toFixed(1)}s"><rect x="180" y="220" width="26" height="23" rx="4" fill="${c}"/><path d="M187,232l4,4l8,-9" stroke="${PAPER}" stroke-width="3.5"/></g>`).join('')+
+  keycap(140,196,'{',C.pink,.2)+keycap(158,192,'}',C.grape,1.2)+
+  zib('zibb',80,GY,{r:'out',ra:'tap',look:3}),
+  bub(26,62,['Shipped!'],{d:1.4})),
+
+stumble:()=>pane(400,'lilac','The Zibb trips over a bug and says: Whoops! The Zobb catches it with a magnifier and says: Caught it! Test says no.',
+  `<g class="stumble oB">${zib('zibb',105,GY,{mouth:'o',look:3,cls:''})}</g>`+
+  `<g><path d="M186,${GY-8}l-12,8M194,${GY-6}v8M204,${GY-8}l10,8M188,${GY-22}l-6,-10M202,${GY-22}l6,-10"/><ellipse cx="195" cy="${GY-13}" rx="15" ry="10" fill="${C.pink}"/><circle cx="190" cy="${GY-15}" r="2" fill="${INK}" stroke="none"/><circle cx="200" cy="${GY-15}" r="2" fill="${INK}" stroke="none"/></g>`+
+  `<path class="poploop oC" d="M180,196l30,30M210,196l-30,30" stroke="${C.tang}" stroke-width="7"/>`+
+  zib('zobb',300,GY,{f:1,r:'up',rp:PROP.magnifier}),
+  bub(24,70,['Whoops!'],{d:.9})+bub(206,30,['Caught it!','Test says no.'],{t:'br',d:2})),
+
+tune:()=>pane(400,'butter','Bixby raises a wrench beside a bench where a new helper pops into being. He says: A new slip? A new helper. The Zubb says: Back to the quest!',
+  gear(198,66,23,C.teal)+gear(233,94,14,C.pink,0,1)+
+  `<path d="M160,214V${GY}M244,214V${GY}"/><rect x="148" y="205" width="108" height="10" rx="3" fill="${PAPER}"/>`+
+  `<g class="poploop oB">${zib('zeeb',202,205,{s:.55})}</g>`+
+  person('bixby',80,GY,{pose:'tool',prop:PROP.wrench})+zib('zubb',330,GY,{l:'up',lp:PROP.pencil,look:-2}),
+  bub(14,8,['A new slip?','A new helper.'],{d:1})+bub(262,34,['Back to','the quest!'],{d:2.2,fs:15})),
+
+alone:()=>pane(400,'butter','Bixby steps back while the Zibb types alone and unchecked parcels race off the conveyor. The Zibb says: Ship it! Ship it! Bixby says: So fast!',
+  `<path d="M220,222V${GY}"/><rect x="198" y="213" width="44" height="9" rx="3" fill="${C.sun}"/><rect x="246" y="244" width="144" height="9" rx="4" fill="${INK}"/>`+
+  [C.tang,C.teal,C.pink,C.grape].map((c,i)=>`<g class="convey quick" style="--d:${(i*.35).toFixed(2)}s"><rect x="250" y="220" width="26" height="23" rx="4" fill="${c}"/><text x="263" y="238" font-size="16" text-anchor="middle">?</text></g>`).join('')+
+  keycap(212,196,'{',C.pink,.1)+keycap(230,192,'}',C.grape,.7)+keycap(221,190,';',C.teal,1.3)+
+  person('bixby',48,GY,{})+zib('zibb',150,GY,{r:'out',ra:'tap',look:3}),
+  bub(14,56,['So fast!'],{d:2})+bub(150,40,['Ship it!','Ship it!'],{d:1})),
+
+broke:()=>{
+  const lamp=(x,d)=>`<path d="M${x},${GY}V152"/><circle class="flicker" style="--d:${d}s" cx="${x}" cy="140" r="12" fill="${C.sun}"/>`;
+  return pane(400,'lilac','The town clock tower has gone haywire: its hands whirl, a spring pops out and the street lamps flicker. Bixby says: Look what it broke! Mabel stands beside him and nods.',
+    lamp(26,0)+lamp(68,.4)+
+    `<path d="M252,${GY}L256,104H312L316,${GY}Z" fill="${C.tang}"/><path d="M246,104L284,58L322,104Z" fill="${PAPER}"/><path d="M270,${GY}v-34h28v34" fill="${INK}"/><circle cx="284" cy="140" r="24" fill="${PAPER}"/>`+
+    `<g transform="translate(284 140)"><g class="whirl oC"><circle r="19" stroke="none"/><path d="M0,0V-17"/></g><g class="whirl oC" style="animation-duration:2.3s"><circle r="19" stroke="none"/><path d="M0,0H11" stroke-width="5.5"/></g></g>`+
+    `<g class="poploop oL"><path d="M308,152l9,-7l5,13l9,-7l5,13l8,-5"/>${gear(356,162,10,C.pink)}</g>`+
+    `<text class="poploop oC" style="--d:.6s" x="360" y="112" font-size="26" text-anchor="middle">13!</text>`+
+    person('bixby',120,GY,{})+person('mabel',198,GY,{f:1,nod:1}),
+    bub(40,30,['Look what','it broke!'],{t:'br',d:1.2}));
+},
+
+shrunk:()=>pane(400,'butter','Only two tickets are left by the backlog sign, far below a mark showing how tall the tower used to be. The Zibb says: Only two left!',
+  `<path d="M70,200V${GY}"/><rect x="22" y="170" width="98" height="30" rx="6" fill="${PAPER}"/><text x="71" y="190" font-size="14" text-anchor="middle" letter-spacing=".1em">BACKLOG</text>`+
+  `<path d="M240,67V${GY}" stroke-dasharray="2 10"/><path d="M230,67h20M230,221h20"/><text x="256" y="72" font-size="12">THEN</text><text x="256" y="226" font-size="12">NOW</text>`+
+  `<rect x="127" y="${GY-22}" width="90" height="20" rx="4" fill="${C.sun}"/><path d="M140,${GY-12}h40" stroke-width="3"/>`+
+  `<g class="lean oBL"><rect x="131" y="${GY-44}" width="90" height="20" rx="4" fill="${PAPER}"/><path d="M144,${GY-34}h30" stroke-width="3"/></g>`+
+  zib('zibb',340,GY,{look:-3}),
+  bub(250,94,['Only two left!'],{d:1.2,fs:15})),
+
+proud:()=>pane(400,'mint','Bixby stands in front of his workshop, with a gear turning on the roof and two helpers at the door. He says: I built this.',
+  gear(336,104,20,C.teal)+
+  `<rect x="184" y="132" width="196" height="${GY-132}" fill="${C.tang}"/><path d="M172,134L282,92L392,134Z" fill="${PAPER}"/>`+
+  `<rect x="226" y="146" width="112" height="28" rx="6" fill="${C.sun}"/><text x="282" y="165" font-size="14" text-anchor="middle" letter-spacing=".1em">WORKSHOP</text>`+
+  `<path d="M258,${GY}v-62h48v62" fill="${INK}"/><circle cx="296" cy="236" r="3.5" fill="${C.sun}" stroke="none"/>`+
+  zib('zobb',218,GY,{s:.45})+zib('zabb',350,GY,{s:.45,look:-2})+
+  person('bixby',84,GY,{}),
+  bub(20,50,['I built this.'],{d:1})),
+
+wren:()=>pane(400,'peach','A new coder, Wren, walks in typing on a keyboard, with a Zibb at her elbow and a cart of tickets rolling behind. She says: No time! Must type!',
+  `<path d="M340,214V${GY}"/><rect x="292" y="186" width="96" height="28" rx="6" fill="${C.sun}"/><text x="340" y="205" font-size="12.5" text-anchor="middle" letter-spacing=".08em">WORKSHOP</text>`+
+  `<g class="walkin"><path d="M82,238L98,226"/>`+
+  [0,1,2,3,4].map(i=>`<rect x="${22+[0,3,-2,2,-1][i]}" y="${211-i*14}" width="56" height="13" rx="3" fill="${[PAPER,C.pink,PAPER,C.teal,PAPER][i]}" stroke-width="3.5"/>`).join('')+
+  `<rect x="16" y="225" width="68" height="20" rx="5" fill="${C.grape}"/>`+
+  [32,68].map(cx=>`<g transform="translate(${cx} 253)"><g class="roll oC"><circle r="11" fill="${PAPER}"/><path d="M-11,0h22M0,-11v22"/></g></g>`).join('')+
+  zib('zibb',128,GY,{s:.8,r:'out',rp:PROP.card,look:3})+person('wren',212,GY,{pose:'type',kb:1})+`</g>`,
+  bub(214,22,['No time!','Must type!'],{d:2.3})),
+
+tell:()=>pane(400,'lilac','Bixby points Wren toward a blueprint of boxes and arrows. He says: Ask what you can build. Wren says: Build?',
+  `<path d="M244,190L228,${GY}M348,190L364,${GY}"/><rect x="214" y="76" width="164" height="116" rx="8" fill="${INK}"/>`+
+  `<g stroke="${PAPER}" stroke-width="3"><rect x="230" y="94" width="36" height="24" rx="4"/><rect x="326" y="94" width="36" height="24" rx="4"/><rect x="278" y="150" width="36" height="24" rx="4"/>`+
+  `<path class="grow oL" d="M270,106h52"/><path class="grow oL" style="--d:.5s" d="M248,122v40h26"/><path class="grow oL" style="--d:1s" d="M344,122v40h-26"/></g>`+
+  star(296,106,7,C.sun,null)+
+  person('wren',48,GY,{})+person('bixby',142,GY,{pose:'point'}),
+  bub(96,10,['Ask what','you can build.'],{d:1.2})+bub(6,62,['Build?'],{t:'br',d:2.4,fs:15})),
+
+wrenbuilds:()=>pane(400,'blush','Wren swings a hammer over a bench where her first helper takes shape, and her Zibb cheers. She says: My turn to build! The Zibb says: Finally!',
+  `<path d="M184,214V${GY}M272,214V${GY}"/><rect x="172" y="205" width="112" height="10" rx="3" fill="${PAPER}"/>`+
+  zib('zobb',228,205,{s:.5})+star(184,186,9,C.tang,0)+star(272,172,8,C.sun,.4)+
+  person('wren',92,GY,{pose:'tool',prop:PROP.hammer})+zib('zibb',342,GY,{l:'up',la:'wave',look:-3}),
+  bub(130,10,['My turn','to build!'],{d:1.2})+bub(288,84,['Finally!'],{d:2.3,fs:15})),
+
+cast:()=>pane(400,'lilac','The Zibbery lined up under a banner: Zibb, Zobb, Zubb, Zeeb and Zabb.',
+  `<path d="M30,50Q200,74 370,50v34Q200,108 30,84Z" fill="${C.sun}"/><text x="200" y="91" font-size="24" text-anchor="middle" letter-spacing=".1em">THE ZIBBERY</text>`+
+  zib('zibb',52,GY,{s:.55})+zib('zobb',126,GY,{s:.55})+zib('zubb',200,GY,{s:.55})+zib('zeeb',274,GY,{s:.6})+zib('zabb',348,GY,{s:.55,look:-2})+
+  tag(52,291,'ZIBB')+tag(126,291,'ZOBB')+tag(200,291,'ZUBB')+tag(274,291,'ZEEB')+tag(348,291,'ZABB')),
+
+race:()=>{
+  const cols=[C.tang,C.teal,C.pink,C.grape,C.sun];
+  const confetti=Array.from({length:14},(_,i)=>`<rect class="fall oC" style="--d:${(-i*.31).toFixed(2)}s" x="${14+i*28}" y="${(i*37)%60-20}" width="9" height="9" rx="2" fill="${cols[i%5]}" stroke-width="2.5"/>`).join('');
+  return pane(400,'mint','The whole Zibbery races under a banner that reads The End while Bixby waves and confetti falls. The Zibb says: We win!',
+    `<path d="M16,44V${GY}M384,44V${GY}"/><g><path d="M16,40Q200,70 384,40v36Q200,106 16,76Z" fill="${C.sun}"/><text x="200" y="84" font-size="27" text-anchor="middle" letter-spacing=".1em">THE END</text></g>`+
+    confetti+
+    person('bixby',46,GY,{s:.56,pose:'wave'})+
+    zib('zabb',106,GY,{s:.58,cls:'run',look:3,d:.1})+zib('zubb',166,GY,{s:.58,cls:'run',look:3,d:.25})+zib('zobb',228,GY,{s:.6,cls:'run',look:3,d:.05})+zib('zibb',296,GY,{s:.62,cls:'run',look:3,d:.3})+
+    zib('zeeb',352,214,{s:.5,look:3}),
+    bub(238,112,['We win!'],{d:1.4}));
+}
+};
+
+/* ---------- the pages ---------- */
+const PAGES=[
+ {cover:1,panes:['cover']},
+ {inside:1},
+ {panes:['town','typing'],verse:[[
+  'In the town of Clackety Clopp, by the Glimmering Glade,',
+  'lived a coder named Bixby, quite proud of his trade.',
+  'He typed every morning. He typed every night.',
+  'He typed every function by hand, left and right.']]},
+ {panes:['door','welcome','scoops'],verse:[[
+  'Then one day came an agent, a Zibb, to his door.',
+  '“I can help you write code! I can help you write more!”',
+  'So Bixby said, “Splendid! Sit here by my chair.',
+  'I’ll type, and you’ll hand me a line here and there.”'],[
+  'So Bixby typed on, and the Zibb fetched him loops,',
+  'and brackets and braces in generous scoops.',
+  'But Bixby still read every line that was writ,',
+  'and Bixby still fixed every bug, bit by bit.']]},
+ {panes:['tired','backlog'],verse:[[
+  'He was faster, it’s true. Maybe two times as quick.',
+  'But the work was still his, and the work was still thick.',
+  'His eyes had gone droopy. His fingers were sore.',
+  'And the backlog grew taller than ever before.']]},
+ {panes:['mabel','backward'],verse:[[
+  'Then along came old Mabel McFlurr of the Fen,',
+  'who had built many things and would build them again.',
+  'She looked at poor Bixby. She looked at his Zibb.',
+  'She looked at his keyboard and said, rather glib:'],[
+  '“You’ve got it all backward, dear Bixby, I fear.',
+  'You sit at the keys while the Zibb idles here.',
+  'The Zibb can write all of it. Give it a shot!',
+  'Your job is to build what it still hasn’t got.”']]},
+ {panes:['alone','broke'],verse:[[
+  'So Bixby stepped back, and the Zibb, all alone,',
+  'wrote code at a speed that the town had not known.',
+  'It shipped before breakfast. It shipped before tea.',
+  'No test and no gate, it shipped fast as can be.'],[
+  'By noon the town clock had struck thirteen, then stopped.',
+  'The lights in the square gave a flicker and popped.',
+  '“It’s fast,” muttered Bixby, “but look what it broke!”',
+  'And Mabel just nodded. She smiled, and she spoke:']]},
+ {panes:['testers','fetchers'],verse:[[
+  '“A Zibb that writes code needs a Zobb that can test.',
+  'It needs a wise Zubb to review all the rest.',
+  'It needs a quick Zeeb that goes fetching the facts,',
+  'and a Zabb at the gate that will stop reckless acts.'],[
+  '“Give it specs it can read. Give it maps of the code.',
+  'Give it gates it must pass at each bend in the road.',
+  'Then stand back and let the whole Zibbery run.',
+  'You build the whole workshop; the Zibbs get it done.”']]},
+ {panes:['build','shelf','ship'],verse:[[
+  'So Bixby stopped typing. He scratched at his head.',
+  'He pushed back his chair, and he built things instead.',
+  'He built a small Zobb that ran tests through the night.',
+  'He built a keen Zubb that told wrong code from right.'],[
+  'He built a quick Zeeb that fetched docs by the stack,',
+  'and a Zabb with a gate that sent bad changes back.',
+  'And the Zibb, with its helpers, went coding away.',
+  'It shipped forty features by lunch the next day.']]},
+ {panes:['stumble','tune'],verse:[[
+  'When it stumbled, the Zobb caught the slip with a test.',
+  'When it wandered, the Zubb sent it back to its quest.',
+  'And Bixby? He watched for where things came unglued,',
+  'then built a new helper each time trouble brewed.']]},
+ {panes:['shrunk','proud'],verse:[[
+  'The backlog that once had grown taller than trees',
+  'shrank down to two tickets that flapped in the breeze.',
+  'And Bixby stayed proud, but of something brand new:',
+  'the workshop he’d built and the work it could do.']]},
+ {panes:['wren','tell'],verse:[[
+  'Then one day a coder named Wren wandered through,',
+  'with a Zibb at her elbow and too much to do.',
+  'She typed as she walked, and she typed as she ate.',
+  'Her backlog rolled after her, tall as a gate.'],[
+  'And Bixby said, “Wren, you have got it reversed,”',
+  'just as Mabel McFlurr had once said to him first.',
+  '“Don’t ask what the agents can type up for you.',
+  'Ask what you can build so their work will ring true.”']]},
+ {panes:['wrenbuilds','race'],verse:[[
+  'So if you build software in Clopp or in Fen,',
+  'remember what Bixby passed onward to Wren:',
+  'A helper beside you will double your pace.',
+  'But helpers for helpers will win the whole race.']]},
+ {back:1,panes:['cast']}
+];
+const N=PAGES.length;
+const HL=[[/\bZibb(?:ery|s)?\b/g,'tang'],[/\bZobb\b/g,'teal'],[/\bZubb\b/g,'sun'],[/\bZeeb\b/g,'pink'],[/\bZabb\b/g,'grape']];
+const mark=t=>HL.reduce((s,[re,c])=>s.replace(re,m=>`<span class="hl ${c}">${m}</span>`),t);
+
+function pageHTML(i){
+  const p=PAGES[i];paneNo=0;
+  if(p.cover){
+    const letters=(w,cls)=>[...w].map((ch,j)=>`<span${cls?` class="${cls}"`:''} style="--d:${(j*.13).toFixed(2)}s">${ch}</span>`).join('');
+    return `<div class="panes cover"><div class="title"><h1 aria-label="Bixby and the Zibb">${['Bixby','and','the'].map(w=>`<b>${letters(w)}</b>`).join(' ')} <b>${letters('Zibb','z')}</b></h1><p class="sub">A rhyme about a coder who stops typing and starts building the helpers his coding agent needs.</p><p class="by">Gerry Wolfe with Claude’s help<span>No, not a one-shot.</span></p><button class="go" type="button" data-go="1">Turn the page</button></div>${S.cover()}</div>`;
+  }
+  if(p.inside){
+    return `<div class="inside"><svg class="art orn" viewBox="0 0 120 150" aria-hidden="true">${zib('zibb',60,142,{r:'up',look:0})}</svg><p class="ded">Inspired by a conversation and insight with Mark Bauer</p></div>`;
+  }
+  if(p.back){
+    return `<div class="panes cover back">${S.cast()}<div class="title"><h2 class="backhead">A story for people who work with coding agents</h2><p class="blurb">Bixby types every line himself. Then a Zibb knocks on his door, the backlog keeps growing, and a builder named Mabel tells him he has it all backward.</p><p class="blurb">The idea in eleven pages: let the agent write the code, and spend your own time building what it needs to do that well. Tests, review, context and gates.</p><blockquote class="pull">A helper beside you will double your pace.<br>But helpers for helpers will win the whole race.</blockquote><p class="by">Gerry Wolfe with Claude’s help</p><button class="go" type="button" data-go="0">Read it again</button></div></div>`;
+  }
+  let n=0;
+  const verse=p.verse.map(st=>`<p class="stanza">${st.map(l=>`<span class="ln" style="--i:${n++}">${mark(l)}</span>`).join('')}</p>`).join('');
+  return `<div class="panes n${p.panes.length}">${p.panes.map(k=>S[k]()).join('')}</div><div class="verse${p.verse.length===1?' solo':''}">${verse}</div>${p.last?'<button class="go again" type="button" data-go="0">Back to the cover</button>':''}<span class="folio" aria-hidden="true">${i-1} / ${N-3}</span>`;
+}
+
+/* ---------- book mechanics ---------- */
+const book=document.getElementById('book'),dots=document.getElementById('dots'),prev=document.getElementById('prev'),next=document.getElementById('next');
+const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const pages=PAGES.map((p,i)=>{const s=document.createElement('section');s.className='page';s.setAttribute('aria-label',i===0?'Cover':i===1?'Inside cover':i===N-1?'Back cover':`Page ${i-1} of ${N-3}`);s.innerHTML=pageHTML(i);book.appendChild(s);return s;});
+PAGES.forEach((p,i)=>{const li=document.createElement('li'),b=document.createElement('button');b.type='button';b.setAttribute('aria-label',i===0?'Go to the cover':i===1?'Go to the inside cover':i===N-1?'Go to the back cover':`Go to page ${i-1}`);b.addEventListener('click',()=>go(i));li.appendChild(b);dots.appendChild(li);});
+let cur=0,busy=false;
+function sync(){
+  prev.disabled=cur===0;next.disabled=cur===N-1;
+  [...dots.querySelectorAll('button')].forEach((b,i)=>b.setAttribute('aria-current',i===cur?'true':'false'));
+  pages.forEach((p,i)=>p.setAttribute('aria-hidden',i===cur?'false':'true'));
+}
+function go(n){
+  if(busy||n<0||n>=N||n===cur)return;
+  const from=pages[cur],to=pages[n],fwd=n>cur;
+  to.innerHTML=pageHTML(n);            /* rebuild so every entrance replays */
+  to.classList.add('on');
+  cur=n;sync();
+  if(reduce){from.classList.remove('on');return;}
+  busy=true;
+  const mover=fwd?from:to,cls=fwd?'turn-out':'turn-in';
+  let done=false;
+  const finish=()=>{if(done)return;done=true;mover.classList.remove(cls);from.classList.remove('on');busy=false;};
+  mover.addEventListener('animationend',function h(e){if(e.target!==mover)return;mover.removeEventListener('animationend',h);finish();});
+  setTimeout(finish,1100);
+  mover.classList.add(cls);
+}
+prev.addEventListener('click',()=>go(cur-1));
+next.addEventListener('click',()=>go(cur+1));
+book.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)go(+b.dataset.go);});
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();go(cur+1);}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(cur-1);}
+});
+let sx=null,sy=0;
+book.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;},{passive:true});
+book.addEventListener('touchend',e=>{
+  if(sx===null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;sx=null;
+  if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5)go(cur+(dx<0?1:-1));
+},{passive:true});
+
+function start(state){
+  const want=Number.isInteger(state&&state.page)?Math.min(N-1,Math.max(0,state.page)):0;
+  const q=/[?&]p=(\d+)/.exec(location.search);
+  cur=q?Math.min(N-1,+q[1]):want;
+  pages[cur].classList.add('on');sync();
+}
+const hot=window.claude&&window.claude.hot;
+if(hot&&hot.snapshot)hot.snapshot(()=>({page:cur}));
+if(hot&&hot.ready)hot.ready(start);else start((hot&&hot.data)||{});
+})();
+</script>
+</body>
+</html>
